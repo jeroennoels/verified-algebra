@@ -31,9 +31,9 @@ inverseR : GroupSpec op e inv -> isInverseR op e inv
 inverseR (MkGroup _ _ r) = r
 
 
-groupInvOpOp : {(#) : Binop s} -> GroupSpec (#) e inv -> (a,b : s) ->
+groupInverse1 : {(#) : Binop s} -> GroupSpec (#) e inv -> (a,b : s) ->
   (inv a # a) # b = b
-groupInvOpOp spec a b = o2 `trans` o3 where
+groupInverse1 spec a b = o2 `trans` o3 where
   o1 : inv a # a = e
   o1 = inverseL spec a
   o2 : (inv a # a) # b = e # b
@@ -42,16 +42,16 @@ groupInvOpOp spec a b = o2 `trans` o3 where
   o3 = neutralL (monoid spec) b
 
 
-groupInvOpOpBis : {(#) : Binop s} -> GroupSpec (#) e inv -> (a,b : s) ->
+groupInverse1Bis : {(#) : Binop s} -> GroupSpec (#) e inv -> (a,b : s) ->
   inv a # (a # b) = b
-groupInvOpOpBis spec a b = assoc `trans` groupInvOpOp spec a b where
+groupInverse1Bis spec a b = assoc `trans` groupInverse1 spec a b where
   assoc : inv a # (a # b) = (inv a # a) # b
   assoc = associative (semigroup (monoid spec)) _ a b
 
 
-groupOpInvOp : {(#) : Binop s} -> GroupSpec (#) e inv -> (a,b : s) ->
+groupInverse2 : {(#) : Binop s} -> GroupSpec (#) e inv -> (a,b : s) ->
   a # (inv b # b) = a
-groupOpInvOp spec a b = o2 `trans` o3 where
+groupInverse2 spec a b = o2 `trans` o3 where
   o1 : inv b # b = e
   o1 = inverseL spec b
   o2 : a # (inv b # b) = a # e
@@ -60,9 +60,9 @@ groupOpInvOp spec a b = o2 `trans` o3 where
   o3 = neutralR (monoid spec) a
 
 
-groupOpInvOpBis : {(#) : Binop s} -> GroupSpec (#) e inv -> (a,b : s) ->
+groupInverse2Bis : {(#) : Binop s} -> GroupSpec (#) e inv -> (a,b : s) ->
   (a # inv b) # b = a
-groupOpInvOpBis spec a b = sym assoc `trans` groupOpInvOp spec a b where
+groupInverse2Bis spec a b = sym assoc `trans` groupInverse2 spec a b where
   assoc : a # (inv b # b) = (a # inv b) # b
   assoc = associative (semigroup (monoid spec)) a _ b
 
@@ -73,7 +73,7 @@ uniqueInverse {e} spec a b given = sym o4 `trans` o3 where
   o1 : inv a # (a # b) = inv a # e
   o1 = cong given
   o2 : inv a # (a # b) = b
-  o2 = groupInvOpOpBis spec a b
+  o2 = groupInverse1Bis spec a b
   o3 : inv a # e = b
   o3 = sym o1 `trans` o2
   o4 : inv a # e = inv a

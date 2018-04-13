@@ -1,0 +1,16 @@
+package verified-algebra
+
+opts = "--warnreach"
+
+pkgs = contrib
+
+modules =
+  Abbrev,
+  Semigroup,
+  Monoid,
+  Group,
+  Main
+
+executable = run
+
+main = Main

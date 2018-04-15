@@ -1,8 +1,5 @@
 module Proofs.GroupTheory
 
-import public Abbrev
-import Semigroup
-import Monoid
 import Group
 
 %default total
@@ -25,7 +22,7 @@ groupInverse1Bis : {(#) : Binop s} -> GroupSpec (#) e inv -> (a,b : s) ->
   inv a # (a # b) = b
 groupInverse1Bis spec a b = assoc `trans` groupInverse1 spec a b where
   assoc : inv a # (a # b) = (inv a # a) # b
-  assoc = associative (semigroup (monoid spec)) _ a b
+  assoc = associative (monoid spec) _ a b
 
 
 groupInverse2 : {(#) : Binop s} -> GroupSpec (#) e inv -> (a,b : s) ->
@@ -43,7 +40,7 @@ groupInverse2Bis : {(#) : Binop s} -> GroupSpec (#) e inv -> (a,b : s) ->
   (a # inv b) # b = a
 groupInverse2Bis spec a b = sym assoc `trans` groupInverse2 spec a b where
   assoc : a # (inv b # b) = (a # inv b) # b
-  assoc = associative (semigroup (monoid spec)) a _ b
+  assoc = associative (monoid spec) a _ b
 
 
 uniqueInverse : {(#) : Binop s} -> GroupSpec (#) e inv -> (a,b : s) ->

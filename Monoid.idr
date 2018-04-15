@@ -1,7 +1,7 @@
 module Monoid
 
 import public Abbrev
-import Semigroup
+import public Semigroup
 
 %default total
 %access export
@@ -17,11 +17,11 @@ isNeutralR : Binop s -> s -> Type
 isNeutralR (#) e = (x : _) -> x # e = x
 
 data MonoidSpec : Binop s -> s -> Type where
-  MkMonoid : SemigroupSpec op -> isNeutralL op e -> isNeutralR op e ->
+  MkMonoid : isAssociative op -> isNeutralL op e -> isNeutralR op e ->
     MonoidSpec op e
 
-semigroup : MonoidSpec op e -> SemigroupSpec op
-semigroup (MkMonoid g _ _) = g
+associative : MonoidSpec op e -> isAssociative op
+associative (MkMonoid g _ _) = g
 
 neutralL : MonoidSpec op e -> isNeutralL op e
 neutralL (MkMonoid _ l _) = l

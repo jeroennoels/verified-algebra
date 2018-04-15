@@ -1,8 +1,7 @@
 module Group
 
 import public Abbrev
-import Semigroup
-import Monoid
+import public Monoid
 
 %default total
 %access export

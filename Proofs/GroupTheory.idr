@@ -1,4 +1,4 @@
-module Proofs.Group
+module Proofs.GroupTheory
 
 import public Abbrev
 import Semigroup

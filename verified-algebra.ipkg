@@ -9,6 +9,7 @@ modules =
   Semigroup,
   Monoid,
   Group,
+  Proofs.GroupTheory,
   Main
 
 executable = run

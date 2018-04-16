@@ -20,7 +20,7 @@ data GroupSpec : Binop s -> s -> (s -> s) -> Type where
   MkGroup : MonoidSpec op e -> isInverseL op e inv -> isInverseR op e inv ->
     GroupSpec op e inv
 
-monoid : GroupSpec op e inv -> MonoidSpec op e
+monoid : GroupSpec op e _ -> MonoidSpec op e
 monoid (MkGroup m _ _) = m
 
 inverseL : GroupSpec op e inv -> isInverseL op e inv
@@ -37,5 +37,5 @@ data AbelianGroupSpec : Binop s -> s -> (s -> s) -> Type where
 group : AbelianGroupSpec op e inv -> GroupSpec op e inv
 group (MkAbelianGroup g _) = g
 
-abelian : AbelianGroupSpec op e inv -> isAbelian op
+abelian : AbelianGroupSpec op _ _ -> isAbelian op
 abelian (MkAbelianGroup _ a) = a

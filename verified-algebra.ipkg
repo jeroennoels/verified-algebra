@@ -1,14 +1,17 @@
 package verified-algebra
 
-opts = "--warnreach"
+sourcedir = src
 
-pkgs = contrib
+opts = "--warnreach"
 
 modules =
   Abbrev,
-  Semigroup,
-  Monoid,
-  Group,
+  Specifications.Semigroup,
+  Specifications.Monoid,
+  Specifications.Group,
+  Specifications.Order,
+  Specifications.Ring,
+  Specifications.TranslationInvariance,
   Proofs.GroupTheory,
   Main
 

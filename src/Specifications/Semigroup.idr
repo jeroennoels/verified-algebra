@@ -1,4 +1,4 @@
-module Semigroup
+module Specifications.Semigroup
 
 import public Abbrev
 

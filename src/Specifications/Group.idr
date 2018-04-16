@@ -1,7 +1,7 @@
-module Group
+module Specifications.Group
 
 import public Abbrev
-import public Monoid
+import public Specifications.Monoid
 
 %default total
 %access export

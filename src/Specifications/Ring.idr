@@ -1,9 +1,9 @@
-module Ring
+module Specifications.Ring
 
 import public Abbrev
-import Semigroup
-import Monoid
-import Group
+import Specifications.Semigroup
+import Specifications.Monoid
+import Specifications.Group
 
 %default total
 %access export

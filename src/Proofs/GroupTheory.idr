@@ -1,6 +1,6 @@
 module Proofs.GroupTheory
 
-import Group
+import Specifications.Group
 
 %default total
 %access export

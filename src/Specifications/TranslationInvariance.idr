@@ -1,8 +1,8 @@
-module TranslationInvariance
+module Specifications.TranslationInvariance
 
 import public Abbrev
-import Group
-import Order
+import Specifications.Group
+import Specifications.Order
 
 %default total
 %access export

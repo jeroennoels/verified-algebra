@@ -1,4 +1,4 @@
-module Order
+module Specifications.Order
 
 import public Abbrev
 

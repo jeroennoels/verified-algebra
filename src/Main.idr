@@ -4,6 +4,7 @@ import Specifications.Group
 import Specifications.TranslationInvariance
 import Specifications.Ring
 import Proofs.GroupTheory
+import Proofs.TranslationInvarianceTheory
 
 
 private

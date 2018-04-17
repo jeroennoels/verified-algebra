@@ -13,6 +13,8 @@ modules =
   Specifications.Ring,
   Specifications.TranslationInvariance,
   Proofs.GroupTheory,
+  Proofs.GroupCancelationLemmas,
+  Proofs.TranslationInvarianceTheory,
   Main
 
 executable = run

@@ -4,15 +4,13 @@ import public Abbrev
 import public Specifications.Monoid
 
 %default total
-%access export
+%access public export
 
 infixl 8 #
 
-public export
 isInverseL : Binop s -> s -> (s -> s) -> Type
 isInverseL (#) e inv = (x : _) -> inv x # x = e
 
-public export
 isInverseR : Binop s -> s -> (s -> s) -> Type
 isInverseR (#) e inv = (x : _) -> x # inv x = e
 
@@ -29,7 +27,6 @@ inverseL (MkGroup _ l _) = l
 inverseR : GroupSpec op e inv -> isInverseR op e inv
 inverseR (MkGroup _ _ r) = r
 
-public export
 data AbelianGroupSpec : Binop s -> s -> (s -> s) -> Type where
   MkAbelianGroup : GroupSpec op e inv -> isAbelian op ->
     AbelianGroupSpec op e inv

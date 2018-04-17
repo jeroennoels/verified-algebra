@@ -4,15 +4,13 @@ import public Abbrev
 import public Specifications.Semigroup
 
 %default total
-%access export
+%access public export
 
 infixl 8 #
 
-public export
 isNeutralL : Binop s -> s -> Type
 isNeutralL (#) e = (x : _) -> e # x = x
 
-public export
 isNeutralR : Binop s -> s -> Type
 isNeutralR (#) e = (x : _) -> x # e = x
 

@@ -5,19 +5,16 @@ import Specifications.Group
 import Specifications.Order
 
 %default total
-%access export
+%access public export
 
 infixl 8 #
 
-public export
 isTranslationInvariantL : Binop s -> Rel s -> Type
 isTranslationInvariantL (#) (<=) = (x,y,a : _) -> x <= y -> a # x <= a # y
 
-public export
 isTranslationInvariantR : Binop s -> Rel s -> Type
 isTranslationInvariantR (#) (<=) = (x,y,a : _) -> x <= y -> x # a <= y # a
 
-public export
 data PartiallyOrderedGroupSpec : Binop s -> s -> (s -> s) -> Rel s -> Type where
   MkPartiallyOrderedGroup : 
     GroupSpec op e inv -> 

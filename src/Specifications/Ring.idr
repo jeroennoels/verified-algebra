@@ -6,13 +6,11 @@ import Specifications.Monoid
 import Specifications.Group
 
 %default total
-%access export
+%access public export
 
-public export
 isDistributativeL : Binop s -> Binop s -> Type
 isDistributativeL (+) (*) = (a,x,y : _) -> a * (x + y) = a * x + a * y
 
-public export
 isDistributativeR : Binop s -> Binop s -> Type
 isDistributativeR (+) (*) = (a,x,y : _) -> (x + y) * a = x * a + y * a
 
@@ -29,7 +27,6 @@ distributativeR (MkPreRing _ r _) = r
 abelian : PreRingSpec add _ -> isAbelian add
 abelian (MkPreRing _ _ a) = a
 
-
 data RingSpec : (Binop s, s, s -> s) -> Binop s -> Type where
   MkRing : PreRingSpec add mul ->
     GroupSpec add zero neg ->
@@ -38,7 +35,6 @@ data RingSpec : (Binop s, s, s -> s) -> Binop s -> Type where
 
 additiveGroup : RingSpec (add, zero, neg) _ -> AbelianGroupSpec add zero neg
 additiveGroup (MkRing preRing group _) = MkAbelianGroup group (abelian preRing)
-
 
 data UnitalRingSpec : (Binop s, s, s -> s) -> (Binop s, s) -> Type where
   MkUnitalRing : RingSpec additive mul ->

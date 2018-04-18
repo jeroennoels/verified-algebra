@@ -19,7 +19,7 @@ double : Neg a => .{spec : additiveGroup {a}} ->
   (x : a) -> (y ** y + negate x = x)
 double {spec} x = 
   let y = x + x
-  in (y ** groupCancel3Bis spec x x)
+  in (y ** groupCancel3bis spec x x)
 
 -- For primitive types we postulate. 
 -- For Data.ZZ we would provide proof.

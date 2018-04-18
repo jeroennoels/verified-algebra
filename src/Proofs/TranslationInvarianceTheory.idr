@@ -19,7 +19,7 @@ orderInverseR spec a b c given = rewrite sym o2 in o1 where
   o1 : a # c # inv c <= b # inv c
   o1 = translationInvariantR spec (a # c) b _ given
   o2 : a # c # inv c = a
-  o2 = groupCancel3Bis (group spec) a c
+  o2 = groupCancel3bis (group spec) a c
 
 
 composeOrder : {(#) : Binop s} -> {(<=) : Rel s} ->

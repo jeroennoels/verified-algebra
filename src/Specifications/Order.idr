@@ -15,14 +15,18 @@ isAntisymmetric : Rel s -> Type
 isAntisymmetric rel = (x,y : _) -> rel x y -> rel y x -> x = y
 
 data PartialOrderSpec : Rel s -> Type where
-  MkPartialOrder : isReflexive rel -> isTransitive rel -> isAntisymmetric rel -> 
+  MkPartialOrder : isReflexive rel -> isTransitive rel -> isAntisymmetric rel ->
     PartialOrderSpec rel
 
 reflexive : PartialOrderSpec rel -> isReflexive rel
 reflexive (MkPartialOrder r _ _) = r
 
 transitive : PartialOrderSpec rel -> isTransitive rel
-transitive (MkPartialOrder _ t _) = t        
+transitive (MkPartialOrder _ t _) = t
 
 antisymmetric : PartialOrderSpec rel -> isAntisymmetric rel
-antisymmetric (MkPartialOrder _ _ a) = a        
+antisymmetric (MkPartialOrder _ _ a) = a
+
+
+data Between : {rel : Rel s} -> s -> (s, s) -> Type where
+  MkBetween : {rel : Rel s} -> rel a x -> rel x b -> Between {rel} x (a,b)

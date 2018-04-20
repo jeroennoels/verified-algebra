@@ -15,24 +15,34 @@ isTranslationInvariantL (#) (<=) = (x,y,a : _) -> x <= y -> a # x <= a # y
 isTranslationInvariantR : Binop s -> Rel s -> Type
 isTranslationInvariantR (#) (<=) = (x,y,a : _) -> x <= y -> x # a <= y # a
 
-data PartiallyOrderedGroupSpec : Binop s -> s -> (s -> s) -> Rel s -> Type where
-  MkPartiallyOrderedGroup : 
-    GroupSpec op e inv -> 
+data PartiallyOrderedMagmaSpec : Binop s -> Rel s -> Type where
+  MkPartiallyOrderedMagma :
     PartialOrderSpec leq ->
     isTranslationInvariantL op leq ->
     isTranslationInvariantR op leq ->
-    PartiallyOrderedGroupSpec op e inv leq
+    PartiallyOrderedMagmaSpec op leq
+
+order : PartiallyOrderedMagmaSpec _ leq -> PartialOrderSpec leq
+order (MkPartiallyOrderedMagma o _ _) = o
+
+translationInvariantL : PartiallyOrderedMagmaSpec op leq ->
+  isTranslationInvariantL op leq
+translationInvariantL (MkPartiallyOrderedMagma _ l _) = l
+
+translationInvariantR : PartiallyOrderedMagmaSpec op leq ->
+  isTranslationInvariantR op leq
+translationInvariantR (MkPartiallyOrderedMagma _ _ r) = r
+
+
+data PartiallyOrderedGroupSpec : Binop s -> s -> (s -> s) -> Rel s -> Type where
+  MkPartiallyOrderedGroup :
+    GroupSpec op inv e ->
+    PartiallyOrderedMagmaSpec op leq ->
+    PartiallyOrderedGroupSpec op inv e leq
+
+invariantOrder : PartiallyOrderedGroupSpec op _ _ leq ->
+  PartiallyOrderedMagmaSpec op leq
+invariantOrder (MkPartiallyOrderedGroup _ m) = m
 
 group : PartiallyOrderedGroupSpec op e inv _ -> GroupSpec op e inv
-group (MkPartiallyOrderedGroup g _ _ _) = g
-
-order : PartiallyOrderedGroupSpec _ _ _ leq -> PartialOrderSpec leq
-order (MkPartiallyOrderedGroup _ o _ _) = o
-
-translationInvariantL : PartiallyOrderedGroupSpec op _ _ leq -> 
-  isTranslationInvariantL op leq
-translationInvariantL (MkPartiallyOrderedGroup _ _ l _) = l
-
-translationInvariantR : PartiallyOrderedGroupSpec op _ _ leq -> 
-  isTranslationInvariantR op leq
-translationInvariantR (MkPartiallyOrderedGroup _ _ _ r) = r
+group (MkPartiallyOrderedGroup g _) = g

@@ -38,3 +38,12 @@ translateIntervalR spec c (MkBetween ax xb) = MkBetween
   (translationInvariantR spec _ _ _ ax)
   (translationInvariantR spec _ _ _ xb)
 
+
+composeIntervals : {(#) : Binop s} ->
+  PartiallyOrderedMagmaSpec (#) leq ->
+    Between leq x (a,b) -> 
+    Between leq y (c,d) -> 
+    Between leq (x # y) (a # c, b # d)
+composeIntervals spec (MkBetween ax xb) (MkBetween cy yd) = MkBetween
+  (composeOrder spec _ _ _ _ ax cy) 
+  (composeOrder spec _ _ _ _ xb yd)

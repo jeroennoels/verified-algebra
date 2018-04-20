@@ -28,5 +28,5 @@ antisymmetric : PartialOrderSpec rel -> isAntisymmetric rel
 antisymmetric (MkPartialOrder _ _ a) = a
 
 
-data Between : {rel : Rel s} -> s -> (s, s) -> Type where
-  MkBetween : {rel : Rel s} -> rel a x -> rel x b -> Between {rel} x (a,b)
+data Between : Rel s -> s -> (s,s) -> Type where
+  MkBetween : rel a x -> rel x b -> Between rel x (a,b)

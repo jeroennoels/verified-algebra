@@ -1,4 +1,4 @@
-module Specifications.Ring
+module Specifications.OrderedRing
 
 import public Abbrev
 
@@ -13,4 +13,7 @@ data PartiallyOrderedRingSpec : (Binop s, s, s -> s) -> Binop s -> Rel s -> Type
   where MkPartiallyOrderedRing :
     RingSpec (add, neg, zero) mul ->
     PartiallyOrderedMagmaSpec add leq ->
-    PartiallyOrderedRingSpec (add, inv, zero) mul leq
+    PartiallyOrderedRingSpec (add, neg, zero) mul leq
+
+ring : PartiallyOrderedRingSpec additive mul _ -> RingSpec additive mul
+ring (MkPartiallyOrderedRing r _) = r 

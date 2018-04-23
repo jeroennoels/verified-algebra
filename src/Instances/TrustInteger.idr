@@ -22,3 +22,5 @@ data IntegerLeq : Integer -> Integer -> Type where
 postulate integerPartiallyOrderedRing : 
   PartiallyOrderedRingSpec ((+), 0, negate) (*) IntegerLeq
 
+integerRing : RingSpec ((+), 0, negate) (*)
+integerRing = ring integerPartiallyOrderedRing

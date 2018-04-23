@@ -27,6 +27,9 @@ transitive (MkPartialOrder _ t _) = t
 antisymmetric : PartialOrderSpec rel -> isAntisymmetric rel
 antisymmetric (MkPartialOrder _ _ a) = a
 
+isTotalOrder : Rel s -> Type
+isTotalOrder rel = (x,y : _) -> Either (rel x y) (rel y x)
+
 
 data Between : Rel s -> s -> (s,s) -> Type where
   MkBetween : rel a x -> rel x b -> Between rel x (a,b)

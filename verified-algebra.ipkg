@@ -12,6 +12,7 @@ modules =
   Specifications.Order,
   Specifications.Ring,
   Specifications.TranslationInvariance,
+  Specifications.OrderedRing,
   Proofs.GroupTheory,
   Proofs.GroupCancelationLemmas,
   Proofs.TranslationInvarianceTheory,

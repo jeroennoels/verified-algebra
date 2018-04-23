@@ -33,10 +33,13 @@ data RingSpec : (Binop s, s, s -> s) -> Binop s -> Type where
     isAssociative mul ->
     RingSpec (add, zero, neg) mul
 
-additiveGroup : RingSpec (add, zero, neg) _ -> AbelianGroupSpec add zero neg
-additiveGroup (MkRing preRing group _) = MkAbelianGroup group (abelian preRing)
+abelianGroup : RingSpec (add, zero, neg) _ -> AbelianGroupSpec add zero neg
+abelianGroup (MkRing preRing group _) = MkAbelianGroup group (abelian preRing)
 
 data UnitalRingSpec : (Binop s, s, s -> s) -> (Binop s, s) -> Type where
   MkUnitalRing : RingSpec additive mul ->
     isNeutralL mul one -> isNeutralR mul one ->
     UnitalRingSpec additive (mul, one)
+
+ring : UnitalRingSpec additive (mul, _) -> RingSpec additive mul
+ring (MkUnitalRing r _ _) = r 

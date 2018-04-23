@@ -21,24 +21,6 @@ composeOrder spec a b c d ab cd =
   in transitive (order spec) (a # c) (b # c) (b # d) pp qq
 
 
-translateIntervalR : {(#) : Binop s} ->
-  PartiallyOrderedMagmaSpec (#) leq -> (c : s) ->
-    Between leq x (a,b) -> Between leq (x # c) (a # c, b # c)
-translateIntervalR spec c (MkBetween ax xb) = MkBetween
-  (translationInvariantR spec _ _ _ ax)
-  (translationInvariantR spec _ _ _ xb)
-
-
-composeIntervals : {(#) : Binop s} ->
-  PartiallyOrderedMagmaSpec (#) leq ->
-    Between leq x (a,b) ->
-    Between leq y (c,d) ->
-    Between leq (x # y) (a # c, b # d)
-composeIntervals spec (MkBetween ax xb) (MkBetween cy yd) = MkBetween
-  (composeOrder spec _ _ _ _ ax cy)
-  (composeOrder spec _ _ _ _ xb yd)
-
-
 orderInverseR : {(#) : Binop s} -> {(<=) : Rel s} ->
   PartiallyOrderedGroupSpec (#) e inv (<=) -> (a,b,c : s) ->
     a # c <= b -> a <= b # inv c
@@ -61,5 +43,3 @@ inverseReversesOrder spec a b given = rewriteRelation leq o3 o4 o2 where
   o3 = groupCancel1 (group spec) a _
   o4 : inv a # b # inv b = inv a
   o4 = groupCancel3bis (group spec) _ b
-
-

@@ -8,6 +8,8 @@ import Proofs.GroupCancelationLemmas
 import Proofs.GroupTheory
 import Proofs.TranslationInvarianceTheory
 
+import Instances.TrustInteger
+
 -- Here we bring in the Neg interface to get a succint additive
 -- notation for groups
 additiveGroup : Neg a => Type
@@ -21,13 +23,9 @@ double {spec} x =
   let y = x + x
   in (y ** groupCancel3bis spec x x)
 
--- For primitive types we postulate. 
--- For Data.ZZ we would provide proof.
-postulate integerGroup : GroupSpec {s = Integer} (+) 0 negate
-
 -- Now we actually compute something, at run time!  :^)
 test : Integer -> Integer
-test x = fst (double {spec = integerGroup} x)
+test x = fst (double {spec = group (abelianGroup integerRing)} x)
 
 main : IO ()
 main = printLn (test 123)

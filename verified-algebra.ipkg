@@ -2,6 +2,8 @@ package verified-algebra
 
 sourcedir = src
 
+pkgs = contrib
+
 opts = "--warnreach"
 
 modules =
@@ -18,6 +20,7 @@ modules =
   Proofs.TranslationInvarianceTheory,
   Proofs.Interval,
   Instances.TrustInteger,
+  Instances.ZZ,
   Main
 
 executable = run

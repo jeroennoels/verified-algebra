@@ -1,16 +1,12 @@
-module TrustInteger
+module Instances.TrustInteger
 
 import public Data.So
 
 import Specifications.Group
-import Specifications.Order
-import Specifications.TranslationInvariance
 import Specifications.Ring
+import Specifications.Order
 import Specifications.OrderedRing
-
-import Proofs.GroupCancelationLemmas
-import Proofs.GroupTheory
-import Proofs.TranslationInvarianceTheory
+import Specifications.TranslationInvariance
 
 %default total
 %access public export

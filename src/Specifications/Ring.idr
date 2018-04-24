@@ -12,7 +12,7 @@ isDistributativeL : Binop s -> Binop s -> Type
 isDistributativeL (+) (*) = (a,x,y : _) -> a * (x + y) = a * x + a * y
 
 isDistributativeR : Binop s -> Binop s -> Type
-isDistributativeR (+) (*) = (a,x,y : _) -> (x + y) * a = x * a + y * a
+isDistributativeR (+) (*) = (x,y,a : _) -> (x + y) * a = x * a + y * a
 
 data PreRingSpec : Binop s -> Binop s -> Type where
   MkPreRing : isDistributativeL add mul -> isDistributativeR add mul ->

@@ -46,3 +46,22 @@ invariantOrder (MkPartiallyOrderedGroup _ m) = m
 
 group : PartiallyOrderedGroupSpec op e inv _ -> GroupSpec op e inv
 group (MkPartiallyOrderedGroup g _) = g
+
+
+isDiscreteOrder : Binop s -> Rel s -> s -> s -> Type
+isDiscreteOrder (+) (<=) zero unit = (x : _) -> 
+  Not (x = zero) -> x <= zero -> unit + x <= zero
+
+data DiscreteOrderedGroupSpec : (Binop s, s, s -> s) -> Rel s -> s -> Type
+  where
+  MkDiscreteOrderedGroupSpec :
+    PartiallyOrderedGroupSpec add zero neg leq ->
+    isAbelian add ->
+    isTotalOrder leq ->
+    isDiscreteOrder add leq zero unit ->
+    Not (zero = unit) -> leq zero unit ->
+    DiscreteOrderedGroupSpec (add, zero, neg) leq unit
+
+orderedGroup : DiscreteOrderedGroupSpec (add, zero, neg) leq unit ->
+  PartiallyOrderedGroupSpec add zero neg leq
+orderedGroup (MkDiscreteOrderedGroupSpec g _ _ _ _ _) = g

@@ -43,3 +43,11 @@ inverseReversesOrder spec a b given = rewriteRelation leq o3 o4 o2 where
   o3 = groupCancel1 (group spec) a _
   o4 : inv a # b # inv b = inv a
   o4 = groupCancel3bis (group spec) _ b
+
+
+strictOrderSeparates : {add : Binop s} -> {(<=) : Rel s} ->
+  DiscreteOrderedGroupSpec (add, zero, neg) (<=) unit -> (a,b : s) ->
+    Not (a = b) -> a <= b -> add unit a <= b
+strictOrderSeparates {add} {neg} spec a b diff given = ?qed where
+  o1 : add (neg b) a <= add (neg b) b
+  o1 = translationInvariantL (invariantOrder (orderedGroup spec)) a b _ given

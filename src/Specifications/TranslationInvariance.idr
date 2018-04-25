@@ -59,9 +59,8 @@ data DiscreteOrderedGroupSpec : (Binop s, s, s -> s) -> Rel s -> s -> Type
     isAbelian add ->
     isTotalOrder leq ->
     isDiscreteOrder add leq zero unit ->
-    Not (zero = unit) -> leq zero unit ->
     DiscreteOrderedGroupSpec (add, zero, neg) leq unit
 
-orderedGroup : DiscreteOrderedGroupSpec (add, zero, neg) leq unit ->
+orderedGroup : DiscreteOrderedGroupSpec (add, zero, neg) leq _ ->
   PartiallyOrderedGroupSpec add zero neg leq
-orderedGroup (MkDiscreteOrderedGroupSpec g _ _ _ _ _) = g
+orderedGroup (MkDiscreteOrderedGroupSpec g _ _ _) = g

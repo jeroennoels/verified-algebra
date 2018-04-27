@@ -20,11 +20,12 @@ lemmaCancel spec a b c = o1 @== cong o2 where
   o1 = associative (monoid spec) a _ c
   o2 : (b # inv c) # c = b
   o2 = groupCancel2bis spec b c
- 
-strictOrderSeparates : {(<=) : Rel s} ->
-  DiscreteOrderedGroupSpec add (<=) unit -> (a,b : s) ->
-    Not (a = b) -> a <= b -> (fst add) unit a <= b
-strictOrderSeparates {add = ((+), zero, neg)} {unit} spec a b diff given = o9 where
+
+  
+strictOrderSeparates : {(+) : Binop s} -> {(<=) : Rel s} ->
+  DiscreteOrderedGroupSpec (+) zero neg (<=) unit -> (a,b : s) ->
+    Not (a = b) -> a <= b -> unit + a <= b
+strictOrderSeparates spec a b diff given = o9 where
   o1 : a + neg b <= b + neg b
   o1 = translationInvariantR (invariantOrder (orderedGroup spec)) a b _ given
   o2 : b + neg b = zero

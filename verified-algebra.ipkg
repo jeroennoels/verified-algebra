@@ -18,6 +18,7 @@ modules =
   Proofs.GroupTheory,
   Proofs.GroupCancelationLemmas,
   Proofs.TranslationInvarianceTheory,
+  Proofs.DiscreteOrderTheory,
   Proofs.Interval,
   Instances.TrustInteger,
   Instances.ZZ,

@@ -10,14 +10,13 @@ infixl 8 #
 
 groupInverseUnique : {(#) : Binop s} -> GroupSpec (#) e inv -> (a,b : s) ->
   a # b = e -> inv a = b
-groupInverseUnique {e} spec a b given = sym o4 `trans` o3 
-  where
+groupInverseUnique {e} spec a b given = o4 @== o3 where
   o1 : inv a # (a # b) = inv a # e
   o1 = cong given
   o2 : inv a # (a # b) = b
   o2 = groupCancel1bis spec a b
   o3 : inv a # e = b
-  o3 = sym o1 `trans` o2
+  o3 = o1 @== o2
   o4 : inv a # e = inv a
   o4 = neutralR (monoid spec) _
 
@@ -50,8 +49,7 @@ groupInverseNeutral {e} spec =
 
 groupInverseAnti : {(#) : Binop s} -> GroupSpec (#) e inv -> (a,b : s) ->
   inv (a # b) = inv b # inv a
-groupInverseAnti spec a b = groupInverseUniqueBis spec _ _ o3 
-  where
+groupInverseAnti spec a b = groupInverseUniqueBis spec _ _ o3 where
   o1 : inv b # inv a # a = inv b
   o1 = groupCancel2bis spec _ a
   o2 : inv b # inv a # a # b = inv b # b
@@ -60,14 +58,10 @@ groupInverseAnti spec a b = groupInverseUniqueBis spec _ _ o3
   o3 = associative (monoid spec) _ a b === o2 === inverseL spec b
 
 
-groupInequalityIsTranslationInvariantL : {(#) : Binop s} ->
-  GroupSpec (#) e inv -> (a,x,y : s) ->
-    Not (x = y) -> Not (a # x = a # y)
-groupInequalityIsTranslationInvariantL spec a x y contra assume = contra o2
-  where
-  o1 : inv a # (a # x) = inv a # (a # y)
-  o1 = cong assume
-  o2 : x = y
-  o2 = sym (groupCancel1bis spec a x) === o1 === (groupCancel1bis spec a y)
-
-
+groupInverseAndEquality : {(#) : Binop s} -> GroupSpec (#) e inv -> (a,b : s) ->
+  a # inv b = e -> a = b
+groupInverseAndEquality {e} spec a b given = o2 @== o1 where
+  o1 : a # inv b # b = b
+  o1 = cong {f = (# b)} given `trans` neutralL (monoid spec) b
+  o2 : a # inv b # b = a
+  o2 = groupCancel2bis spec a b

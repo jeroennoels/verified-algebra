@@ -59,3 +59,12 @@ groupCancel3bis : {(#) : Binop s} -> GroupSpec (#) e inv -> (a,b : s) ->
 groupCancel3bis spec a b = sym assoc `trans` groupCancel3 spec a b where
   assoc : a # (b # inv b) = (a # b) # inv b
   assoc = associative (monoid spec) a b _
+
+
+groupTranslationInjectiveL : {(#) : Binop s} ->
+  GroupSpec (#) e inv -> (a,x,y : s) -> a # x = a # y -> x = y
+groupTranslationInjectiveL spec a x y given = o2 where
+  o1 : inv a # (a # x) = inv a # (a # y)
+  o1 = cong given
+  o2 : x = y
+  o2 = groupCancel1bis spec a x @== o1 === groupCancel1bis spec a y

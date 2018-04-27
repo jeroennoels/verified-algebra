@@ -64,3 +64,7 @@ data DiscreteOrderedGroupSpec : (Binop s, s, s -> s) -> Rel s -> s -> Type
 orderedGroup : DiscreteOrderedGroupSpec (add, zero, neg) leq _ ->
   PartiallyOrderedGroupSpec add zero neg leq
 orderedGroup (MkDiscreteOrderedGroupSpec g _ _ _) = g
+
+discreteOrder : DiscreteOrderedGroupSpec (add, zero, _) leq unit ->
+  isDiscreteOrder add leq zero unit
+discreteOrder (MkDiscreteOrderedGroupSpec _ _ _ d) = d

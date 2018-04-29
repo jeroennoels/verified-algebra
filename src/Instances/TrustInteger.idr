@@ -11,9 +11,8 @@ import Specifications.TranslationInvariance
 %default total
 %access public export
 
-data IntegerLeq : Integer -> Integer -> Type where
-  CheckLeq : So (a <= b) -> IntegerLeq a b
-  CheckNotLeq : So (not (a <= b)) -> IntegerLeq b a
+IntegerLeq : Integer -> Integer -> Type
+IntegerLeq a b = So (a <= b)
 
 postulate integerPartiallyOrderedRing :
   PartiallyOrderedRingSpec (+) 0 negate (*) IntegerLeq

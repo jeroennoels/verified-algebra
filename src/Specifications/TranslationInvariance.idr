@@ -70,3 +70,7 @@ orderedGroup (MkDiscreteOrderedGroupSpec g _ _ _) = g
 discreteOrder : DiscreteOrderedGroupSpec add zero _ leq unit ->
   isDiscreteOrder add leq zero unit
 discreteOrder (MkDiscreteOrderedGroupSpec _ _ _ d) = d
+
+
+SymRange : GroupSpec {s} _ _ neg -> Rel s -> s -> s -> Type
+SymRange spec rel x u = Between rel x (neg u, u)

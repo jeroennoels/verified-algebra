@@ -9,7 +9,7 @@ infixl 8 #
 
 groupCancel1 : {(#) : Binop s} -> GroupSpec (#) e inv -> (a,b : s) ->
   (inv a # a) # b = b
-groupCancel1 spec a b = o2 `trans` o3 where
+groupCancel1 spec a b = o2 === o3 where
   o1 : inv a # a = e
   o1 = inverseL spec a
   o2 : (inv a # a) # b = e # b
@@ -20,14 +20,14 @@ groupCancel1 spec a b = o2 `trans` o3 where
 
 groupCancel1bis : {(#) : Binop s} -> GroupSpec (#) e inv -> (a,b : s) ->
   inv a # (a # b) = b
-groupCancel1bis spec a b = assoc `trans` groupCancel1 spec a b where
+groupCancel1bis spec a b = assoc === groupCancel1 spec a b where
   assoc : inv a # (a # b) = (inv a # a) # b
   assoc = associative (monoid spec) _ a b
 
 
 groupCancel2 : {(#) : Binop s} -> GroupSpec (#) e inv -> (a,b : s) ->
   a # (inv b # b) = a
-groupCancel2 spec a b = o2 `trans` o3 where
+groupCancel2 spec a b = o2 === o3 where
   o1 : inv b # b = e
   o1 = inverseL spec b
   o2 : a # (inv b # b) = a # e
@@ -38,14 +38,14 @@ groupCancel2 spec a b = o2 `trans` o3 where
 
 groupCancel2bis : {(#) : Binop s} -> GroupSpec (#) e inv -> (a,b : s) ->
   (a # inv b) # b = a
-groupCancel2bis spec a b = sym assoc `trans` groupCancel2 spec a b where
+groupCancel2bis spec a b = assoc @== groupCancel2 spec a b where
   assoc : a # (inv b # b) = (a # inv b) # b
   assoc = associative (monoid spec) a _ b
 
 
 groupCancel3 : {(#) : Binop s} -> GroupSpec (#) e inv -> (a,b : s) ->
   a # (b # inv b) = a
-groupCancel3 spec a b = o2 `trans` o3 where
+groupCancel3 spec a b = o2 === o3 where
   o1 : b # inv b = e
   o1 = inverseR spec b
   o2 : a # (b # inv b) = a # e
@@ -56,7 +56,7 @@ groupCancel3 spec a b = o2 `trans` o3 where
 
 groupCancel3bis : {(#) : Binop s} -> GroupSpec (#) e inv -> (a,b : s) ->
   (a # b) # inv b = a
-groupCancel3bis spec a b = sym assoc `trans` groupCancel3 spec a b where
+groupCancel3bis spec a b = assoc @== groupCancel3 spec a b where
   assoc : a # (b # inv b) = (a # b) # inv b
   assoc = associative (monoid spec) a b _
 

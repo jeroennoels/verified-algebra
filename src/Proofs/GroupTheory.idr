@@ -31,7 +31,7 @@ groupInverseInvolution spec a =
 groupInverseMutual : GroupSpec _ _ inv -> (a,b : s) ->
   inv a = b -> inv b = a
 groupInverseMutual spec a b given =
-  cong (sym given) `trans` groupInverseInvolution spec a
+  cong given @== groupInverseInvolution spec a
 
 
 groupInverseUniqueBis : {(#) : Binop s} -> GroupSpec (#) e inv -> (a,b : s) ->
@@ -62,6 +62,6 @@ groupInverseAndEquality : {(#) : Binop s} -> GroupSpec (#) e inv -> (a,b : s) ->
   a # inv b = e -> a = b
 groupInverseAndEquality {e} spec a b given = o2 @== o1 where
   o1 : a # inv b # b = b
-  o1 = cong {f = (# b)} given `trans` neutralL (monoid spec) b
+  o1 = cong {f = (# b)} given === neutralL (monoid spec) b
   o2 : a # inv b # b = a
   o2 = groupCancel2bis spec a b

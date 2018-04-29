@@ -9,11 +9,12 @@ import Specifications.TranslationInvariance
 %access public export
 
 -- todo multiplication of positive elements
-data PartiallyOrderedRingSpec : (Binop s, s, s -> s) -> Binop s -> Rel s -> Type
+data PartiallyOrderedRingSpec : 
+  Binop s -> s -> (s -> s) -> Binop s -> Rel s -> Type
   where MkPartiallyOrderedRing :
-    RingSpec (add, neg, zero) mul ->
+    RingSpec add zero neg mul ->
     PartiallyOrderedMagmaSpec add leq ->
-    PartiallyOrderedRingSpec (add, neg, zero) mul leq
+    PartiallyOrderedRingSpec add zero neg mul leq
 
-ring : PartiallyOrderedRingSpec additive mul _ -> RingSpec additive mul
+ring : PartiallyOrderedRingSpec add zero neg mul _ -> RingSpec add zero neg mul
 ring (MkPartiallyOrderedRing r _) = r 

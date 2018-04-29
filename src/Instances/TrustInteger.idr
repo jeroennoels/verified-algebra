@@ -15,8 +15,8 @@ data IntegerLeq : Integer -> Integer -> Type where
   CheckLeq : So (a <= b) -> IntegerLeq a b
   CheckNotLeq : So (not (a <= b)) -> IntegerLeq b a
 
-postulate integerPartiallyOrderedRing : 
-  PartiallyOrderedRingSpec ((+), 0, negate) (*) IntegerLeq
+postulate integerPartiallyOrderedRing :
+  PartiallyOrderedRingSpec (+) 0 negate (*) IntegerLeq
 
-integerRing : RingSpec ((+), 0, negate) (*)
+integerRing : RingSpec (+) 0 negate (*)
 integerRing = ring integerPartiallyOrderedRing

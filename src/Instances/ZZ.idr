@@ -30,8 +30,8 @@ zzPreRing = MkPreRing
   multDistributesOverPlusLeftZ
   plusCommutativeZ
 
-zzRing : RingSpec (ZZ.plusZ, 0, ZZnegate) ZZ.multZ
+zzRing : RingSpec ZZ.plusZ 0 ZZnegate ZZ.multZ
 zzRing = MkRing zzPreRing zzGroup multAssociativeZ
 
-zzUnitalRing : UnitalRingSpec (ZZ.plusZ, 0, ZZnegate) (ZZ.multZ, 1)
+zzUnitalRing : UnitalRingSpec ZZ.plusZ 0 ZZnegate ZZ.multZ 1
 zzUnitalRing = MkUnitalRing zzRing multOneLeftNeutralZ multOneRightNeutralZ

@@ -27,19 +27,21 @@ distributativeR (MkPreRing _ r _) = r
 abelian : PreRingSpec add _ -> isAbelian add
 abelian (MkPreRing _ _ a) = a
 
-data RingSpec : (Binop s, s, s -> s) -> Binop s -> Type where
+
+data RingSpec : Binop s -> s -> (s -> s) -> Binop s -> Type where
   MkRing : PreRingSpec add mul ->
     GroupSpec add zero neg ->
     isAssociative mul ->
-    RingSpec (add, zero, neg) mul
+    RingSpec add zero neg mul
 
-abelianGroup : RingSpec (add, zero, neg) _ -> AbelianGroupSpec add zero neg
+abelianGroup : RingSpec add zero neg _ -> AbelianGroupSpec add zero neg
 abelianGroup (MkRing preRing group _) = MkAbelianGroup group (abelian preRing)
 
-data UnitalRingSpec : (Binop s, s, s -> s) -> (Binop s, s) -> Type where
-  MkUnitalRing : RingSpec additive mul ->
-    isNeutralL mul one -> isNeutralR mul one ->
-    UnitalRingSpec additive (mul, one)
 
-ring : UnitalRingSpec additive (mul, _) -> RingSpec additive mul
-ring (MkUnitalRing r _ _) = r 
+data UnitalRingSpec : Binop s -> s -> (s -> s) -> Binop s -> s -> Type where
+  MkUnitalRing : RingSpec add zero neg mul ->
+    isNeutralL mul one -> isNeutralR mul one ->
+    UnitalRingSpec add zero neg mul one
+
+ring : UnitalRingSpec add zero neg mul _ -> RingSpec add zero neg mul
+ring (MkUnitalRing r _ _) = r

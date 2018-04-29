@@ -43,3 +43,13 @@ inverseReversesOrder spec a b given = rewriteRelation leq o3 o4 o2 where
   o3 = groupCancel1 (group spec) a _
   o4 : inv a # b # inv b = inv a
   o4 = groupCancel3bis (group spec) _ b
+
+
+groupInverseAndOrder : {(#) : Binop s} ->
+  PartiallyOrderedGroupSpec (#) e inv leq -> (a,b : s) ->
+    a `leq` b -> a # inv b `leq` e
+groupInverseAndOrder spec a b given = rewrite sym o2 in o1 where
+  o1 : a # inv b `leq` b # inv b
+  o1 = translationInvariantR (invariantOrder spec) a b _ given
+  o2 : b # inv b = e
+  o2 = inverseR (group spec) b

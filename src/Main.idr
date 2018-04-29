@@ -7,8 +7,11 @@ import Specifications.Ring
 import Proofs.GroupCancelationLemmas
 import Proofs.GroupTheory
 import Proofs.TranslationInvarianceTheory
+import Proofs.Interval
+import Proofs.DiscreteOrderTheory
 
 import Instances.TrustInteger
+import Instances.ZZ
 
 -- Here we bring in the Neg interface to get a succint additive
 -- notation for groups

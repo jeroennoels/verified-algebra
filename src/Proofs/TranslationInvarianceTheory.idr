@@ -1,5 +1,7 @@
 module Proofs.TranslationInvarianceTheory
 
+import Util
+
 import Specifications.Group
 import Specifications.Order
 import Specifications.TranslationInvariance

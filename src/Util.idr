@@ -1,7 +1,6 @@
 module Util
 
 import Abbrev
-import Data.So
 
 %default total
 %access public export

@@ -5,6 +5,7 @@ import Util
 import Specifications.Group
 import Specifications.Order
 import Specifications.TranslationInvariance
+import Specifications.OrderedGroup
 import Specifications.DiscreteOrderedGroup
 
 import Proofs.GroupTheory
@@ -43,10 +44,10 @@ strictOrderSeparates : {(+) : Binop s} -> {(<=) : Rel s} ->
     Not (a = b) -> a <= b -> unit + a <= b
 strictOrderSeparates spec a b diff given = o4 where
   o1 : a + neg b <= zero
-  o1 = groupInverseAndOrder (orderedGroup spec) a b given
+  o1 = groupInverseAndOrder (partiallyOrderedGroup spec) a b given
   o2 : a + neg b = zero -> a = b
-  o2 = groupInverseAndEquality (group (orderedGroup spec)) a b
+  o2 = groupInverseAndEquality (group spec) a b
   o3 : unit + (a + neg b) <= zero
   o3 = discreteOrder spec (a + neg b) (contraposition o2 diff) o1
   o4 : unit + a <= b
-  o4 = lemmaOrder (orderedGroup spec) unit a b o3
+  o4 = lemmaOrder (partiallyOrderedGroup spec) unit a b o3

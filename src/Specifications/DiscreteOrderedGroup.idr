@@ -4,6 +4,7 @@ import public Abbrev
 import Specifications.Group
 import Specifications.Order
 import Specifications.TranslationInvariance
+import Specifications.OrderedGroup
 
 %default total
 %access public export
@@ -15,22 +16,28 @@ isDiscreteOrder (+) (<=) zero unit = (x : _) ->
 
 data DiscreteOrderedGroupSpec : Binop s -> s -> (s -> s) -> Rel s -> s -> Type
   where
-  MkDiscreteOrderedGroupSpec :
-    PartiallyOrderedGroupSpec add zero neg leq ->
+  MkDiscreteOrderedGroup :
+    OrderedGroupSpec add zero neg leq ->
     isAbelian add ->
-    isTotalOrder leq ->
     isDiscreteOrder add leq zero unit ->
     DiscreteOrderedGroupSpec add zero neg leq unit
 
 
 orderedGroup : DiscreteOrderedGroupSpec add zero neg leq _ ->
+  OrderedGroupSpec add zero neg leq
+orderedGroup (MkDiscreteOrderedGroup g _ _) = g
+
+partiallyOrderedGroup : DiscreteOrderedGroupSpec add zero neg leq _ ->
   PartiallyOrderedGroupSpec add zero neg leq
-orderedGroup (MkDiscreteOrderedGroupSpec g _ _ _) = g
+partiallyOrderedGroup spec = partiallyOrderedGroup (orderedGroup spec)
+
+group : DiscreteOrderedGroupSpec add zero neg _ _ -> GroupSpec add zero neg
+group spec = group (partiallyOrderedGroup spec)
+
 
 discreteOrder : DiscreteOrderedGroupSpec add zero _ leq unit ->
   isDiscreteOrder add leq zero unit
-discreteOrder (MkDiscreteOrderedGroupSpec _ _ _ d) = d
+discreteOrder (MkDiscreteOrderedGroup _ _ d) = d
 
 totalOrder : DiscreteOrderedGroupSpec _ _ _ leq _ -> TotalOrderSpec leq
-totalOrder (MkDiscreteOrderedGroupSpec p _ t _) =
-  MkTotalOrder (order (invariantOrder p)) t
+totalOrder (MkDiscreteOrderedGroup p _ _) = totalOrder p

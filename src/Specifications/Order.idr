@@ -31,5 +31,15 @@ isTotalOrder : Rel s -> Type
 isTotalOrder rel = (x,y : _) -> Either (rel x y) (rel y x)
 
 
+data TotalOrderSpec : Rel s -> Type where
+  MkTotalOrder : PartialOrderSpec rel -> isTotalOrder rel -> TotalOrderSpec rel
+
+partialOrder : TotalOrderSpec rel -> PartialOrderSpec rel
+partialOrder (MkTotalOrder p _) = p
+
+totalOrder : TotalOrderSpec rel -> isTotalOrder rel
+totalOrder (MkTotalOrder _ t) = t
+
+
 data Between : Rel s -> s -> (s,s) -> Type where
   MkBetween : rel a x -> rel x b -> Between rel x (a,b)

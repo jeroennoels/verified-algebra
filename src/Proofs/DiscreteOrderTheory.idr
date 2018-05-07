@@ -5,6 +5,7 @@ import Util
 import Specifications.Group
 import Specifications.Order
 import Specifications.TranslationInvariance
+import Specifications.DiscreteOrderedGroup
 
 import Proofs.GroupTheory
 import Proofs.GroupCancelationLemmas

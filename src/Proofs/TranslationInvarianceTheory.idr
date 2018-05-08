@@ -55,3 +55,13 @@ groupInverseAndOrder spec a b given = rewrite sym o2 in o1 where
   o1 = translationInvariantR (invariantOrder spec) a b _ given
   o2 : b # inv b = e
   o2 = inverseR (group spec) b
+
+
+invertNegative : {(<=) : Rel s} ->
+  PartiallyOrderedGroupSpec _ zero neg (<=) -> (a : s) ->
+    a <= zero -> zero <= neg a
+invertNegative spec a negative = rewrite sym o2 in o1 where
+  o1 : neg zero <= neg a
+  o1 = inverseReversesOrder spec a zero negative
+  o2 : neg zero = zero
+  o2 = groupInverseNeutral (group spec)

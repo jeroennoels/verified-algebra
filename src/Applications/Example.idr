@@ -19,7 +19,7 @@ orderedGroupSpec : Neg s => Rel s -> Type
 orderedGroupSpec {s} leq = OrderedGroupSpec {s} (+) 0 negate leq
 
 absoluteValue : Neg s => (leq : Rel s) -> (decide : decisionProcedure leq) ->
-  orderedGroupSpec {s} leq -> s -> (a ** leq 0 a)
+  .orderedGroupSpec {s} leq -> s -> (a ** leq 0 a)
 absoluteValue {s} leq decide spec a =
   case decide a 0 of
     Yes prf => (negate a ** invertNegative (partiallyOrderedGroup spec) a prf)

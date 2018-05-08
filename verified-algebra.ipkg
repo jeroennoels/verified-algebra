@@ -26,6 +26,7 @@ modules =
   Proofs.Interval,
   Instances.TrustInteger,
   Instances.ZZ,
+  Applications.Example,
   Main
 
 executable = run

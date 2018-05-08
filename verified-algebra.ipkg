@@ -18,7 +18,7 @@ modules =
   Specifications.OrderedGroup,
   Specifications.DiscreteOrderedGroup,
   Specifications.OrderedRing,
-  Proofs.Misc,
+  Proofs.OrderTheory,
   Proofs.GroupTheory,
   Proofs.GroupCancelationLemmas,
   Proofs.TranslationInvarianceTheory,

@@ -1,4 +1,4 @@
-module Proofs.Misc
+module Proofs.OrderTheory
 
 import Abbrev
 import Util
@@ -9,7 +9,6 @@ import Specifications.Order
 
 rewriteReflexive : isReflexive rel -> (a,b : s) -> a = b -> rel a b
 rewriteReflexive {rel} spec a b eq = rewriteRelation rel Refl eq (spec a)
-
 
 orderContra : TotalOrderSpec leq -> (a,b : s) -> 
   Not (leq a b) -> (leq b a, Not (a = b))

@@ -17,3 +17,6 @@ infixl 5 @==
 
 (@==) : a = b -> a = c -> b = c
 (@==) Refl Refl = Refl
+
+decisionProcedure : Rel s -> Type
+decisionProcedure rel = (a,b : _) -> Dec (rel a b)

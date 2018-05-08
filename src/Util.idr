@@ -1,6 +1,8 @@
 module Util
 
 import Abbrev
+import Data.So
+import Decidable.Decidable
 
 %default total
 %access export
@@ -15,3 +17,8 @@ total
 butNotLeft : Either a b -> Not a -> b
 butNotLeft (Left a) contra = absurd (contra a) 
 butNotLeft (Right b) _ = b
+
+total public export
+isItSo : (b : Bool) -> Dec (So b)
+isItSo True = Yes Oh
+isItSo False = No absurd

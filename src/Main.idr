@@ -13,6 +13,8 @@ import Proofs.DiscreteOrderTheory
 import Instances.TrustInteger
 import Instances.ZZ
 
+import Applications.Example
+
 -- Here we bring in the Neg interface to get a succint additive
 -- notation for groups
 additiveGroup : Neg a => Type
@@ -27,8 +29,8 @@ double {spec} x =
   in (y ** groupCancel3bis spec x x)
 
 -- Now we actually compute something, at run time!  :^)
-test : Integer -> Integer
-test x = fst (double {spec = group (abelianGroup integerRing)} x)
+--test : Integer -> Integer
+--test x = fst (double {spec = group (abelianGroup integerRing)} x)
 
 main : IO ()
-main = printLn (test 123)
+main = printLn (test (-1234))

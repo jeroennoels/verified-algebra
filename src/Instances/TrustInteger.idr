@@ -1,21 +1,19 @@
 module Instances.TrustInteger
 
 import public Data.So
-
-import Specifications.Group
-import Specifications.Ring
-import Specifications.Order
+import public Abbrev
+import Util
 import Specifications.OrderedRing
-import Specifications.TranslationInvariance
 
 %default total
 %access public export
 
 IntegerLeq : Integer -> Integer -> Type
-IntegerLeq a b = So (a <= b)
+IntegerLeq a b = So (intToBool (prim__slteBigInt a b))
 
-postulate integerPartiallyOrderedRing :
-  PartiallyOrderedRingSpec (+) 0 negate (*) IntegerLeq
+decideLeq : decisionProcedure IntegerLeq
+decideLeq a b = isItSo (intToBool (prim__slteBigInt a b))
 
-integerRing : RingSpec (+) 0 negate (*)
-integerRing = ring integerPartiallyOrderedRing
+private
+example : Type
+example = PartiallyOrderedRingSpec (+) 0 negate (*) IntegerLeq

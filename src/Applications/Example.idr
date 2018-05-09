@@ -28,5 +28,6 @@ absoluteValue {s} leq decide spec a =
 
 postulate integerOrderedGroup : OrderedGroupSpec (+) 0 negate IntegerLeq
 
-test : Integer -> Integer
-test x = fst $ absoluteValue IntegerLeq decideLeq integerOrderedGroup x
+testAbsoluteValue : Integer -> Integer
+testAbsoluteValue x = fst $
+  absoluteValue IntegerLeq decideLeq integerOrderedGroup x

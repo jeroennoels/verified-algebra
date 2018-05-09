@@ -22,3 +22,9 @@ total public export
 isItSo : (b : Bool) -> Dec (So b)
 isItSo True = Yes Oh
 isItSo False = No absurd
+
+
+public export
+data EitherErased : Type -> Type -> Type where
+  LeftE :  .a -> EitherErased a b
+  RightE : .b -> EitherErased a b

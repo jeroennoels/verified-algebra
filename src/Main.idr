@@ -1,8 +1,10 @@
 module Main
 
+import Util
+
 import Specifications.Group
 import Specifications.TranslationInvariance
-import Specifications.Ring
+import Specifications.DiscreteOrderedGroup
 
 import Proofs.GroupCancelationLemmas
 import Proofs.GroupTheory
@@ -28,9 +30,22 @@ double {spec} x =
   let y = x + x
   in (y ** groupCancel3bis spec x x)
 
+postulate integerDiscreteOrderedGroup : 
+  DiscreteOrderedGroupSpec (+) 0 negate IntegerLeq 1
+
 -- Now we actually compute something, at run time!  :^)
---test : Integer -> Integer
---test x = fst (double {spec = group (abelianGroup integerRing)} x)
+testDouble : Integer -> Integer
+testDouble x = fst (double {spec = group integerDiscreteOrderedGroup} x)
+
+
+testSeparation : Integer -> Integer -> Bool
+testSeparation a b = case 
+  separate {neg = negate} integerDiscreteOrderedGroup decideLeq a b of
+    LeftE _ => True
+    RightE _ => False
+    
 
 main : IO ()
-main = printLn (test (-1234))
+main = do printLn (testSeparation 4 5)
+          printLn (testSeparation 5 5)
+          printLn (testSeparation 6 5)

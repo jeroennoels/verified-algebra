@@ -10,6 +10,7 @@ import Specifications.DiscreteOrderedGroup
 
 import Proofs.GroupTheory
 import Proofs.GroupCancelationLemmas
+import Proofs.OrderTheory
 import Proofs.TranslationInvarianceTheory
 
 %default total
@@ -51,3 +52,15 @@ strictOrderSeparates spec a b diff given = o4 where
   o3 = discreteOrder spec (a + neg b) (contraposition o2 diff) o1
   o4 : unit + a <= b
   o4 = lemmaOrder (partiallyOrderedGroup spec) unit a b o3
+
+
+public export
+separate : {(+) : Binop s} -> {(<=) : Rel s} ->
+ .DiscreteOrderedGroupSpec (+) zero neg (<=) unit -> 
+   decisionProcedure (<=) -> (a,b : s) -> 
+     EitherErased (a <= b) (unit + b <= a)
+separate spec decide a b = case decide a b of
+  Yes prf => LeftE prf
+  No contra => 
+    let (baLeq, abDiff) = orderContra (totalOrder spec) a b contra
+    in RightE $ strictOrderSeparates spec b a (abDiff . sym) baLeq

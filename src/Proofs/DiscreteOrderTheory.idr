@@ -1,5 +1,6 @@
 module Proofs.DiscreteOrderTheory
 
+import public Data.Erased
 import Util
 
 import Specifications.Group
@@ -58,9 +59,10 @@ public export
 separate : {(+) : Binop s} -> {(<=) : Rel s} ->
  .DiscreteOrderedGroupSpec (+) zero neg (<=) unit -> 
    decisionProcedure (<=) -> (a,b : s) -> 
-     EitherErased (a <= b) (unit + b <= a)
+     Either (Erased (a <= b)) (Erased (unit + b <= a))
 separate spec decide a b = case decide a b of
-  Yes prf => LeftE prf
+  Yes prf => Left (Erase prf)
   No contra => 
     let (baLeq, abDiff) = orderContra (totalOrder spec) a b contra
-    in RightE $ strictOrderSeparates spec b a (abDiff . sym) baLeq
+        prf = strictOrderSeparates spec b a (abDiff . sym) baLeq
+    in Right (Erase prf) 

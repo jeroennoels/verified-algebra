@@ -41,9 +41,8 @@ testDouble x = fst (double {spec = group integerDiscreteOrderedGroup} x)
 testSeparation : Integer -> Integer -> Bool
 testSeparation a b = case 
   separate {neg = negate} integerDiscreteOrderedGroup decideLeq a b of
-    LeftE _ => True
-    RightE _ => False
-    
+    Left _ => True
+    Right _ => False
 
 main : IO ()
 main = do printLn (testSeparation 4 5)

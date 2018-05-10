@@ -23,6 +23,16 @@ composeOrder spec a b c d ab cd =
   in transitive (order spec) (a # c) (b # c) (b # d) pp qq
 
 
+orderInverseL : {(#) : Binop s} -> {(<=) : Rel s} ->
+  PartiallyOrderedGroupSpec (#) e inv (<=) -> (a,b,c : s) ->
+    a # c <= b -> c <= inv a # b
+orderInverseL spec a b c given = rewrite sym o2 in o1 where
+  o1 : inv a # (a # c) <= inv a # b
+  o1 = translationInvariantL (invariantOrder spec) (a # c) b _ given
+  o2 : inv a # (a # c) = c
+  o2 = groupCancel1bis (group spec) a c
+
+
 orderInverseR : {(#) : Binop s} -> {(<=) : Rel s} ->
   PartiallyOrderedGroupSpec (#) e inv (<=) -> (a,b,c : s) ->
     a # c <= b -> a <= b # inv c

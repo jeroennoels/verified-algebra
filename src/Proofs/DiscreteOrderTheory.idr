@@ -66,3 +66,13 @@ separate spec decide a b = case decide a b of
         prf = strictOrderSeparates spec b a (diff . sym) baLeq
     in EraseR prf
 
+
+public export
+separateBis : {(+) : Binop s} -> {(<=) : Rel s} ->
+  DiscreteOrderedGroupSpec (+) zero neg (<=) unit ->
+  decisionProcedure (<=) -> (a,b : s) ->
+    EitherErased (a <= neg unit + b) (b <= a)
+separateBis spec decide a b =
+  case separate spec decide b a of
+    EraseL ba => EraseR ba
+    EraseR ab => EraseL (orderInverseL (partiallyOrderedGroup spec) unit _ _ ab)

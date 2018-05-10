@@ -1,12 +1,16 @@
 module Proofs.TranslationInvarianceTheory
 
+import public Data.Erased
+
 import Specifications.Group
 import Specifications.Order
 import Specifications.TranslationInvariance
+import Specifications.DiscreteOrderedGroup
 
 import Proofs.GroupCancelationLemmas
 import Proofs.GroupTheory
 import Proofs.TranslationInvarianceTheory
+import Proofs.DiscreteOrderTheory
 
 %default total
 %access export
@@ -30,3 +34,13 @@ composeIntervals spec (MkBetween ax xb) (MkBetween cy yd) = MkBetween
   (composeOrder spec _ _ _ _ xb yd)
 
 
+public export
+pivot : DiscreteOrderedGroupSpec add zero neg leq unit ->
+  decisionProcedure leq -> (p,x : s) ->
+    Between leq x (a,b) ->
+    Either (Between leq x (a,p))
+           (Between leq x (add unit p, b))
+pivot spec decide p x (MkBetween ax xb) =
+  case separate spec decide x p of
+    Left (Erase xp) => Left (MkBetween ax xp)
+    Right (Erase px) => Right (MkBetween px xb)

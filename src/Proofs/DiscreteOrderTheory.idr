@@ -57,23 +57,12 @@ strictOrderSeparates spec a b diff given = o4 where
 
 public export
 separate : {(+) : Binop s} -> {(<=) : Rel s} ->
- .DiscreteOrderedGroupSpec (+) zero neg (<=) unit ->
+  DiscreteOrderedGroupSpec (+) zero neg (<=) unit ->
   decisionProcedure (<=) -> (a,b : s) ->
     Either (Erased (a <= b)) (Erased (unit + b <= a))
 separate spec decide a b = case decide a b of
   Yes prf => Left (Erase prf)
   No contra =>
-    let (baLeq, abDiff) = orderContra (totalOrder spec) a b contra
-        prf = strictOrderSeparates spec b a (abDiff . sym) baLeq
+    let (baLeq, diff) = orderContra (totalOrder spec) a b contra
+        prf = strictOrderSeparates spec b a (diff . sym) baLeq
     in Right (Erase prf)
-
-
-pivot : .DiscreteOrderedGroupSpec add zero neg leq unit ->
-  decisionProcedure leq -> (p,x : s) -> 
-    Between leq x (a,b) -> 
-    Either (Between leq x (a,p)) 
-           (Between leq x (add unit p, b))
-pivot spec decide p x (MkBetween ax xb) = 
-  case separate spec decide x p of
-    Left (Erase xp) => Left (MkBetween ax xp)
-    Right (Erase px)  => Right (MkBetween px xb)

@@ -1,6 +1,6 @@
 module Proofs.TranslationInvarianceTheory
 
-import public Data.Erased
+import Util
 
 import Specifications.Group
 import Specifications.Order
@@ -38,9 +38,9 @@ public export
 pivot : DiscreteOrderedGroupSpec add zero neg leq unit ->
   decisionProcedure leq -> (p,x : s) ->
     Between leq x (a,b) ->
-    Either (Between leq x (a,p))
-           (Between leq x (add unit p, b))
+    EitherErased (Between leq x (a,p))
+                 (Between leq x (add unit p, b))
 pivot spec decide p x (MkBetween ax xb) =
   case separate spec decide x p of
-    Left (Erase xp) => Left (MkBetween ax xp)
-    Right (Erase px) => Right (MkBetween px xb)
+    EraseL xp => EraseL (MkBetween ax xp)
+    EraseR px => EraseR (MkBetween px xb)

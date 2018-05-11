@@ -1,6 +1,7 @@
 module Proofs.GroupCancelationLemmas
 
 import Specifications.Group
+import Symmetry.Opposite
 
 %default total
 %access export
@@ -45,20 +46,12 @@ groupCancel2bis spec a b = assoc @== groupCancel2 spec a b where
 
 groupCancel3 : {(#) : Binop s} -> GroupSpec (#) e inv -> (a,b : s) ->
   a # (b # inv b) = a
-groupCancel3 spec a b = o2 === o3 where
-  o1 : b # inv b = e
-  o1 = inverseR spec b
-  o2 : a # (b # inv b) = a # e
-  o2 = cong o1
-  o3 : a # e = a
-  o3 = neutralR (monoid spec) a
+groupCancel3 spec a b = groupCancel1 (opposite spec) b a
 
 
 groupCancel3bis : {(#) : Binop s} -> GroupSpec (#) e inv -> (a,b : s) ->
   (a # b) # inv b = a
-groupCancel3bis spec a b = assoc @== groupCancel3 spec a b where
-  assoc : a # (b # inv b) = (a # b) # inv b
-  assoc = associative (monoid spec) a b _
+groupCancel3bis spec a b = groupCancel1bis (opposite spec) b a
 
 
 groupTranslationInjectiveL : {(#) : Binop s} ->

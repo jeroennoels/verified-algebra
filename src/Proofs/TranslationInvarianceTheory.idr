@@ -1,13 +1,12 @@
 module Proofs.TranslationInvarianceTheory
 
 import Util
-
 import Specifications.Group
 import Specifications.Order
 import Specifications.TranslationInvariance
-
 import Proofs.GroupTheory
 import Proofs.GroupCancelationLemmas
+import Symmetry.Opposite
 
 %default total
 %access export
@@ -36,11 +35,7 @@ orderInverseL spec a b c given = rewrite sym o2 in o1 where
 orderInverseR : {(#) : Binop s} -> {(<=) : Rel s} ->
   PartiallyOrderedGroupSpec (#) e inv (<=) -> (a,b,c : s) ->
     a # c <= b -> a <= b # inv c
-orderInverseR spec a b c given = rewrite sym o2 in o1 where
-  o1 : a # c # inv c <= b # inv c
-  o1 = translationInvariantR (invariantOrder spec) (a # c) b _ given
-  o2 : a # c # inv c = a
-  o2 = groupCancel3bis (group spec) a c
+orderInverseR spec a b c = orderInverseL (opposite spec) c b a
 
 
 inverseReversesOrder : {(#) : Binop s} ->

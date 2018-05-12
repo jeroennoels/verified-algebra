@@ -16,4 +16,5 @@ decideLeq a b = isItSo (intToBool (prim__slteBigInt a b))
 
 private
 example : Type
-example = PartiallyOrderedRingSpec (+) 0 negate (*) IntegerLeq
+example = PartiallyOrderedRingSpec 
+            prim__addBigInt 0 (prim__subBigInt 0) prim__mulBigInt IntegerLeq

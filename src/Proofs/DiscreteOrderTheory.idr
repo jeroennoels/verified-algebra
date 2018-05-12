@@ -75,4 +75,4 @@ separateBis : {(+) : Binop s} -> {(<=) : Rel s} ->
 separateBis spec decide a b =
   case separate spec decide b a of
     EraseL ba => EraseR ba
-    EraseR ab => EraseL (orderInverseL (partiallyOrderedGroup spec) unit _ _ ab)
+    EraseR ab => EraseL (orderInverseL (partiallyOrderedGroup spec) unit b a ab)

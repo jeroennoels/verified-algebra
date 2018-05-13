@@ -44,22 +44,14 @@ testDouble : Integer -> Integer
 testDouble x = fst (double {spec = group integerDiscreteOrderedGroup} x)
 
 
-testSeparation : Integer -> Integer -> Bool
-testSeparation a b = case 
-  separate integerDiscreteOrderedGroup decideLeq a b of
-    EraseL _ => True
-    EraseR _ => False
-
-showEE : EitherErased a b -> String
-showEE (EraseL _) = "left"
-showEE _ = "right"
+testSeparation : Integer -> Integer -> String
+testSeparation a b = show $ separate integerDiscreteOrderedGroup decideLeq a b
 
 testPivot : Integer -> Integer -> Integer -> Integer -> String
 testPivot p a b x = 
   case decideBetween {leq = IntegerLeq} decideLeq x a b of
-    Yes axb => showEE $ 
-      pivot integerDiscreteOrderedGroup decideLeq p x axb
-    No _ => "error"
+    Yes axb => show $ pivot integerDiscreteOrderedGroup decideLeq p x axb
+    No _ => "Error"
   
 
 main : IO ()

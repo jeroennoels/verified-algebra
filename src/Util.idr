@@ -27,4 +27,9 @@ public export
 data EitherErased : Type -> Type -> Type where
     EraseL : .a -> EitherErased a b
     EraseR : .b -> EitherErased a b
+
+public export
+implementation Show (EitherErased a b) where
+  show (EraseL _) = "Left"
+  show (EraseR _) = "Right"
     

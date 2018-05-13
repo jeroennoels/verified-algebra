@@ -50,7 +50,7 @@ testSeparation a b = show $ separate integerDiscreteOrderedGroup decideLeq a b
 testPivot : Integer -> Integer -> Integer -> Integer -> String
 testPivot p a b x = 
   case decideBetween {leq = IntegerLeq} decideLeq x a b of
-    Yes axb => show $ pivot integerDiscreteOrderedGroup decideLeq p x axb
+    Yes axb => show $ decidePivot integerDiscreteOrderedGroup decideLeq p x axb
     No _ => "Error"
   
 

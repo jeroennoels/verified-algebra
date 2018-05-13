@@ -36,24 +36,24 @@ composeIntervals spec (MkBetween ax xb) (MkBetween cy yd) = MkBetween
 
 
 public export
-pivot : DiscreteOrderedGroupSpec add zero neg leq unit ->
+decidePivot : DiscreteOrderedGroupSpec add zero neg leq unit ->
   decisionProcedure leq -> (p,x : s) ->
     Between leq x (a,b) ->
     EitherErased (Between leq x (a,p))
                  (Between leq x (add unit p, b))
-pivot spec decide p x (MkBetween ax xb) =
+decidePivot spec decide p x (MkBetween ax xb) =
   case separate spec decide x p of
     EraseL xp => EraseL (MkBetween ax xp)
     EraseR px => EraseR (MkBetween px xb)
 
 
 public export
-pivotBis : DiscreteOrderedGroupSpec add zero neg leq unit ->
+decidePivotBis : DiscreteOrderedGroupSpec add zero neg leq unit ->
   decisionProcedure leq -> (p,x : s) ->
     Between leq x (a,b) ->
     EitherErased (Between leq x (a, add (neg unit) p))
                  (Between leq x (p, b))
-pivotBis spec decide p x (MkBetween ax xb) =
+decidePivotBis spec decide p x (MkBetween ax xb) =
   case separateBis spec decide x p of
     EraseL xp => EraseL (MkBetween ax xp)
     EraseR px => EraseR (MkBetween px xb)

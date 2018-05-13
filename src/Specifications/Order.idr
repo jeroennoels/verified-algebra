@@ -44,9 +44,9 @@ totalOrder (MkTotalOrder _ t) = t
 data Between : Rel s -> s -> (s,s) -> Type where
   MkBetween : rel a x -> rel x b -> Between rel x (a,b)
 
-left : Between rel x (a,b) -> rel a x
-left (MkBetween l _) = l
+betweenL : Between rel x (a,b) -> rel a x
+betweenL (MkBetween l _) = l
 
-right : Between rel x (a,b) -> rel x b
-right (MkBetween _ r) = r
+betweenR : Between rel x (a,b) -> rel x b
+betweenR (MkBetween _ r) = r
 

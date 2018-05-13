@@ -32,4 +32,12 @@ public export
 implementation Show (EitherErased a b) where
   show (EraseL _) = "Left"
   show (EraseR _) = "Right"
-    
+
+
+public export        
+decideBoth : (a -> b -> c) -> (c -> a) -> (c -> b) -> Dec a -> Dec b -> Dec c
+decideBoth pair left right = dec 
+  where
+    dec (Yes a) (Yes b) = Yes (pair a b)
+    dec (No contra) _ = No (contra . left)
+    dec _ (No contra) = No (contra . right)

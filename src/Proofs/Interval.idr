@@ -61,8 +61,5 @@ decidePivotBis spec decide p x (MkBetween ax xb) =
 
 decideBetween : decisionProcedure leq -> (x,a,b : s) ->  
   Dec (Between leq x (a,b))
-decideBetween decide x a b = case (decide a x, decide x b) of
-  (Yes ax, Yes xb) => Yes (MkBetween ax xb)
-  (No contra, _) => No (contra . left)
-  (_, No contra) => No (contra . right)
-  
+decideBetween decide x a b = 
+  decideBoth MkBetween betweenL betweenR (decide a x) (decide x b)

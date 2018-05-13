@@ -47,13 +47,22 @@ testDouble x = fst (double {spec = group integerDiscreteOrderedGroup} x)
 testSeparation : Integer -> Integer -> String
 testSeparation a b = show $ separate integerDiscreteOrderedGroup decideLeq a b
 
-testPivot : Integer -> Integer -> Integer -> Integer -> String
-testPivot p a b x = 
+pivot : (x : Integer) -> .Between IntegerLeq x (a,b) -> 
+  Integer -> String
+pivot x axb p = show $ 
+  decidePivot integerDiscreteOrderedGroup decideLeq p x axb 
+
+threeway : (x : Integer) -> .Between IntegerLeq x (a,b) -> 
+  Integer -> Integer -> String
+threeway x axb p q = show $ 
+  decideThreeway integerDiscreteOrderedGroup decideLeq p q x axb 
+
+test : Integer -> Integer -> Integer -> Integer -> Integer -> String
+test a p q b x = 
   case decideBetween {leq = IntegerLeq} decideLeq x a b of
-    Yes axb => show $ decidePivot integerDiscreteOrderedGroup decideLeq p x axb
+    Yes axb => threeway x axb p q
     No _ => "Error"
   
-
 main : IO ()
-main = do printLn (testPivot 5 1 9 3)
+main = printLn $ map (test 0 3 7 10) [(-1)..11]
 

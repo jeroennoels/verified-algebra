@@ -25,14 +25,27 @@ isItSo False = No absurd
 
 public export
 data EitherErased : Type -> Type -> Type where
-    EraseL : .a -> EitherErased a b
-    EraseR : .b -> EitherErased a b
+  EraseL : .a -> EitherErased a b
+  EraseR : .b -> EitherErased a b
+
+public export
+data ThreeErased : Type -> Type -> Type -> Type where
+  ThreeL : .a -> ThreeErased a b c
+  ThreeM : .b -> ThreeErased a b c
+  ThreeR : .c -> ThreeErased a b c
+  
 
 public export
 implementation Show (EitherErased a b) where
   show (EraseL _) = "Left"
   show (EraseR _) = "Right"
 
+public export
+implementation Show (ThreeErased a b c) where
+  show (ThreeL _) = "Left"
+  show (ThreeM _) = "Middle"
+  show (ThreeR _) = "Right"
+  
 
 public export        
 decideBoth : (a -> b -> c) -> (c -> a) -> (c -> b) -> Dec a -> Dec b -> Dec c

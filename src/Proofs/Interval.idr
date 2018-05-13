@@ -62,3 +62,17 @@ decidePivotBis spec decide p x (MkBetween ax xb) =
     EraseL xp => EraseL (MkBetween ax xp)
     EraseR px => EraseR (MkBetween px xb)
 
+
+decideThreeway : DiscreteOrderedGroupSpec add zero neg leq unit ->
+  decisionProcedure leq -> (p,q,x : s) ->
+    Between leq x (a,b) ->
+    ThreeErased (Between leq x (a,p))
+                (Between leq x (add unit p, add (neg unit) q))
+                (Between leq x (q,b))
+decideThreeway spec decide p q x axb =
+  case decidePivot spec decide p x axb of
+    EraseL axp => ThreeL axp
+    EraseR pxb => 
+      case decidePivotBis spec decide q x pxb of
+        EraseL pxq => ThreeM pxq
+        EraseR qxb => ThreeR qxb

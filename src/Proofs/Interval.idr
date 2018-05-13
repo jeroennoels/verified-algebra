@@ -35,9 +35,9 @@ composeIntervals spec (MkBetween ax xb) (MkBetween cy yd) = MkBetween
   (composeOrder spec _ _ _ _ xb yd)
 
 
-decideBetween : decisionProcedure leq -> (x,a,b : s) ->  
+decideBetween : decisionProcedure leq -> (x,a,b : s) ->
   Dec (Between leq x (a,b))
-decideBetween decide x a b = 
+decideBetween decide x a b =
   decideBoth MkBetween betweenL betweenR (decide a x) (decide x b)
 
 
@@ -48,8 +48,8 @@ decidePivot : DiscreteOrderedGroupSpec add zero neg leq unit ->
                  (Between leq x (add unit p, b))
 decidePivot spec decide p x (MkBetween ax xb) =
   case separate spec decide x p of
-    EraseL xp => EraseL (MkBetween ax xp)
-    EraseR px => EraseR (MkBetween px xb)
+    Left xp => Left (MkBetween ax xp)
+    Right px => Right (MkBetween px xb)
 
 
 decidePivotBis : DiscreteOrderedGroupSpec add zero neg leq unit ->
@@ -59,20 +59,20 @@ decidePivotBis : DiscreteOrderedGroupSpec add zero neg leq unit ->
                  (Between leq x (p, b))
 decidePivotBis spec decide p x (MkBetween ax xb) =
   case separateBis spec decide x p of
-    EraseL xp => EraseL (MkBetween ax xp)
-    EraseR px => EraseR (MkBetween px xb)
+    Left xp => Left (MkBetween ax xp)
+    Right px => Right (MkBetween px xb)
 
 
-decideThreeway : DiscreteOrderedGroupSpec add zero neg leq unit ->
+decidePartition3 : DiscreteOrderedGroupSpec add zero neg leq unit ->
   decisionProcedure leq -> (p,q,x : s) ->
     Between leq x (a,b) ->
-    ThreeErased (Between leq x (a,p))
-                (Between leq x (add unit p, add (neg unit) q))
-                (Between leq x (q,b))
-decideThreeway spec decide p q x axb =
+    Either3Erased (Between leq x (a,p))
+                  (Between leq x (add unit p, add (neg unit) q))
+                  (Between leq x (q,b))
+decidePartition3 spec decide p q x axb =
   case decidePivot spec decide p x axb of
-    EraseL axp => ThreeL axp
-    EraseR pxb => 
+    Left l => Left l
+    Right pxb =>
       case decidePivotBis spec decide q x pxb of
-        EraseL pxq => ThreeM pxq
-        EraseR qxb => ThreeR qxb
+        Left m => Middle m
+        Right r => Right r

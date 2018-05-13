@@ -5,51 +5,49 @@ import Data.So
 import Decidable.Decidable
 
 %default total
-%access export
+%access public export
 
+export
 rewriteRelation : (rel : Rel s) -> a = aa -> b = bb -> rel a b -> rel aa bb
 rewriteRelation rel p q given = rewrite sym p in rewrite sym q in given
 
+export
 contraposition : (p -> q) -> Not q -> Not p
 contraposition f contra p = contra (f p)
 
-total
+total export
 butNotLeft : Either a b -> Not a -> b
-butNotLeft (Left a) contra = absurd (contra a) 
+butNotLeft (Left a) contra = absurd (contra a)
 butNotLeft (Right b) _ = b
 
-total public export
+total
 isItSo : (b : Bool) -> Dec (So b)
 isItSo True = Yes Oh
 isItSo False = No absurd
 
-public export
+
 data EitherErased : Type -> Type -> Type where
-  EraseL : .a -> EitherErased a b
-  EraseR : .b -> EitherErased a b
+  Left  : .a -> EitherErased a b
+  Right : .b -> EitherErased a b
 
-public export
-data ThreeErased : Type -> Type -> Type -> Type where
-  ThreeL : .a -> ThreeErased a b c
-  ThreeM : .b -> ThreeErased a b c
-  ThreeR : .c -> ThreeErased a b c
-  
+namespace Either3Erased
+  data Either3Erased : Type -> Type -> Type -> Type where
+    Left   : .a -> Either3Erased a b c
+    Middle : .b -> Either3Erased a b c
+    Right  : .c -> Either3Erased a b c
 
-public export
 implementation Show (EitherErased a b) where
-  show (EraseL _) = "Left"
-  show (EraseR _) = "Right"
+  show (Left _) = "Left"
+  show (Right _) = "Right"
 
-public export
-implementation Show (ThreeErased a b c) where
-  show (ThreeL _) = "Left"
-  show (ThreeM _) = "Middle"
-  show (ThreeR _) = "Right"
-  
+implementation Show (Either3Erased a b c) where
+  show (Left _) = "Left"
+  show (Middle _) = "Middle"
+  show (Right _) = "Right"
 
-public export        
+
 decideBoth : (a -> b -> c) -> (c -> a) -> (c -> b) -> Dec a -> Dec b -> Dec c
-decideBoth pair left right = dec 
+decideBoth pair left right = dec
   where
     dec (Yes a) (Yes b) = Yes (pair a b)
     dec (No contra) _ = No (contra . left)

@@ -60,11 +60,11 @@ separate : {(+) : Binop s} -> {(<=) : Rel s} ->
   decisionProcedure (<=) -> (a,b : s) ->
     EitherErased (a <= b) (unit + b <= a)
 separate spec decide a b = case decide a b of
-  Yes prf => EraseL prf
+  Yes prf => Left prf
   No contra =>
     let (baLeq, diff) = orderContra (totalOrder spec) a b contra
         prf = strictOrderSeparates spec b a (diff . sym) baLeq
-    in EraseR prf
+    in Right prf
 
 
 public export
@@ -74,5 +74,5 @@ separateBis : {(+) : Binop s} -> {(<=) : Rel s} ->
     EitherErased (a <= neg unit + b) (b <= a)
 separateBis spec decide a b =
   case separate spec decide b a of
-    EraseL ba => EraseR ba
-    EraseR ab => EraseL (orderInverseL (partiallyOrderedGroup spec) unit b a ab)
+    Left ba => Right ba
+    Right ab => Left (orderInverseL (partiallyOrderedGroup spec) unit b a ab)

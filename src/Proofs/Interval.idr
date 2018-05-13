@@ -17,13 +17,13 @@ import Proofs.DiscreteOrderTheory
 
 infixl 8 #
 
-
 translateIntervalR : {(#) : Binop s} ->
   PartiallyOrderedMagmaSpec (#) leq -> (c : s) ->
     Between leq x (a,b) -> Between leq (x # c) (a # c, b # c)
 translateIntervalR spec c (MkBetween ax xb) = MkBetween
   (translationInvariantR spec _ _ _ ax)
   (translationInvariantR spec _ _ _ xb)
+
 
 composeIntervals : {(#) : Binop s} ->
   PartiallyOrderedMagmaSpec (#) leq ->
@@ -35,7 +35,12 @@ composeIntervals spec (MkBetween ax xb) (MkBetween cy yd) = MkBetween
   (composeOrder spec _ _ _ _ xb yd)
 
 
-public export
+decideBetween : decisionProcedure leq -> (x,a,b : s) ->  
+  Dec (Between leq x (a,b))
+decideBetween decide x a b = 
+  decideBoth MkBetween betweenL betweenR (decide a x) (decide x b)
+
+
 decidePivot : DiscreteOrderedGroupSpec add zero neg leq unit ->
   decisionProcedure leq -> (p,x : s) ->
     Between leq x (a,b) ->
@@ -47,7 +52,6 @@ decidePivot spec decide p x (MkBetween ax xb) =
     EraseR px => EraseR (MkBetween px xb)
 
 
-public export
 decidePivotBis : DiscreteOrderedGroupSpec add zero neg leq unit ->
   decisionProcedure leq -> (p,x : s) ->
     Between leq x (a,b) ->
@@ -58,8 +62,3 @@ decidePivotBis spec decide p x (MkBetween ax xb) =
     EraseL xp => EraseL (MkBetween ax xp)
     EraseR px => EraseR (MkBetween px xb)
 
-
-decideBetween : decisionProcedure leq -> (x,a,b : s) ->  
-  Dec (Between leq x (a,b))
-decideBetween decide x a b = 
-  decideBoth MkBetween betweenL betweenR (decide a x) (decide x b)

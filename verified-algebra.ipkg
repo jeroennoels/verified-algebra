@@ -28,6 +28,7 @@ modules =
   Instances.TrustInteger,
   Instances.ZZ,
   Applications.Example,
+  Applications.Carry,
   Main
 
 executable = run

@@ -48,5 +48,5 @@ group : PartiallyOrderedGroupSpec op e inv _ -> GroupSpec op e inv
 group (MkPartiallyOrderedGroup g _) = g
 
 
-SymRange : GroupSpec {s} _ _ neg -> Rel s -> s -> s -> Type
-SymRange spec rel x u = Between rel x (neg u, u)
+InRange : Rel s -> (s -> s) -> s -> s -> Type
+InRange rel inv x u = Between rel x (inv u, u)

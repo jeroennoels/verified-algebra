@@ -2,15 +2,12 @@ module Main
 
 import Util
 import Specifications.DiscreteOrderedGroup
-
 import Proofs.GroupTheory
 import Proofs.TranslationInvarianceTheory
 import Proofs.DiscreteOrderTheory
 import Proofs.Interval
-
 import Instances.TrustInteger
 import Instances.ZZ
-
 import Applications.Example
 
 integerDiscreteOrderedGroupSpec : Type
@@ -22,12 +19,6 @@ postulate integerDiscreteOrderedGroup : Main.integerDiscreteOrderedGroupSpec
 
 testSeparation : Integer -> Integer -> String
 testSeparation a b = show $ separate integerDiscreteOrderedGroup decideLeq a b
-
-
-pivot : (x : Integer) -> .Between IntegerLeq x (a,b) -> 
-  Integer -> String
-pivot x axb p = show $ 
-  decidePivot integerDiscreteOrderedGroup decideLeq p x axb 
 
 
 partition3 : (x : Integer) -> .Between IntegerLeq x (a,b) -> 
@@ -44,4 +35,7 @@ test a p q b x =
 
     
 main : IO ()
-main = printLn $ map (test 0 3 7 10) [(-1)..11]
+main = do printLn $ map (test 0 3 7 10) [(-1)..11]
+          printLn $ map testDouble [0..9] 
+          printLn $ map testAbsoluteValue [(-5)..5] 
+          

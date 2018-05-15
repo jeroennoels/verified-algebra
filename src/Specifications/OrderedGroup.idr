@@ -1,9 +1,7 @@
 module Specifications.OrderedGroup
 
 import public Abbrev
-import Specifications.Group
-import Specifications.Order
-import Specifications.TranslationInvariance
+import public Specifications.TranslationInvariance
 
 %default total
 %access public export

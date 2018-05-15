@@ -1,9 +1,5 @@
 module Symmetry.Opposite
 
-import Specifications.Semigroup
-import Specifications.Monoid
-import Specifications.Group
-import Specifications.Order
 import Specifications.TranslationInvariance
 
 %access export

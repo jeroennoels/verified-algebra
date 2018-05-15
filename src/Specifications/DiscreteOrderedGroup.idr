@@ -1,10 +1,7 @@
 module Specifications.DiscreteOrderGroup
 
 import public Abbrev
-import Specifications.Group
-import Specifications.Order
-import Specifications.TranslationInvariance
-import Specifications.OrderedGroup
+import public Specifications.OrderedGroup
 
 %default total
 %access public export

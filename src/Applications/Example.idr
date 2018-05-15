@@ -4,11 +4,7 @@ import public Data.So
 import public Decidable.Decidable
 
 import Util
-import Specifications.Order
-import Specifications.Group
-import Specifications.TranslationInvariance
 import Specifications.OrderedGroup
-
 import Proofs.OrderTheory
 import Proofs.GroupTheory
 import Proofs.GroupCancelationLemmas

@@ -1,13 +1,8 @@
 module Applications.Example
 
 import Util
-import Specifications.Order
-import Specifications.TranslationInvariance
-import Specifications.Group
-import Specifications.OrderedGroup
 import Specifications.DiscreteOrderedGroup
 import Proofs.Interval
-import Instances.TrustInteger
 
 %default total
 %access public export

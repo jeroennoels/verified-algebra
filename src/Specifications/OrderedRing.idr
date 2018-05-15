@@ -2,8 +2,8 @@ module Specifications.OrderedRing
 
 import public Abbrev
 
-import Specifications.Ring
-import Specifications.TranslationInvariance
+import public Specifications.Ring
+import public Specifications.TranslationInvariance
 
 %default total
 %access public export

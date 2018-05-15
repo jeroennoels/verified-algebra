@@ -2,12 +2,7 @@ module Instances.ZZ
 
 import Data.ZZ
 
-import Specifications.Monoid
-import Specifications.Group
-import Specifications.Ring
-import Specifications.Order
 import Specifications.OrderedRing
-import Specifications.TranslationInvariance
 
 %default total
 %access public export

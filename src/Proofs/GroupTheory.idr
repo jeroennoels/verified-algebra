@@ -58,6 +58,16 @@ groupInverseAnti spec a b = groupInverseUniqueBis spec _ _ o3 where
   o3 = associative (monoid spec) _ a b === o2 === inverseL spec b
 
 
+groupInverseAntiInverse : {(#) : Binop s} ->
+  GroupSpec (#) e inv -> (a,b : s) ->
+    inv (a # inv b) = b # inv a
+groupInverseAntiInverse spec a b = o1 === o2 where
+  o1 : inv (a # inv b) = inv (inv b) # inv a
+  o1 = groupInverseAnti spec a (inv b)
+  o2 : inv (inv b) # inv a = b # inv a
+  o2 = cong {f = (# inv a)} $ groupInverseInvolution spec b
+
+
 groupInverseAndEquality : {(#) : Binop s} -> GroupSpec (#) e inv -> (a,b : s) ->
   a # inv b = e -> a = b
 groupInverseAndEquality {e} spec a b given = o2 @== o1 where
@@ -65,3 +75,4 @@ groupInverseAndEquality {e} spec a b given = o2 @== o1 where
   o1 = cong {f = (# b)} given === neutralL (monoid spec) b
   o2 : a # inv b # b = a
   o2 = groupCancel2bis spec a b
+

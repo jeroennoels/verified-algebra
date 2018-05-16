@@ -1,21 +1,21 @@
 module Proofs.TranslationInvarianceTheory
 
 import Util
-
-import Specifications.Group
-import Specifications.Order
-import Specifications.TranslationInvariance
 import Specifications.DiscreteOrderedGroup
-
 import Proofs.GroupCancelationLemmas
 import Proofs.GroupTheory
 import Proofs.TranslationInvarianceTheory
 import Proofs.DiscreteOrderTheory
+import Symmetry.Opposite
 
 %default total
 %access export
 
 infixl 8 #
+
+rewriteBetween : a = c -> b = d -> Between leq x (a,b) -> Between leq x (c,d)
+rewriteBetween p q given = rewrite sym p in rewrite sym q in given
+
 
 translateIntervalR : {(#) : Binop s} ->
   PartiallyOrderedMagmaSpec (#) leq -> (c : s) ->
@@ -23,6 +23,12 @@ translateIntervalR : {(#) : Binop s} ->
 translateIntervalR spec c (MkBetween ax xb) = MkBetween
   (translationInvariantR spec _ _ _ ax)
   (translationInvariantR spec _ _ _ xb)
+
+
+translateIntervalL : {(#) : Binop s} ->
+  PartiallyOrderedMagmaSpec (#) leq -> (c : s) ->
+    Between leq x (a,b) -> Between leq (c # x) (c # a, c # b)
+translateIntervalL spec = translateIntervalR (opposite spec)
 
 
 composeIntervals : {(#) : Binop s} ->

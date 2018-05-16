@@ -37,9 +37,9 @@ orderInverseR spec a b c = orderInverseL (opposite spec) c b a
 
 
 inverseReversesOrder : {(#) : Binop s} ->
-  PartiallyOrderedGroupSpec (#) _ inv leq -> (a,b : s) ->
+  PartiallyOrderedGroupSpec (#) _ inv leq ->
     leq a b -> inv b `leq` inv a
-inverseReversesOrder spec a b given = rewriteRelation leq o3 o4 o2 where
+inverseReversesOrder spec {a} {b} given = rewriteRelation leq o3 o4 o2 where
   o1 : inv a # a `leq` inv a # b
   o1 = translationInvariantL (invariantOrder spec) _ _ (inv a) given
   o2 : inv a # a # inv b `leq` inv a # b # inv b
@@ -65,6 +65,13 @@ invertNegative : {(<=) : Rel s} ->
     a <= zero -> zero <= neg a
 invertNegative spec a negative = rewrite sym o2 in o1 where
   o1 : neg zero <= neg a
-  o1 = inverseReversesOrder spec a zero negative
+  o1 = inverseReversesOrder spec negative
   o2 : neg zero = zero
   o2 = groupInverseNeutral (group spec)
+
+
+invertBetween : PartiallyOrderedGroupSpec op e inv rel ->
+  Between rel x (a,b) -> Between rel (inv x) (inv b, inv a)
+invertBetween spec (MkBetween ax xb) =
+  MkBetween (inverseReversesOrder spec xb)
+            (inverseReversesOrder spec ax)

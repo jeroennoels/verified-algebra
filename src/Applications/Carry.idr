@@ -1,4 +1,4 @@
-module Applications.Example
+module Applications.Carry
 
 import Util
 import Specifications.DiscreteOrderedGroup

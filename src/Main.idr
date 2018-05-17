@@ -9,12 +9,26 @@ import Proofs.Interval
 import Instances.TrustInteger
 import Instances.ZZ
 import Applications.Example
+import Applications.Carry
 
-integerDiscreteOrderedGroupSpec : Type
-integerDiscreteOrderedGroupSpec = DiscreteOrderedGroupSpec
-  prim__addBigInt 0 (prim__subBigInt 0) IntegerLeq 1
 
-postulate integerDiscreteOrderedGroup : Main.integerDiscreteOrderedGroupSpec
+implementation AdditiveGroup Integer where
+  (+) = prim__addBigInt
+  Neg = prim__subBigInt 0
+  Zero = 0
+  One = 1
+
+  
+-- integerDiscreteOrderedGroupSpec : Type
+-- integerDiscreteOrderedGroupSpec = DiscreteOrderedGroupSpec
+--   prim__addBigInt 0 (prim__subBigInt 0) IntegerLeq 1
+
+lala : AdditiveGroup s => Rel s -> Type
+lala {s} leq = DiscreteOrderedGroupSpec {s} (+) Zero Neg leq One
+
+
+
+postulate integerDiscreteOrderedGroup : lala IntegerLeq
 
 
 testSeparation : Integer -> Integer -> String
@@ -27,15 +41,24 @@ partition3 x axb p q = show $
   decidePartition3 integerDiscreteOrderedGroup decideLeq p q x axb 
 
 
-test : Integer -> Integer -> Integer -> Integer -> Integer -> String
-test a p q b x = 
+testPartition3 : Integer -> Integer -> Integer -> Integer -> Integer -> String
+testPartition3 a p q b x = 
   case decideBetween {leq = IntegerLeq} decideLeq x a b of
     Yes axb => partition3 x axb p q
     No _ => "Error"
 
-    
+
+testCarry : Integer -> String
+testCarry x = 
+  case decideBetween {leq = IntegerLeq} decideLeq x (-18) 18 of
+    Yes inRange => show $ carry $ 
+            computeCarry integerDiscreteOrderedGroup decideLeq 9 x inRange 
+    No _ => "Error"
+
+
 main : IO ()
-main = do printLn $ map (test 0 3 7 10) [(-1)..11]
+main = do printLn $ map (testPartition3 0 3 7 10) [(-1)..11]
           printLn $ map testDouble [0..9] 
           printLn $ map testAbsoluteValue [(-5)..5] 
+          printLn $ map testCarry [(-20)..(-12)] 
           

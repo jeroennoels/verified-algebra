@@ -10,7 +10,25 @@ import Proofs.Interval
 %default total
 %access public export
 
+export
+weakenBetween : PartialOrderSpec rel -> 
+  rel b c -> Between rel x (a,b) -> Between rel x (a,c)
+weakenBetween spec bc (MkBetween ax xb) = 
+  MkBetween ax (transitive spec _ _ _ xb bc)  
+
+
+interface AdditiveGroup s where 
+  (+) : s -> s -> s
+  Neg : s -> s
+  Zero : s
+  One : s
+ 
 data Carry = M | O | P
+
+implementation Show Carry where
+  show M = "Carry_M"
+  show O = "Carry_O"
+  show P = "Carry_P"
 
 export
 lemmaLeft : {(+) : Binop s} ->
@@ -33,7 +51,7 @@ lemmaRight : {(+) : Binop s} ->
     Between leq (x + neg (y + u)) (neg y, u + neg y)
 lemmaRight spec u y x given =
   rewrite sym o2 in rewrite sym o3 in o1
- where
+where
   o1 : Between leq (neg (y + u + neg x)) (neg y, neg (y + neg u))
   o1 = invertBetween spec $ lemmaLeft spec u y (neg x) $ invertBetween spec given
   o2 : neg (y + u + neg x) = x + neg (y + u)
@@ -42,11 +60,26 @@ lemmaRight spec u y x given =
   o3 = groupInverseAntiInverse (group spec) y u
 
 
-carry : {(+) : Binop s} -> DiscreteOrderedGroupSpec (+) zero neg leq unit ->
-  decisionProcedure leq -> (u,x : s) ->
-    InRange leq neg x (u + u) -> (Carry, s)
-carry spec decide u x prf =
-  case decidePartition3 spec decide (neg u) u x prf of
-    Left _   => (M, unit + u + x)
-    Middle _ => (O, x)
-    Right _  => (P, x + neg (unit + u))
+data CarryResult : Binop s -> (s -> s) -> Rel s -> s -> Type where
+  MkCarryResult : 
+    Carry -> (x : s) ->
+    InRange leq neg x (add u (neg unit)) ->    
+    CarryResult add neg leq unit
+
+carry : CarryResult _ _ _ _ -> Carry
+carry (MkCarryResult c _ _) = c
+
+
+computeCarry : AdditiveGroup s =>
+  DiscreteOrderedGroupSpec (+) Zero Neg leq One ->
+    decisionProcedure leq -> (u,x : s) ->
+    InRange leq Neg x (u + u) -> CarryResult (+) Neg leq One
+computeCarry spec decide u x prf =
+  case decidePartition3 spec decide (Neg u) u x prf of
+    Left prf => let ll = lemmaLeft (partiallyOrderedGroup spec) u One x prf
+                    ww = weakenBetween (partialOrder (totalOrder spec)) ?q ll
+                    vv = rewriteBetween 
+                           (sym $ groupInverseAntiInverse (group spec) u One) Refl ww
+                in MkCarryResult {u} M (One + u + x) vv
+    Middle _ => ?m -- (O, x)
+    Right _ => ?r --(P, x + Neg (One + u))

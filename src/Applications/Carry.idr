@@ -58,6 +58,23 @@ shiftLeftToSymRange {s} spec u x bound given = o4 where
   o4 = rewriteBetween (sym o3) Refl o2
 
 
+export
+shiftRightToSymRange : {(+) : Binop s} ->
+  DiscreteOrderedGroupSpec (+) _ neg leq unit -> 
+    (u,x : s) ->
+    leq unit (u + neg unit) ->
+    Between leq x (u, u + u) ->
+    InRange leq neg (x + neg (unit + u)) (u + neg unit)
+shiftRightToSymRange spec u x bound given = rewrite sym o2 in o1 where
+  o1 : InRange leq neg (neg (unit + u + neg x)) (u + neg unit)
+  o1 = let pog = partiallyOrderedGroup spec in
+       invertSymRange pog $ 
+       shiftLeftToSymRange spec u (neg x) bound $ 
+       invertBetween pog given 
+  o2 : neg (unit + u + neg x) = x + neg (unit + u)
+  o2 = groupInverseAntiInverse (group spec) (unit + u) x
+       
+
 data CarryResult : Binop s -> (s -> s) -> Rel s -> s -> Type where
   MkCarryResult : 
     Carry -> (x : s) -> InRange leq neg x (add u (neg unit)) ->    
@@ -77,20 +94,3 @@ computeCarry spec decide u x prf =
                   (shiftLeftToSymRange spec u x ?bound prf)
     Middle _ => ?m -- (O, x)
     Right _ => ?r --(P, x + Neg (One + u))
-
-
-
-export
-lemmaRight : {(+) : Binop s} ->
-  PartiallyOrderedGroupSpec (+) zero neg leq -> (u,a,x : s) ->
-    Between leq x (u, u + u) ->
-    Between leq (x + neg (a + u)) (neg a, u + neg a)
-lemmaRight spec u a x given =
-  rewrite sym o2 in rewrite sym o3 in o1
-where
-  o1 : Between leq (neg (a + u + neg x)) (neg a, neg (a + neg u))
-  o1 = invertBetween spec $ shiftToLeft spec u a (neg x) $ invertBetween spec given
-  o2 : neg (a + u + neg x) = x + neg (a + u)
-  o2 = groupInverseAntiInverse (group spec) (a + u) x
-  o3 : neg (a + neg u) = u + neg a
-  o3 = groupInverseAntiInverse (group spec) a u

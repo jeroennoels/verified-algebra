@@ -23,6 +23,22 @@ weakenR spec bc (MkBetween ax xb) =
   MkBetween ax (transitive spec _ _ _ xb bc)  
 
 
+invertBetween : PartiallyOrderedGroupSpec _ _ inv rel ->
+  Between rel x (a,b) -> Between rel (inv x) (inv b, inv a)
+invertBetween spec (MkBetween ax xb) =
+  MkBetween (inverseReversesOrder spec xb)
+            (inverseReversesOrder spec ax)
+
+
+invertSymRange : PartiallyOrderedGroupSpec _ _ inv rel ->
+  InRange rel inv x b -> InRange rel inv (inv x) b
+invertSymRange {b} spec given = rewriteBetween Refl o2 o1 where
+  o1 : Between rel (inv x) (inv b, inv (inv b))
+  o1 = invertBetween spec given
+  o2 : inv (inv b) = b
+  o2 = groupInverseInvolution (group spec) b
+
+
 translateIntervalR : {(#) : Binop s} ->
   PartiallyOrderedMagmaSpec (#) leq -> (c : s) ->
     Between leq x (a,b) -> Between leq (x # c) (a # c, b # c)

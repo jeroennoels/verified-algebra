@@ -68,10 +68,3 @@ invertNegative spec a negative = rewrite sym o2 in o1 where
   o1 = inverseReversesOrder spec negative
   o2 : neg zero = zero
   o2 = groupInverseNeutral (group spec)
-
-
-invertBetween : PartiallyOrderedGroupSpec op e inv rel ->
-  Between rel x (a,b) -> Between rel (inv x) (inv b, inv a)
-invertBetween spec (MkBetween ax xb) =
-  MkBetween (inverseReversesOrder spec xb)
-            (inverseReversesOrder spec ax)

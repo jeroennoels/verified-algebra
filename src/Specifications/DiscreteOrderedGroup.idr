@@ -38,3 +38,6 @@ discreteOrder (MkDiscreteOrderedGroup _ _ d) = d
 
 totalOrder : DiscreteOrderedGroupSpec _ _ _ leq _ -> TotalOrderSpec leq
 totalOrder (MkDiscreteOrderedGroup p _ _) = totalOrder p
+
+abelian : DiscreteOrderedGroupSpec add _ _ _ _ -> isAbelian add
+abelian (MkDiscreteOrderedGroup _ a _) = a

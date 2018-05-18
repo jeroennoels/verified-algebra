@@ -47,6 +47,10 @@ invariantOrder (MkPartiallyOrderedGroup _ m) = m
 group : PartiallyOrderedGroupSpec op e inv _ -> GroupSpec op e inv
 group (MkPartiallyOrderedGroup g _) = g
 
+namespace PartiallyOrderedGroup
+  order : PartiallyOrderedGroupSpec _ _ _ leq -> PartialOrderSpec leq
+  order = order . invariantOrder
+
 
 InRange : Rel s -> (s -> s) -> s -> s -> Type
 InRange rel inv x u = Between rel x (inv u, u)

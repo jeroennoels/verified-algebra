@@ -40,39 +40,38 @@ shiftToLeft spec u a x given = rewriteBetween o2 o3 o1 where
 
 export
 shiftLeftToSymRange : {(+) : Binop s} ->
-  DiscreteOrderedGroupSpec (+) _ neg leq unit ->
-    (u,x : s) ->
-    leq unit (u + neg unit) ->
+  PartiallyOrderedGroupSpec (+) _ neg leq ->
+    (u,a,x : s) ->
+    leq a (u + neg a) ->
     Between leq x (neg (u + u), neg u) ->
-    InRange leq neg (unit + u + x) (u + neg unit)
-shiftLeftToSymRange {s} spec u x bound given = o4 where
+    InRange leq neg (a + u + x) (u + neg a)
+shiftLeftToSymRange {s} spec u a x bound given = o4 where
   sx : s
-  sx = unit + u + x
-  o1 : Between leq sx (unit + neg u, unit)
-  o1 = shiftToLeft (partiallyOrderedGroup spec) u unit x given
-  o2 : Between leq sx (unit + neg u, u + neg unit)
-  o2 = weakenR (partialOrder (totalOrder spec)) bound o1
-  o3 : neg (u + neg unit) = unit + neg u
-  o3 = groupInverseAntiInverse (group spec) u unit
-  o4 : Between leq sx (neg (u + neg unit), u + neg unit)
+  sx = a + u + x
+  o1 : Between leq sx (a + neg u, a)
+  o1 = shiftToLeft spec u a x given
+  o2 : Between leq sx (a + neg u, u + neg a)
+  o2 = weakenR (order spec) bound o1
+  o3 : neg (u + neg a) = a + neg u
+  o3 = groupInverseAntiInverse (group spec) u a
+  o4 : Between leq sx (neg (u + neg a), u + neg a)
   o4 = rewriteBetween (sym o3) Refl o2
 
 
 export
 shiftRightToSymRange : {(+) : Binop s} ->
-  DiscreteOrderedGroupSpec (+) _ neg leq unit ->
-    (u,x : s) ->
-    leq unit (u + neg unit) ->
+  PartiallyOrderedGroupSpec (+) _ neg leq ->
+    (u,a,x : s) ->
+    leq a (u + neg a) ->
     Between leq x (u, u + u) ->
-    InRange leq neg (x + neg (unit + u)) (u + neg unit)
-shiftRightToSymRange spec u x bound given = rewrite sym o2 in o1 where
-  o1 : InRange leq neg (neg (unit + u + neg x)) (u + neg unit)
-  o1 = let pog = partiallyOrderedGroup spec in
-       invertSymRange pog $
-       shiftLeftToSymRange spec u (neg x) bound $
-       invertBetween pog given
-  o2 : neg (unit + u + neg x) = x + neg (unit + u)
-  o2 = groupInverseAntiInverse (group spec) (unit + u) x
+    InRange leq neg (x + neg (a + u)) (u + neg a)
+shiftRightToSymRange spec u a x bound given = rewrite sym o2 in o1 where
+  o1 : InRange leq neg (neg (a + u + neg x)) (u + neg a)
+  o1 = invertSymRange spec $
+       shiftLeftToSymRange spec u a (neg x) bound $
+       invertBetween spec given
+  o2 : neg (a + u + neg x) = x + neg (a + u)
+  o2 = groupInverseAntiInverse (group spec) (a + u) x
 
 
 export
@@ -99,13 +98,14 @@ computeCarry : AdditiveGroup s =>
     decisionProcedure leq -> (u,x : s) ->
     InRange leq Neg x (u + u) -> CarryResult (+) Neg leq One
 computeCarry spec decide u x prf =
-  case decidePartition3 spec decide (Neg u) u x prf of
+  let pog = partiallyOrderedGroup spec 
+  in case decidePartition3 spec decide (Neg u) u x prf of
     Left prf
       => MkCarryResult M (One + u + x)
-           (shiftLeftToSymRange spec u x ?bound prf)
+           (shiftLeftToSymRange pog u One x ?bound prf)
     Middle prf
       => MkCarryResult O x
-           (toSymRange (partiallyOrderedGroup spec) (abelian spec) prf)
+           (toSymRange pog (abelian spec) prf)
     Right prf
       => MkCarryResult P (x + Neg (One + u))
-           (shiftRightToSymRange spec u x ?bound prf)
+           (shiftRightToSymRange pog u One x ?bound prf)

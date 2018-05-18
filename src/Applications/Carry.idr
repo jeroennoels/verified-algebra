@@ -26,32 +26,16 @@ implementation Show Carry where
 
 export
 lemmaLeft : {(+) : Binop s} ->
-  PartiallyOrderedGroupSpec (+) zero neg leq -> (u,y,x : s) ->
+  PartiallyOrderedGroupSpec (+) zero neg leq -> (u,a,x : s) ->
     Between leq x (neg (u + u), neg u) ->
-    Between leq (y + u + x) (y + neg u, y)
-lemmaLeft spec u y x given = rewriteBetween o2 o3 o1 where
-  o1 : Between leq (y + u + x) (y + u + neg (u + u), y + u + neg u)
-  o1 = translateIntervalL (invariantOrder spec) (y + u) given
-  o2 : y + u + neg (u + u) = y + neg u
-  o2 = groupCancelMisc2 (group spec) y u _
-  o3 : y + u + neg u = y
-  o3 = groupCancel3bis (group spec) y u
-
-
-export
-lemmaRight : {(+) : Binop s} ->
-  PartiallyOrderedGroupSpec (+) zero neg leq -> (u,y,x : s) ->
-    Between leq x (u, u + u) ->
-    Between leq (x + neg (y + u)) (neg y, u + neg y)
-lemmaRight spec u y x given =
-  rewrite sym o2 in rewrite sym o3 in o1
-where
-  o1 : Between leq (neg (y + u + neg x)) (neg y, neg (y + neg u))
-  o1 = invertBetween spec $ lemmaLeft spec u y (neg x) $ invertBetween spec given
-  o2 : neg (y + u + neg x) = x + neg (y + u)
-  o2 = groupInverseAntiInverse (group spec) (y + u) x
-  o3 : neg (y + neg u) = u + neg y
-  o3 = groupInverseAntiInverse (group spec) y u
+    Between leq (a + u + x) (a + neg u, a)
+lemmaLeft spec u a x given = rewriteBetween o2 o3 o1 where
+  o1 : Between leq (a + u + x) (a + u + neg (u + u), a + u + neg u)
+  o1 = translateIntervalL (invariantOrder spec) (a + u) given
+  o2 : a + u + neg (u + u) = a + neg u
+  o2 = groupCancelMisc2 (group spec) a u _
+  o3 : a + u + neg u = a
+  o3 = groupCancel3bis (group spec) a u
 
 
 data CarryResult : Binop s -> (s -> s) -> Rel s -> s -> Type where
@@ -77,3 +61,22 @@ computeCarry spec decide u x prf =
                 in MkCarryResult {u} M (One + u + x) vv
     Middle _ => ?m -- (O, x)
     Right _ => ?r --(P, x + Neg (One + u))
+
+
+
+
+
+export
+lemmaRight : {(+) : Binop s} ->
+  PartiallyOrderedGroupSpec (+) zero neg leq -> (u,a,x : s) ->
+    Between leq x (u, u + u) ->
+    Between leq (x + neg (a + u)) (neg a, u + neg a)
+lemmaRight spec u a x given =
+  rewrite sym o2 in rewrite sym o3 in o1
+where
+  o1 : Between leq (neg (a + u + neg x)) (neg a, neg (a + neg u))
+  o1 = invertBetween spec $ lemmaLeft spec u a (neg x) $ invertBetween spec given
+  o2 : neg (a + u + neg x) = x + neg (a + u)
+  o2 = groupInverseAntiInverse (group spec) (a + u) x
+  o3 : neg (a + neg u) = u + neg a
+  o3 = groupInverseAntiInverse (group spec) a u

@@ -17,6 +17,12 @@ rewriteBetween : a = c -> b = d -> Between leq x (a,b) -> Between leq x (c,d)
 rewriteBetween p q given = rewrite sym p in rewrite sym q in given
 
 
+weakenR : PartialOrderSpec rel -> 
+  rel b c -> Between rel x (a,b) -> Between rel x (a,c)
+weakenR spec bc (MkBetween ax xb) = 
+  MkBetween ax (transitive spec _ _ _ xb bc)  
+
+
 translateIntervalR : {(#) : Binop s} ->
   PartiallyOrderedMagmaSpec (#) leq -> (c : s) ->
     Between leq x (a,b) -> Between leq (x # c) (a # c, b # c)

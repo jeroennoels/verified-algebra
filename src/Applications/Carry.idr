@@ -7,15 +7,9 @@ import Proofs.GroupCancelMisc
 import Proofs.GroupTheory
 import Proofs.TranslationInvarianceTheory
 import Proofs.Interval
+
 %default total
 %access public export
-
-export
-weakenBetween : PartialOrderSpec rel -> 
-  rel b c -> Between rel x (a,b) -> Between rel x (a,c)
-weakenBetween spec bc (MkBetween ax xb) = 
-  MkBetween ax (transitive spec _ _ _ xb bc)  
-
 
 interface AdditiveGroup s where 
   (+) : s -> s -> s
@@ -77,7 +71,7 @@ computeCarry : AdditiveGroup s =>
 computeCarry spec decide u x prf =
   case decidePartition3 spec decide (Neg u) u x prf of
     Left prf => let ll = lemmaLeft (partiallyOrderedGroup spec) u One x prf
-                    ww = weakenBetween (partialOrder (totalOrder spec)) ?q ll
+                    ww = weakenR (partialOrder (totalOrder spec)) ?q ll
                     vv = rewriteBetween 
                            (sym $ groupInverseAntiInverse (group spec) u One) Refl ww
                 in MkCarryResult {u} M (One + u + x) vv

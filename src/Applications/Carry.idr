@@ -95,17 +95,20 @@ carry (MkCarryResult c _ _) = c
 
 computeCarry : AdditiveGroup s =>
   DiscreteOrderedGroupSpec (+) Zero Neg leq One ->
-    decisionProcedure leq -> (u,x : s) ->
-    InRange leq Neg x (u + u) -> CarryResult (+) Neg leq One
-computeCarry spec decide u x prf =
+  decisionProcedure leq -> 
+  (u,x : s) ->
+  leq One (u + Neg One) ->
+  InRange leq Neg x (u + u) -> 
+  CarryResult (+) Neg leq One
+computeCarry spec decide u x bound prf =
   let pog = partiallyOrderedGroup spec 
   in case decidePartition3 spec decide (Neg u) u x prf of
     Left prf
       => MkCarryResult M (One + u + x)
-           (shiftLeftToSymRange pog u One x ?bound prf)
+           (shiftLeftToSymRange pog u One x bound prf)
     Middle prf
       => MkCarryResult O x
            (toSymRange pog (abelian spec) prf)
     Right prf
       => MkCarryResult P (x + Neg (One + u))
-           (shiftRightToSymRange pog u One x ?bound prf)
+           (shiftRightToSymRange pog u One x bound prf)

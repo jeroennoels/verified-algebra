@@ -49,10 +49,10 @@ testPartition3 a p q b x =
 
 
 testCarry : Integer -> String
-testCarry x = 
+testCarry x =    
   case decideBetween {leq = IntegerLeq} decideLeq x (-18) 18 of
     Yes inRange => show $ carry $ 
-            computeCarry integerDiscreteOrderedGroup decideLeq 9 x inRange 
+            computeCarry integerDiscreteOrderedGroup decideLeq 9 x Oh inRange 
     No _ => "Error"
 
 
@@ -60,5 +60,5 @@ main : IO ()
 main = do printLn $ map (testPartition3 0 3 7 10) [(-1)..11]
           printLn $ map testDouble [0..9] 
           printLn $ map testAbsoluteValue [(-5)..5] 
-          printLn $ map testCarry [(-20)..(-12)] 
+          printLn $ map testCarry [(-20)..20] 
           

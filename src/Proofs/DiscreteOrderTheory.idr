@@ -1,8 +1,10 @@
 module Proofs.DiscreteOrderTheory
 
 import Util
+import Data.Vect
+import Data.Rel
+import Decidable.Decidable
 import Specifications.DiscreteOrderedGroup
-
 import Proofs.GroupCancelationLemmas
 import Proofs.GroupTheory
 import Proofs.GroupCancelMisc
@@ -41,24 +43,28 @@ strictOrderSeparates spec a b diff given = o4 where
 
 
 public export
-separate : {(+) : Binop s} -> {(<=) : Rel s} ->
-  DiscreteOrderedGroupSpec (+) zero neg (<=) unit ->
-  decisionProcedure (<=) -> (a,b : s) ->
-    EitherErased (a <= b) (unit + b <= a)
-separate spec decide a b = case decide a b of
-  Yes prf => Left prf
-  No contra =>
-    let (baLeq, diff) = orderContra (totalOrder spec) a b contra
-        prf = strictOrderSeparates spec b a (diff . sym) baLeq
-    in Right prf
+separate : Decidable [s,s] leq => {(+) : Binop s} ->
+  DiscreteOrderedGroupSpec (+) zero neg leq unit ->
+    (a,b : s) ->
+    EitherErased (a `leq` b) (unit + b `leq` a)
+separate {s} spec a b =
+  case dec a b of
+    Yes prf => Left prf
+    No contra =>
+      let (baLeq, diff) = orderContra (totalOrder spec) a b contra
+          prf = strictOrderSeparates spec b a (diff . sym) baLeq
+      in Right prf
+  where
+    dec : decisionProcedure leq
+    dec = decide {ts = [s,s]}
 
 
 public export
-separateBis : {(+) : Binop s} -> {(<=) : Rel s} ->
-  DiscreteOrderedGroupSpec (+) zero neg (<=) unit ->
-  decisionProcedure (<=) -> (a,b : s) ->
-    EitherErased (a <= neg unit + b) (b <= a)
-separateBis spec decide a b =
-  case separate spec decide b a of
+separateBis : Decidable [s,s] leq => {(+) : Binop s} ->
+  DiscreteOrderedGroupSpec (+) zero neg leq unit ->
+    (a,b : s) ->
+    EitherErased (a `leq` neg unit + b) (b `leq` a)
+separateBis spec a b =
+  case separate spec b a of
     Left ba => Right ba
     Right ab => Left (orderInverseL (partiallyOrderedGroup spec) unit b a ab)

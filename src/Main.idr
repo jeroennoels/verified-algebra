@@ -22,8 +22,8 @@ implementation AdditiveGroup Integer where
   One = 1
 
 implementation Decidable [Integer, Integer] IntegerLeq where
-  decide = decideLeq 
-  
+  decide = decideLeq
+
 -- integerDiscreteOrderedGroupSpec : Type
 -- integerDiscreteOrderedGroupSpec = DiscreteOrderedGroupSpec
 --   prim__addBigInt 0 (prim__subBigInt 0) IntegerLeq 1
@@ -37,34 +37,35 @@ postulate integerDiscreteOrderedGroup : lala IntegerLeq
 
 
 testSeparation : Integer -> Integer -> String
-testSeparation a b = show $ separate integerDiscreteOrderedGroup decideLeq a b
+testSeparation a b = show $ separate integerDiscreteOrderedGroup a b
 
 
-partition3 : (x : Integer) -> .Between IntegerLeq x (a,b) -> 
+partition3 : (x : Integer) -> .Between IntegerLeq x (a,b) ->
   Integer -> Integer -> String
-partition3 x axb p q = show $ 
-  decidePartition3 integerDiscreteOrderedGroup decideLeq p q x axb 
+partition3 x axb p q = show $
+  decidePartition3 integerDiscreteOrderedGroup p q x axb
 
 
 testPartition3 : Integer -> Integer -> Integer -> Integer -> Integer -> String
-testPartition3 a p q b x = 
+testPartition3 a p q b x =
   case decideBetween {leq = IntegerLeq} decideLeq x a b of
     Yes axb => partition3 x axb p q
     No _ => "Error"
 
 
 testCarry : Integer -> String
-testCarry x =    
+testCarry x =
   case decideBetween {leq = IntegerLeq} decideLeq x (-18) 18 of
-    Yes inRange => show $ carry $ 
-            computeCarry integerDiscreteOrderedGroup 9 x 
-              (CheckIntegerLeq Oh) inRange 
+    Yes inRange =>
+          let result = computeCarry integerDiscreteOrderedGroup 9 x
+                         (CheckIntegerLeq Oh) inRange
+          in show (value result)               
     No _ => "Error"
 
 
 main : IO ()
 main = do printLn $ map (testPartition3 0 3 7 10) [(-1)..11]
-          printLn $ map testDouble [0..9] 
-          printLn $ map testAbsoluteValue [(-5)..5] 
-          printLn $ map testCarry [(-20)..20] 
-          
+          printLn $ map testDouble [0..9]
+          printLn $ map testAbsoluteValue [(-5)..5]
+          printLn $ map testCarry [(-20)..20]
+

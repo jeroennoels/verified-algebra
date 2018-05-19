@@ -1,6 +1,9 @@
 module Proofs.TranslationInvarianceTheory
 
 import Util
+import Data.Vect
+import Data.Rel
+import Decidable.Decidable
 import Specifications.DiscreteOrderedGroup
 import Proofs.GroupCancelationLemmas
 import Proofs.GroupTheory
@@ -17,10 +20,10 @@ rewriteBetween : a = c -> b = d -> Between leq x (a,b) -> Between leq x (c,d)
 rewriteBetween p q given = rewrite sym p in rewrite sym q in given
 
 
-weakenR : PartialOrderSpec rel -> 
+weakenR : PartialOrderSpec rel ->
   rel b c -> Between rel x (a,b) -> Between rel x (a,c)
-weakenR spec bc (MkBetween ax xb) = 
-  MkBetween ax (transitive spec _ _ _ xb bc)  
+weakenR spec bc (MkBetween ax xb) =
+  MkBetween ax (transitive spec _ _ _ xb bc)
 
 
 invertBetween : PartiallyOrderedGroupSpec _ _ inv rel ->
@@ -69,38 +72,41 @@ decideBetween decide x a b =
   decideBoth MkBetween betweenL betweenR (decide a x) (decide x b)
 
 
-decidePivot : DiscreteOrderedGroupSpec add zero neg leq unit ->
-  decisionProcedure leq -> (p,x : s) ->
+decidePivot : Decidable [s,s] leq =>
+  DiscreteOrderedGroupSpec add zero neg leq unit ->
+    (p,x : s) ->
     Between leq x (a,b) ->
     EitherErased (Between leq x (a,p))
                  (Between leq x (add unit p, b))
-decidePivot spec decide p x (MkBetween ax xb) =
-  case separate spec decide x p of
+decidePivot {s} spec p x (MkBetween ax xb) =
+  case separate spec x p of
     Left xp => Left (MkBetween ax xp)
     Right px => Right (MkBetween px xb)
 
 
-decidePivotBis : DiscreteOrderedGroupSpec add zero neg leq unit ->
-  decisionProcedure leq -> (p,x : s) ->
+decidePivotBis : Decidable [s,s] leq =>
+  DiscreteOrderedGroupSpec add zero neg leq unit ->
+    (p,x : s) ->
     Between leq x (a,b) ->
     EitherErased (Between leq x (a, add (neg unit) p))
                  (Between leq x (p, b))
-decidePivotBis spec decide p x (MkBetween ax xb) =
-  case separateBis spec decide x p of
+decidePivotBis {s} spec p x (MkBetween ax xb) =
+  case separateBis spec x p of
     Left xp => Left (MkBetween ax xp)
     Right px => Right (MkBetween px xb)
 
 
-decidePartition3 : DiscreteOrderedGroupSpec add zero neg leq unit ->
-  decisionProcedure leq -> (p,q,x : s) ->
+decidePartition3 : Decidable [s,s] leq =>
+  DiscreteOrderedGroupSpec add zero neg leq unit ->
+    (p,q,x : s) ->
     Between leq x (a,b) ->
     Either3Erased (Between leq x (a,p))
                   (Between leq x (add unit p, add (neg unit) q))
                   (Between leq x (q,b))
-decidePartition3 spec decide p q x axb =
-  case decidePivot spec decide p x axb of
+decidePartition3 spec p q x axb =
+  case decidePivot spec p x axb of
     Left l => Left l
     Right pxb =>
-      case decidePivotBis spec decide q x pxb of
+      case decidePivotBis spec q x pxb of
         Left m => Middle m
         Right r => Right r

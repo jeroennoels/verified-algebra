@@ -23,9 +23,9 @@ interface AdditiveGroup s where
 data Carry = M | O | P
 
 implementation Show Carry where
-  show M = "Carry_M"
-  show O = "Carry_O"
-  show P = "Carry_P"
+  show M = "M"
+  show O = "O"
+  show P = "P"
 
 export
 shiftToLeft : {(+) : Binop s} ->
@@ -92,20 +92,18 @@ data CarryResult : Binop s -> (s -> s) -> Rel s -> s -> Type where
     Carry -> (x : s) -> InRange leq neg x (add u (neg unit)) ->
     CarryResult add neg leq unit
 
-carry : CarryResult _ _ _ _ -> Carry
-carry (MkCarryResult c _ _) = c
-
+value : CarryResult {s} _ _ _ _ -> (Carry, s)
+value (MkCarryResult c x _) = (c, x)
 
 computeCarry : (AdditiveGroup s, Decidable [s,s] leq) =>
   DiscreteOrderedGroupSpec (+) Zero Neg leq One ->
---  decisionProcedure leq -> 
   (u,x : s) ->
   leq One (u + Neg One) ->
   InRange leq Neg x (u + u) -> 
   CarryResult (+) Neg leq One
-computeCarry {s} spec u x bound prf =
+computeCarry spec u x bound prf =
   let pog = partiallyOrderedGroup spec 
-  in case decidePartition3 spec (decide {ts = [s,s]}) (Neg u) u x prf of
+  in case decidePartition3 spec (Neg u) u x prf of
     Left prf
       => MkCarryResult M (One + u + x)
            (shiftLeftToSymRange pog u One x bound prf)

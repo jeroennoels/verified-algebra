@@ -1,6 +1,9 @@
 module Main
 
 import Util
+import Data.Vect
+import Data.Rel
+import Decidable.Decidable
 import Specifications.DiscreteOrderedGroup
 import Proofs.GroupTheory
 import Proofs.TranslationInvarianceTheory
@@ -18,6 +21,8 @@ implementation AdditiveGroup Integer where
   Zero = 0
   One = 1
 
+implementation Decidable [Integer, Integer] IntegerLeq where
+  decide = decideLeq 
   
 -- integerDiscreteOrderedGroupSpec : Type
 -- integerDiscreteOrderedGroupSpec = DiscreteOrderedGroupSpec
@@ -52,7 +57,8 @@ testCarry : Integer -> String
 testCarry x =    
   case decideBetween {leq = IntegerLeq} decideLeq x (-18) 18 of
     Yes inRange => show $ carry $ 
-            computeCarry integerDiscreteOrderedGroup decideLeq 9 x Oh inRange 
+            computeCarry integerDiscreteOrderedGroup 9 x 
+              (CheckIntegerLeq Oh) inRange 
     No _ => "Error"
 
 

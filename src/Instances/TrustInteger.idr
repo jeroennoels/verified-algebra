@@ -8,11 +8,17 @@ import Specifications.OrderedRing
 %default total
 %access public export
 
-IntegerLeq : Integer -> Integer -> Type
-IntegerLeq a b = So (intToBool (prim__slteBigInt a b))
+data IntegerLeq : Integer -> Integer -> Type where
+  CheckIntegerLeq : So (intToBool (prim__slteBigInt a b)) -> IntegerLeq a b  
+
+soIntegerLeq : IntegerLeq a b -> So (intToBool (prim__slteBigInt a b))
+soIntegerLeq (CheckIntegerLeq so) = so
 
 decideLeq : decisionProcedure IntegerLeq
-decideLeq a b = isItSo (intToBool (prim__slteBigInt a b))
+decideLeq a b = case isItSo (intToBool (prim__slteBigInt a b)) of
+  Yes oh => Yes (CheckIntegerLeq oh)
+  No contra => No (contra . soIntegerLeq)
+
 
 private
 example : Type

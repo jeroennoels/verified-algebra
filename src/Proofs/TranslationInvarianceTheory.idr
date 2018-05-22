@@ -11,7 +11,7 @@ import Symmetry.Opposite
 
 infixl 8 #
 
-composeOrder : {(#) : Binop s} -> {(<=) : Rel s} ->
+composeOrder : {(#) : Binop s} -> {(<=) : Binrel s} ->
   PartiallyOrderedMagmaSpec (#) (<=) -> (a,b,c,d : s) ->
     a <= b -> c <= d -> a # c <= b # d
 composeOrder spec a b c d ab cd =
@@ -20,7 +20,7 @@ composeOrder spec a b c d ab cd =
   in transitive (order spec) (a # c) (b # c) (b # d) pp qq
 
 
-orderInverseL : {(#) : Binop s} -> {(<=) : Rel s} ->
+orderInverseL : {(#) : Binop s} -> {(<=) : Binrel s} ->
   PartiallyOrderedGroupSpec (#) e inv (<=) -> (a,b,c : s) ->
     a # c <= b -> c <= inv a # b
 orderInverseL spec a b c given = rewrite sym o2 in o1 where
@@ -30,7 +30,7 @@ orderInverseL spec a b c given = rewrite sym o2 in o1 where
   o2 = groupCancel1bis (group spec) a c
 
 
-orderInverseR : {(#) : Binop s} -> {(<=) : Rel s} ->
+orderInverseR : {(#) : Binop s} -> {(<=) : Binrel s} ->
   PartiallyOrderedGroupSpec (#) e inv (<=) -> (a,b,c : s) ->
     a # c <= b -> a <= b # inv c
 orderInverseR spec a b c = orderInverseL (opposite spec) c b a
@@ -60,7 +60,7 @@ groupInverseAndOrder spec a b given = rewrite sym o2 in o1 where
   o2 = inverseR (group spec) b
 
 
-invertNegative : {(<=) : Rel s} ->
+invertNegative : {(<=) : Binrel s} ->
   PartiallyOrderedGroupSpec _ zero neg (<=) -> (a : s) ->
     a <= zero -> zero <= neg a
 invertNegative spec a negative = rewrite sym o2 in o1 where

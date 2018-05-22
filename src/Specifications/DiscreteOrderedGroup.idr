@@ -6,13 +6,13 @@ import public Specifications.OrderedGroup
 %default total
 %access public export
 
-isDiscreteOrder : Binop s -> Rel s -> s -> s -> Type
+isDiscreteOrder : Binop s -> Binrel s -> s -> s -> Type
 isDiscreteOrder (+) (<=) zero unit = (x : _) ->
   Not (x = zero) -> x <= zero -> unit + x <= zero
 
 
-data DiscreteOrderedGroupSpec : Binop s -> s -> (s -> s) -> Rel s -> s -> Type
-  where
+data DiscreteOrderedGroupSpec : 
+       Binop s -> s -> (s -> s) -> Binrel s -> s -> Type where
   MkDiscreteOrderedGroup :
     OrderedGroupSpec add zero neg leq ->
     isAbelian add ->

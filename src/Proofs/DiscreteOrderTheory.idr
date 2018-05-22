@@ -28,7 +28,7 @@ lemmaOrder spec a b c given = rewriteRelation leq o2 o3 o1 where
   o3 = neutralL (monoid (group spec)) c
 
 
-strictOrderSeparates : {(+) : Binop s} -> {(<=) : Rel s} ->
+strictOrderSeparates : {(+) : Binop s} -> {(<=) : Binrel s} ->
   DiscreteOrderedGroupSpec (+) zero neg (<=) unit -> (a,b : s) ->
     Not (a = b) -> a <= b -> unit + a <= b
 strictOrderSeparates spec a b diff given = o4 where

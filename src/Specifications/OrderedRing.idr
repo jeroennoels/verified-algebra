@@ -10,7 +10,7 @@ import public Specifications.TranslationInvariance
 
 -- todo multiplication of positive elements
 data PartiallyOrderedRingSpec : 
-  Binop s -> s -> (s -> s) -> Binop s -> Rel s -> Type
+  Binop s -> s -> (s -> s) -> Binop s -> Binrel s -> Type
   where MkPartiallyOrderedRing :
     RingSpec add zero neg mul ->
     PartiallyOrderedMagmaSpec add leq ->

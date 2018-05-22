@@ -5,16 +5,16 @@ import public Common.Abbrev
 %default total
 %access public export
 
-isReflexive : Rel s -> Type
+isReflexive : Binrel s -> Type
 isReflexive rel = (x : _) -> rel x x
 
-isTransitive : Rel s -> Type
+isTransitive : Binrel s -> Type
 isTransitive rel = (x,y,z : _) -> rel x y -> rel y z -> rel x z
 
-isAntisymmetric : Rel s -> Type
+isAntisymmetric : Binrel s -> Type
 isAntisymmetric rel = (x,y : _) -> rel x y -> rel y x -> x = y
 
-data PartialOrderSpec : Rel s -> Type where
+data PartialOrderSpec : Binrel s -> Type where
   MkPartialOrder : isReflexive rel -> isTransitive rel -> isAntisymmetric rel ->
     PartialOrderSpec rel
 
@@ -27,11 +27,11 @@ transitive (MkPartialOrder _ t _) = t
 antisymmetric : PartialOrderSpec rel -> isAntisymmetric rel
 antisymmetric (MkPartialOrder _ _ a) = a
 
-isTotalOrder : Rel s -> Type
+isTotalOrder : Binrel s -> Type
 isTotalOrder rel = (x,y : _) -> Either (rel x y) (rel y x)
 
 
-data TotalOrderSpec : Rel s -> Type where
+data TotalOrderSpec : Binrel s -> Type where
   MkTotalOrder : PartialOrderSpec rel -> isTotalOrder rel -> TotalOrderSpec rel
 
 partialOrder : TotalOrderSpec rel -> PartialOrderSpec rel
@@ -41,7 +41,7 @@ totalOrder : TotalOrderSpec rel -> isTotalOrder rel
 totalOrder (MkTotalOrder _ t) = t
 
 
-data Between : Rel s -> s -> (s,s) -> Type where
+data Between : Binrel s -> s -> (s,s) -> Type where
   MkBetween : rel a x -> rel x b -> Between rel x (a,b)
 
 betweenL : Between rel x (a,b) -> rel a x

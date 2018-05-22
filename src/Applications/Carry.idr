@@ -82,7 +82,7 @@ toSymRange spec abel =
   rewriteBetween (sym $ groupInverseAntiInverse (group spec) _ _) (abel _ _)
 
 
-data CarryResult : Binop s -> (s -> s) -> Rel s -> s -> Type where
+data CarryResult : Binop s -> (s -> s) -> Binrel s -> s -> Type where
   MkCarryResult :
     Carry -> (x : s) -> InRange leq neg x (add u (neg unit)) ->
     CarryResult add neg leq unit

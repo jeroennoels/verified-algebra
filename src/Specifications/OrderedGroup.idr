@@ -6,7 +6,7 @@ import public Specifications.TranslationInvariance
 %default total
 %access public export
 
-data OrderedGroupSpec : Binop s -> s -> (s -> s) -> Rel s -> Type where
+data OrderedGroupSpec : Binop s -> s -> (s -> s) -> Binrel s -> Type where
   MkOrderedGroup :
     PartiallyOrderedGroupSpec op inv e leq ->
     isTotalOrder leq ->

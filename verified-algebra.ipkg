@@ -9,6 +9,7 @@ opts = "--warnreach"
 modules =
   Common.Abbrev,
   Common.Util,
+  Common.Interfaces,
   Specifications.Semigroup,
   Specifications.Monoid,
   Specifications.Group,
@@ -26,7 +27,6 @@ modules =
   Proofs.TranslationInvarianceTheory,
   Proofs.DiscreteOrderTheory,
   Proofs.Interval,
-  Common.Interfaces,
   Instances.Notation,
   Instances.TrustInteger,
   Instances.ZZ,

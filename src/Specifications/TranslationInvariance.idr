@@ -9,13 +9,13 @@ import public Specifications.Order
 
 infixl 8 #
 
-isTranslationInvariantL : Binop s -> Rel s -> Type
+isTranslationInvariantL : Binop s -> Binrel s -> Type
 isTranslationInvariantL (#) (<=) = (x,y,a : _) -> x <= y -> a # x <= a # y
 
-isTranslationInvariantR : Binop s -> Rel s -> Type
+isTranslationInvariantR : Binop s -> Binrel s -> Type
 isTranslationInvariantR (#) (<=) = (x,y,a : _) -> x <= y -> x # a <= y # a
 
-data PartiallyOrderedMagmaSpec : Binop s -> Rel s -> Type where
+data PartiallyOrderedMagmaSpec : Binop s -> Binrel s -> Type where
   MkPartiallyOrderedMagma :
     PartialOrderSpec leq ->
     isTranslationInvariantL op leq ->
@@ -34,7 +34,8 @@ translationInvariantR : PartiallyOrderedMagmaSpec op leq ->
 translationInvariantR (MkPartiallyOrderedMagma _ _ r) = r
 
 
-data PartiallyOrderedGroupSpec : Binop s -> s -> (s -> s) -> Rel s -> Type where
+data PartiallyOrderedGroupSpec : 
+       Binop s -> s -> (s -> s) -> Binrel s -> Type where
   MkPartiallyOrderedGroup :
     GroupSpec op inv e ->
     PartiallyOrderedMagmaSpec op leq ->
@@ -52,5 +53,5 @@ namespace PartiallyOrderedGroup
   order = order . invariantOrder
 
 
-InRange : Rel s -> (s -> s) -> s -> s -> Type
+InRange : Binrel s -> (s -> s) -> s -> s -> Type
 InRange rel inv x u = Between rel x (inv u, u)

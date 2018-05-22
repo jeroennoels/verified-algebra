@@ -1,6 +1,6 @@
 module Main
 
-import Util
+import Common.Util
 import Specifications.DiscreteOrderedGroup
 import Proofs.GroupTheory
 import Proofs.TranslationInvarianceTheory

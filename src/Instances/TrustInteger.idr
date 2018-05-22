@@ -5,7 +5,7 @@ import public Data.Vect
 import public Data.Rel
 import public Decidable.Decidable
 import public Common.Abbrev
-import Util
+import Common.Util
 import Common.Interfaces
 import Specifications.DiscreteOrderedGroup
 import Instances.Notation

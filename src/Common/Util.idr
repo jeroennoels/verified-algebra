@@ -1,4 +1,4 @@
-module Util
+module Common.Util
 
 import Common.Abbrev
 import Data.So

@@ -1,6 +1,6 @@
 module Proofs.DiscreteOrderTheory
 
-import Util
+import Common.Util
 import Data.Vect
 import Data.Rel
 import Decidable.Decidable

@@ -1,7 +1,7 @@
 module Proofs.OrderTheory
 
 import Common.Abbrev
-import Util
+import Common.Util
 import Specifications.Order
 
 %default total

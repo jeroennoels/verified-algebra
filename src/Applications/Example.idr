@@ -4,7 +4,7 @@ import public Data.So
 import Data.Vect
 import Data.Rel
 import Decidable.Decidable
-import Util
+import Common.Util
 import Specifications.OrderedGroup
 import Proofs.OrderTheory
 import Proofs.GroupTheory

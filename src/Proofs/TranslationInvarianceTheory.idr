@@ -1,6 +1,6 @@
 module Proofs.TranslationInvarianceTheory
 
-import Util
+import Common.Util
 import Specifications.TranslationInvariance
 import Proofs.GroupTheory
 import Proofs.GroupCancelationLemmas

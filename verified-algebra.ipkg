@@ -8,7 +8,7 @@ opts = "--warnreach"
 
 modules =
   Common.Abbrev,
-  Util,
+  Common.Util,
   Specifications.Semigroup,
   Specifications.Monoid,
   Specifications.Group,

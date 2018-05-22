@@ -1,6 +1,6 @@
 module Specifications.TranslationInvariance
 
-import public Abbrev
+import public Common.Abbrev
 import public Specifications.Group
 import public Specifications.Order
 

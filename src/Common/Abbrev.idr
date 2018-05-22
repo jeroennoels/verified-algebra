@@ -1,4 +1,4 @@
-module Abbrev
+module Common.Abbrev
 
 %default total
 %access public export

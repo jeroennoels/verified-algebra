@@ -4,7 +4,7 @@ import public Data.So
 import public Data.Vect
 import public Data.Rel
 import public Decidable.Decidable
-import public Abbrev
+import public Common.Abbrev
 import Util
 import Common.Interfaces
 import Specifications.DiscreteOrderedGroup

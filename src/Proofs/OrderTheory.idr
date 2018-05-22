@@ -1,6 +1,6 @@
 module Proofs.OrderTheory
 
-import Abbrev
+import Common.Abbrev
 import Util
 import Specifications.Order
 

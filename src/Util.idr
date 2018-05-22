@@ -1,6 +1,6 @@
 module Util
 
-import Abbrev
+import Common.Abbrev
 import Data.So
 import Decidable.Decidable
 

@@ -1,6 +1,6 @@
 module Specifications.DiscreteOrderGroup
 
-import public Abbrev
+import public Common.Abbrev
 import public Specifications.OrderedGroup
 
 %default total

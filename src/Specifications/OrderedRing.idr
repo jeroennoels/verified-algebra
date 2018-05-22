@@ -1,6 +1,6 @@
 module Specifications.OrderedRing
 
-import public Abbrev
+import public Common.Abbrev
 
 import public Specifications.Ring
 import public Specifications.TranslationInvariance

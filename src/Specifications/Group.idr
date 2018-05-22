@@ -1,6 +1,6 @@
 module Specifications.Group
 
-import public Abbrev
+import public Common.Abbrev
 import public Specifications.Monoid
 
 %default total

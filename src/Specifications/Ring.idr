@@ -1,6 +1,6 @@
 module Specifications.Ring
 
-import public Abbrev
+import public Common.Abbrev
 import public Specifications.Group
 
 %default total

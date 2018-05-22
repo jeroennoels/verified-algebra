@@ -1,6 +1,6 @@
 module Proofs.GroupCancelMisc
 
-import public Abbrev
+import public Common.Abbrev
 import Specifications.Group
 import Symmetry.Opposite
 import Proofs.GroupCancelationLemmas

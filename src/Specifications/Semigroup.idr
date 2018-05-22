@@ -1,6 +1,6 @@
 module Specifications.Semigroup
 
-import public Abbrev
+import public Common.Abbrev
 
 %default total
 %access public export

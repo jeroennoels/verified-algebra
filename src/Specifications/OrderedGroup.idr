@@ -1,6 +1,6 @@
 module Specifications.OrderedGroup
 
-import public Abbrev
+import public Common.Abbrev
 import public Specifications.TranslationInvariance
 
 %default total

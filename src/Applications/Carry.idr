@@ -10,15 +10,10 @@ import Proofs.GroupCancelMisc
 import Proofs.GroupTheory
 import Proofs.TranslationInvarianceTheory
 import Proofs.Interval
+import Common.Interfaces
 
 %default total
 %access public export
-
-interface AdditiveGroup s where
-  (+) : s -> s -> s
-  Neg : s -> s
-  Zero : s
-  One : s
 
 data Carry = M | O | P
 
@@ -29,7 +24,7 @@ implementation Show Carry where
 
 export
 shiftToLeft : {(+) : Binop s} ->
-  PartiallyOrderedGroupSpec (+) zero neg leq ->
+  PartiallyOrderedGroupSpec (+) _ neg leq ->
     (u,a,x : s) ->
     Between leq x (neg (u + u), neg u) ->
     Between leq (a + u + x) (a + neg u, a)
@@ -95,21 +90,21 @@ data CarryResult : Binop s -> (s -> s) -> Rel s -> s -> Type where
 value : CarryResult {s} _ _ _ _ -> (Carry, s)
 value (MkCarryResult c x _) = (c, x)
 
-computeCarry : (AdditiveGroup s, Decidable [s,s] leq) =>
+computeCarry : (AdditiveGroup s, Unital s, Decidable [s,s] leq) =>
   DiscreteOrderedGroupSpec (+) Zero Neg leq One ->
   (u,x : s) ->
   leq One (u + Neg One) ->
-  InRange leq Neg x (u + u) -> 
+  InRange leq Neg x (u + u) ->
   CarryResult (+) Neg leq One
 computeCarry spec u x bound prf =
-  let pog = partiallyOrderedGroup spec 
-  in case decidePartition3 spec (Neg u) u x prf of
+  let pog = partiallyOrderedGroup spec in
+  case decidePartition3 spec (Neg u) u x prf of
     Left prf
-      => MkCarryResult M (One + u + x)
-           (shiftLeftToSymRange pog u One x bound prf)
+      => MkCarryResult M (One + u + x) $
+           shiftLeftToSymRange pog u One x bound prf
     Middle prf
-      => MkCarryResult O x
-           (toSymRange pog (abelian spec) prf)
+      => MkCarryResult O x $
+           toSymRange pog (abelian spec) prf
     Right prf
-      => MkCarryResult P (x + Neg (One + u))
-           (shiftRightToSymRange pog u One x bound prf)
+      => MkCarryResult P (x + Neg (One + u)) $
+           shiftRightToSymRange pog u One x bound prf

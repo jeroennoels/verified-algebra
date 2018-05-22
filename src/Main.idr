@@ -7,12 +7,18 @@ import Proofs.TranslationInvarianceTheory
 import Proofs.DiscreteOrderTheory
 import Proofs.Interval
 import Common.Interfaces
+import Instances.Notation
 import Instances.TrustInteger
 import Instances.ZZ
 import Applications.Example
 import Applications.Carry
 
 %default total
+
+testAbsoluteValue : Integer -> Integer
+testAbsoluteValue x = fst $
+  absoluteValue (orderedGroup integerDiscreteOrderedGroup) x
+ 
 
 testSeparation : Integer -> Integer -> String
 testSeparation a b = show $ separate integerDiscreteOrderedGroup a b
@@ -41,6 +47,5 @@ testCarry x =
 
 main : IO ()
 main = do printLn $ map (testPartition3 0 3 7 10) [(-1)..11]
-          printLn $ map testDouble [0..9]
           printLn $ map testAbsoluteValue [(-5)..5]
           printLn $ map testCarry [(-20)..20]

@@ -23,7 +23,7 @@ groupCancel1bis : {(#) : Binop s} -> GroupSpec (#) e inv -> (a,b : s) ->
   inv a # (a # b) = b
 groupCancel1bis spec a b = assoc === groupCancel1 spec a b where
   assoc : inv a # (a # b) = (inv a # a) # b
-  assoc = associative (monoid spec) _ a b
+  assoc = associative (monoid spec) _ _ _
 
 
 groupCancel2 : {(#) : Binop s} -> GroupSpec (#) e inv -> (a,b : s) ->
@@ -41,7 +41,7 @@ groupCancel2bis : {(#) : Binop s} -> GroupSpec (#) e inv -> (a,b : s) ->
   (a # inv b) # b = a
 groupCancel2bis spec a b = assoc @== groupCancel2 spec a b where
   assoc : a # (inv b # b) = (a # inv b) # b
-  assoc = associative (monoid spec) a _ b
+  assoc = associative (monoid spec) _ _ _
 
 
 groupCancel3 : {(#) : Binop s} -> GroupSpec (#) e inv -> (a,b : s) ->

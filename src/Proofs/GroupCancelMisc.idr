@@ -15,7 +15,7 @@ groupCancelMisc1 : {(#) : Binop s} -> GroupSpec (#) e inv -> (a,b,c : s) ->
   a # (b # inv c) # c = a # b
 groupCancelMisc1 spec a b c = o1 @== cong o2 where
   o1 : a # ((b # inv c) # c) = a # (b # inv c) # c
-  o1 = associative (monoid spec) a _ c
+  o1 = associative (monoid spec) _ _ _
   o2 : (b # inv c) # c = b
   o2 = groupCancel2bis spec b c
 
@@ -30,5 +30,5 @@ groupCancelMisc2 spec a b c = o4 @== cong o3 where
   o3 : b # inv (c # b) = inv c
   o3 = o1 === o2
   o4 : a # (b # inv (c # b)) = a # b # inv (c # b)
-  o4 = associative (monoid spec) a b _
+  o4 = associative (monoid spec) _ _ _
 

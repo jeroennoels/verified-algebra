@@ -55,7 +55,7 @@ groupInverseAnti spec a b = groupInverseUniqueBis spec _ _ o3 where
   o2 : inv b # inv a # a # b = inv b # b
   o2 = cong {f = (# b)} o1
   o3 : inv b # inv a # (a # b) = e
-  o3 = associative (monoid spec) _ a b === o2 === inverseL spec b
+  o3 = associative (monoid spec) _ _ _ === o2 === inverseL spec b
 
 
 groupInverseAntiInverse : {(#) : Binop s} ->

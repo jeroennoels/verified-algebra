@@ -1,8 +1,10 @@
 module Common.Util
 
-import Common.Abbrev
-import Data.So
-import Decidable.Decidable
+import public Data.So
+import public Data.Vect
+import public Data.Rel
+import public Decidable.Decidable
+import public Common.Abbrev
 
 %default total
 %access public export
@@ -30,6 +32,7 @@ data EitherErased : Type -> Type -> Type where
   Left  : .a -> EitherErased a b
   Right : .b -> EitherErased a b
 
+
 namespace Either3Erased
   data Either3Erased : Type -> Type -> Type -> Type where
     Left   : .a -> Either3Erased a b c
@@ -52,3 +55,7 @@ decideBoth pair left right = dec
     dec (Yes a) (Yes b) = Yes (pair a b)
     dec (No contra) _ = No (contra . left)
     dec _ (No contra) = No (contra . right)
+
+
+decision : Decidable [s,s] rel => (a,b : s) -> Dec (rel a b)
+decision {s} = decide {ts = [s,s]}

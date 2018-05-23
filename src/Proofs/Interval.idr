@@ -1,9 +1,6 @@
 module Proofs.TranslationInvarianceTheory
 
 import Common.Util
-import Data.Vect
-import Data.Rel
-import Decidable.Decidable
 import Specifications.DiscreteOrderedGroup
 import Proofs.GroupCancelationLemmas
 import Proofs.GroupTheory
@@ -66,10 +63,11 @@ composeIntervals spec (MkBetween ax xb) (MkBetween cy yd) = MkBetween
   (composeOrder spec _ _ _ _ xb yd)
 
 
-decideBetween : decisionProcedure leq -> (x,a,b : s) ->
-  Dec (Between leq x (a,b))
-decideBetween decide x a b =
-  decideBoth MkBetween betweenL betweenR (decide a x) (decide x b)
+decideBetween : Decidable [s,s] leq => (x,a,b : s) -> Dec (Between leq x (a,b))
+decideBetween x a b =
+  decideBoth MkBetween betweenL betweenR
+    (decision {rel = leq} a x) 
+    (decision {rel = leq} x b)
 
 
 decidePivot : Decidable [s,s] leq =>

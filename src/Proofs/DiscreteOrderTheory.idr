@@ -1,9 +1,6 @@
 module Proofs.DiscreteOrderTheory
 
 import Common.Util
-import Data.Vect
-import Data.Rel
-import Decidable.Decidable
 import Specifications.DiscreteOrderedGroup
 import Proofs.GroupCancelationLemmas
 import Proofs.GroupTheory
@@ -47,16 +44,13 @@ separate : Decidable [s,s] leq => {(+) : Binop s} ->
   DiscreteOrderedGroupSpec (+) zero neg leq unit ->
     (a,b : s) ->
     EitherErased (a `leq` b) (unit + b `leq` a)
-separate {s} spec a b =
-  case dec a b of
+separate spec a b =
+  case decision {rel = leq} a b of
     Yes prf => Left prf
     No contra =>
       let (baLeq, diff) = orderContra (totalOrder spec) a b contra
           prf = strictOrderSeparates spec b a (diff . sym) baLeq
       in Right prf
-  where
-    dec : decisionProcedure leq
-    dec = decide {ts = [s,s]}
 
 
 public export

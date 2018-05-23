@@ -32,14 +32,14 @@ partition3 x axb p q = show $
 
 testPartition3 : Integer -> Integer -> Integer -> Integer -> Integer -> String
 testPartition3 a p q b x =
-  case decideBetween {leq = IntegerLeq} decideLeq x a b of
+  case decideBetween {leq = IntegerLeq} x a b of
     Yes axb => partition3 x axb p q
     No _ => "Error"
 
 
 testCarry : Integer -> String
 testCarry x =
-  case decideBetween {leq = IntegerLeq} decideLeq x (-18) 18 of
+  case decideBetween {leq = IntegerLeq} x (-18) 18 of
     Yes inRange => show $ value $
       computeCarry integerDiscreteOrderedGroup 9 x (CheckIntegerLeq Oh) inRange
     No _ => "Error"

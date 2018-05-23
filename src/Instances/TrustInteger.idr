@@ -19,7 +19,7 @@ data IntegerLeq : Integer -> Integer -> Type where
 soIntegerLeq : IntegerLeq a b -> So (intToBool (prim__slteBigInt a b))
 soIntegerLeq (CheckIntegerLeq so) = so
 
-decideLeq : decisionProcedure IntegerLeq
+decideLeq : (a,b : Integer) -> Dec (IntegerLeq a b)
 decideLeq a b = case isItSo (intToBool (prim__slteBigInt a b)) of
   Yes oh => Yes (CheckIntegerLeq oh)
   No contra => No (contra . soIntegerLeq)

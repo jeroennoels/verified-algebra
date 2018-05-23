@@ -1,19 +1,17 @@
 module Applications.Carry
 
 import Common.Util
-import Data.Vect
-import Data.Rel
-import Decidable.Decidable
+import Common.Interfaces
 import Specifications.DiscreteOrderedGroup
 import Proofs.GroupCancelationLemmas
 import Proofs.GroupCancelMisc
 import Proofs.GroupTheory
 import Proofs.TranslationInvarianceTheory
 import Proofs.Interval
-import Common.Interfaces
 
 %default total
 %access public export
+
 
 data Carry = M | O | P
 
@@ -89,6 +87,7 @@ data CarryResult : Binop s -> (s -> s) -> Binrel s -> s -> Type where
 
 value : CarryResult {s} _ _ _ _ -> (Carry, s)
 value (MkCarryResult c x _) = (c, x)
+
 
 computeCarry : (AdditiveGroup s, Unital s, Decidable [s,s] leq) =>
   DiscreteOrderedGroupSpec (+) Zero Neg leq One ->

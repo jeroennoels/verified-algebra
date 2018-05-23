@@ -1,12 +1,12 @@
 module Main
 
 import Common.Util
+import Common.Interfaces
 import Specifications.DiscreteOrderedGroup
 import Proofs.GroupTheory
 import Proofs.TranslationInvarianceTheory
 import Proofs.DiscreteOrderTheory
 import Proofs.Interval
-import Common.Interfaces
 import Instances.Notation
 import Instances.TrustInteger
 import Instances.ZZ

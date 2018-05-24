@@ -7,6 +7,9 @@ interface AdditiveGroup s where
   (+) : s -> s -> s
   Neg : s -> s
   Zero : s
-  
-interface Unital s where  
+
+interface Unital s where
   One : s
+
+interface Multiplicative s where
+  (*) : s -> s -> s

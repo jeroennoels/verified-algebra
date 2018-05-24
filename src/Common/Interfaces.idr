@@ -1,3 +1,6 @@
+||| These interfaces enable a clean additive or multiplicative
+||| notation.  We use capitalized function names because in this
+||| package, implicit bounds are usually unwanted.
 module Common.Interfaces
 
 %default total

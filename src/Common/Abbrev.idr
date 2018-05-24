@@ -12,6 +12,7 @@ Binrel s = s -> s -> Type
 infixl 5 ===
 infixl 5 @==
 
+||| associative infix syntax for `trans`
 (===) : a = b -> b = c -> a = c
 (===) Refl Refl = Refl
 

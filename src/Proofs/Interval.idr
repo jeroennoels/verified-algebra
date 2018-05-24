@@ -31,7 +31,7 @@ invertBetween spec (MkBetween ax xb) =
 
 
 invertSymRange : PartiallyOrderedGroupSpec _ _ inv rel ->
-  InRange rel inv x b -> InRange rel inv (inv x) b
+  InSymRange rel inv x b -> InSymRange rel inv (inv x) b
 invertSymRange {b} spec given = rewriteBetween Refl o2 o1 where
   o1 : Between rel (inv x) (inv b, inv (inv b))
   o1 = invertBetween spec given

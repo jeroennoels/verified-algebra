@@ -57,5 +57,7 @@ decideBoth pair left right = dec
     dec _ (No contra) = No (contra . right)
 
 
+||| Reduce code clutter: if you inline this where it is used, an
+||| explicit type annotation would be needed.
 decision : Decidable [s,s] rel => (a,b : s) -> Dec (rel a b)
 decision {s} = decide {ts = [s,s]}

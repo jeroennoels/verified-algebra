@@ -1,7 +1,10 @@
+||| Mathematicians often make an appeal to 'symmetry' to derive
+||| variations on a lemma or theorem.
 module Symmetry.Opposite
 
 import Specifications.TranslationInvariance
 
+%default total
 %access export
 
 private

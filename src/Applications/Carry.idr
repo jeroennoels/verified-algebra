@@ -1,3 +1,5 @@
+||| This example is inspired by exact real arithmetic.  
+||| See explain-carry.txt for a brief introduction.
 module Applications.Carry
 
 import Common.Util
@@ -20,6 +22,8 @@ implementation Show Carry where
   show O = "O"
   show P = "P"
 
+||| Adhoc lemma. 
+||| Start with `computeCarry` to understand where it fits.
 export
 shiftToLeft : {(+) : Binop s} ->
   PartiallyOrderedGroupSpec (+) _ neg leq ->
@@ -34,6 +38,8 @@ shiftToLeft spec u a x given = rewriteBetween o2 o3 o1 where
   o3 : a + u + neg u = a
   o3 = groupCancel3bis (group spec) a u
 
+||| Adhoc lemma. 
+||| Start with `computeCarry` to understand where it fits.
 export
 shiftLeftToSymRange : {(+) : Binop s} ->
   PartiallyOrderedGroupSpec (+) _ neg leq ->
@@ -53,7 +59,9 @@ shiftLeftToSymRange {s} spec u a x bound given = o4 where
   o4 : Between leq sx (neg (u + neg a), u + neg a)
   o4 = rewriteBetween (sym o3) Refl o2
 
-
+||| Adhoc lemma. 
+||| Start with `computeCarry` to understand where it fits.
+||| Derived from `shiftLeftToSymRange` using symmetry.
 export
 shiftRightToSymRange : {(+) : Binop s} ->
   PartiallyOrderedGroupSpec (+) _ neg leq ->
@@ -69,7 +77,7 @@ shiftRightToSymRange spec u a x bound given = rewrite sym o2 in o1 where
   o2 : neg (a + u + neg x) = x + neg (a + u)
   o2 = groupInverseAntiInverse (group spec) (a + u) x
 
-
+||| Lemma: turn an interval into a proper SymRange.
 export
 toSymRange : {(+) : Binop s} ->
   PartiallyOrderedGroupSpec (+) _ neg leq ->
@@ -89,6 +97,8 @@ value : CarryResult {s} _ _ _ _ -> (Carry, s)
 value (MkCarryResult c x _) = (c, x)
 
 
+||| See explain-carry.txt for a brief introduction.
+||| The radix is u + 1 and 1 <= u - 1 means it is at least 3. 
 computeCarry : (AdditiveGroup s, Unital s, Decidable [s,s] leq) =>
   DiscreteOrderedGroupSpec (+) Zero Neg leq One ->
   (u,x : s) ->

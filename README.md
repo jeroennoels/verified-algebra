@@ -17,11 +17,19 @@ is best illustrated with a short
 [example](https://github.com/jeroennoels/verified-algebra/blob/master/src/Applications/Example.idr):
 
 ```idris
+||| A clean additive notation that plays nicely with implicit binding.
+interface AdditiveGroup s where
+  (+) : s -> s -> s
+  Ng : s -> s
+  Zero : s
+
+||| Compute the absolute value of an element in any ordered group,
+||| and return it along with a proof that the result is non-negative.
 absoluteValue : (AdditiveGroup s, Decidable [s,s] leq) =>
-  OrderedGroupSpec (+) Zero Neg leq -> s -> (a ** leq Zero a)
+  OrderedGroupSpec (+) Zero Ng leq -> s -> (a ** leq Zero a)
 absoluteValue spec x =
   case decision {rel = leq} x Zero of
-    Yes prf => (Neg x ** invertNegative (partiallyOrderedGroup spec) x prf)
+    Yes prf => (Ng x ** invertNegative (partiallyOrderedGroup spec) x prf)
     No contra =>
         let (positive, _) = orderContra (totalOrder spec) x Zero contra
         in (x ** positive)

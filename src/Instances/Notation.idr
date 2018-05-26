@@ -13,4 +13,4 @@ import Specifications.DiscreteOrderedGroup
 specifyDiscreteOrderedGroup :
   (AdditiveGroup s, Unital s, Decidable [s,s] leq) => Type
 specifyDiscreteOrderedGroup {leq} = 
-  DiscreteOrderedGroupSpec (+) Zero Neg leq One
+  DiscreteOrderedGroupSpec (+) Zero Ng leq One

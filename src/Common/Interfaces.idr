@@ -8,7 +8,7 @@ module Common.Interfaces
 
 interface AdditiveGroup s where
   (+) : s -> s -> s
-  Neg : s -> s
+  Ng : s -> s
   Zero : s
 
 interface Unital s where

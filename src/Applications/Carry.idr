@@ -100,14 +100,14 @@ value (MkCarryResult c x _) = (c, x)
 ||| See explain-carry.txt for a brief introduction.
 ||| The radix is u + 1 and 1 <= u - 1 means it is at least 3. 
 computeCarry : (AdditiveGroup s, Unital s, Decidable [s,s] leq) =>
-  DiscreteOrderedGroupSpec (+) Zero Neg leq One ->
+  DiscreteOrderedGroupSpec (+) Zero Ng leq One ->
   (u,x : s) ->
-  leq One (u + Neg One) ->
-  InSymRange leq Neg x (u + u) ->
-  CarryResult (+) Neg leq One
+  leq One (u + Ng One) ->
+  InSymRange leq Ng x (u + u) ->
+  CarryResult (+) Ng leq One
 computeCarry spec u x bound prf =
   let pog = partiallyOrderedGroup spec in
-  case decidePartition3 spec (Neg u) u x prf of
+  case decidePartition3 spec (Ng u) u x prf of
     Left prf
       => MkCarryResult M (One + u + x) $
            shiftLeftToSymRange pog u One x bound prf
@@ -115,5 +115,5 @@ computeCarry spec u x bound prf =
       => MkCarryResult O x $
            toSymRange pog (abelian spec) prf
     Right prf
-      => MkCarryResult P (x + Neg (One + u)) $
+      => MkCarryResult P (x + Ng (One + u)) $
            shiftRightToSymRange pog u One x bound prf

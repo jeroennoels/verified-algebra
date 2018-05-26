@@ -27,7 +27,7 @@ decideLeq a b = case isItSo (intToBool (prim__slteBigInt a b)) of
 
 implementation AdditiveGroup Integer where
   (+) = prim__addBigInt
-  Neg = prim__subBigInt 0
+  Ng = prim__subBigInt 0
   Zero = 0
 
 implementation Unital Integer where

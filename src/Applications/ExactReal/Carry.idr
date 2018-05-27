@@ -1,6 +1,6 @@
 ||| This example is inspired by exact real arithmetic.  
 ||| See explain-carry.txt for a brief introduction.
-module Applications.Carry
+module Applications.ExactReal.Carry
 
 import Common.Util
 import Common.Interfaces

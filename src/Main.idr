@@ -11,7 +11,7 @@ import Instances.Notation
 import Instances.TrustInteger
 import Instances.ZZ
 import Applications.Example
-import Applications.Carry
+import Applications.ExactReal.Carry
 
 %default total
 

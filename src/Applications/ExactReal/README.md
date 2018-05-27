@@ -1,14 +1,18 @@
-The "Carry" example is inspired by exact real arithmetic.  We want to
-implement addition of real numbers, represented as an infinite stream
-of symmetrically redundant digits.  To explain what this means, we
-look at a simple example in radix 10.
+This application is based on exact real arithmetic.  We implement the
+addition of real numbers represented as an infinite stream of
+symmetrically redundant digits.  The most remarkable feature here is,
+that it allows one to start with the most significant digits first,
+and compute progressively more accurate results if desired.  To
+explain what this means, we look at a simple example in radix 10.
 
 A real number between -1 and 1 can be expressed as a stream of digits
-in the symmetric range [-9..9].  Consider two numbers, say x and y,
+in the symmetric range `[-9..9]`.  Consider two numbers, say x and y,
 expressed as such:
 
+```
   x :      4   5  -7   0   9   1  ..    means   4/10 + 5/100 ..
   y :     -2   6  -7  -2   9   0  ..    means  -2/10 + 6/100 ..
+```
 
 Just as in the usual decimal case, the interpretation is based on
 powers of 10.  The only difference is that we allow negative digits.
@@ -40,7 +44,8 @@ to absorb one carry.  Thus we always end up with a digit inside the
 original [-9..9] range, carry included.  There is no cascade effect!
 
 This allows us to incrementally compute the sum of two real numbers,
-i.e. starting with the most significant digits.
+i.e. processing digits from left to right, starting with the most
+significant ones.
 
 The above example used radix 10 because it is familiar to everyone,
 but the same trick works for any radix r, when r >= 3.  It does not

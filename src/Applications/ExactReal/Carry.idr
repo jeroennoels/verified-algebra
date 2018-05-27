@@ -1,5 +1,5 @@
 ||| This example is inspired by exact real arithmetic.  
-||| See explain-carry.txt for a brief introduction.
+||| See README for a brief introduction.
 module Applications.ExactReal.Carry
 
 import Common.Util

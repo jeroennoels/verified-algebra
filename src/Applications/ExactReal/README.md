@@ -28,7 +28,7 @@ both streams:
 
 That new stream consists of digits in `[-18..18]`.  We need to fit
 these sums back into the original `[-9..9]` range.  Therefor we
-"reduce" them modulo `10`, and track the differences:
+reduce them modulo `10`, and track the differences:
 
 ```
            2   1  -4  -2   8   1  ..      reduced
@@ -37,12 +37,10 @@ these sums back into the original `[-9..9]` range.  Therefor we
 ```
 
 Notice that we can always reduce `[-18..18]` into `[-8..8]` if we want
-to.  It works precisely because we allow _negative_ digits: `9` reduces
-to `-1`, so it cannot be made to fit into `[0..8]`.  This observation
-is key.
-
-Just as in ordinary arithmetic, we carry the differences to the left.
-The carry digit can be `-1`, `0` or `1`.
+to.  It works precisely because we allow _negative_ digits: `9`
+reduces to `-1`, so it cannot be made to fit into `[0..8]`.  This
+observation is key.  Just as in ordinary arithmetic, we carry the
+differences to the left.  The carry digit can be `-1`, `0` or `1`.
 
 So why did we want to reduce summed digits into `[-8..8]` rather than
 `[-9..9]`?  The point is, this offers exactly the necessary wiggle room
@@ -51,8 +49,6 @@ original `[-9..9]` range, carry included.  There is no cascade effect!
 
 This allows us to _incrementally_ compute the sum of two real numbers,
 i.e. processing digits from left to right, starting with the most
-significant ones.
-
-The above example used radix `10` because it is familiar to everyone,
-but the same trick works for any radix `r >= 3`.  It does not work
-with binary representations though.
+significant ones.  The above example used radix `10` because it is
+familiar to everyone, but the same trick works for any radix `r >= 3`.
+It does not work with binary representations though.

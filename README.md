@@ -26,7 +26,7 @@ interface AdditiveGroup s where
 ||| Compute the absolute value of an element in any ordered group,
 ||| and return it along with a proof that the result is non-negative.
 absoluteValue : (AdditiveGroup s, Decidable [s,s] leq) =>
-  OrderedGroupSpec (+) Zero Ng leq -> s -> (a ** leq Zero a)
+  .OrderedGroupSpec (+) Zero Ng leq -> s -> (a ** leq Zero a)
 absoluteValue spec x =
   case decision {rel = leq} x Zero of
     Yes prf => (Ng x ** invertNegative (partiallyOrderedGroup spec) x prf)
@@ -34,3 +34,5 @@ absoluteValue spec x =
         let (positive, _) = orderContra (totalOrder spec) x Zero contra
         in (x ** positive)
 ```
+
+The type `s` above could for instance be `Integer` with a postulated `OrderedGroupSpec`.  Or it could also be `Data.ZZ` with an explicitly constructed specification proof term.  Or any other ordered group structure.

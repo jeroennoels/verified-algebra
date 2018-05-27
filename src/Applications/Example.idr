@@ -13,7 +13,7 @@ import Proofs.TranslationInvarianceTheory
 
 
 absoluteValue : (AdditiveGroup s, Decidable [s,s] leq) =>
-  OrderedGroupSpec (+) Zero Ng leq -> s -> (a ** leq Zero a)
+  .OrderedGroupSpec (+) Zero Ng leq -> s -> (a ** leq Zero a)
 absoluteValue spec x =
   case decision {rel = leq} x Zero of
     Yes prf => (Ng x ** invertNegative (partiallyOrderedGroup spec) x prf)

@@ -97,8 +97,8 @@ value : CarryResult {s} _ _ _ _ -> (Carry, s)
 value (MkCarryResult c x _) = (c, x)
 
 
-||| See explain-carry.txt for a brief introduction.
-||| The radix is u + 1 and 1 <= u - 1 means it is at least 3. 
+||| See README for a brief introduction.
+||| The radix is u + 1, and 1 <= u - 1 means it is at least 3. 
 computeCarry : (AdditiveGroup s, Unital s, Decidable [s,s] leq) =>
   DiscreteOrderedGroupSpec (+) Zero Ng leq One ->
   (u,x : s) ->

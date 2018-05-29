@@ -89,18 +89,23 @@ toSymRange spec abel =
   rewriteBetween (sym $ groupInverseAntiInverse (group spec) _ _) (abel _ _)
 
 
+||| multiply by Carry
 scale : s -> (s -> s) -> s -> Carry -> s
-scale zero neg x = f where
-  f : Carry -> s
-  f M = neg x
-  f O = zero
-  f P = x
+scale zero neg x M = neg x
+scale zero neg x O = zero
+scale zero neg x P = x
+
+
+||| u = radix - 1
+||| radix = u + 1
+||| carry * radix + output = input
+||| output in [-v..v] where v = u - 1
 
 data CarryResult : Binop s -> s -> (s -> s) -> Binrel s -> s -> Type where
   MkCarryResult :
-    .{x : s} ->  (carry : Carry) -> (reduced : s) ->
-    scale zero neg (add unit u) carry `add` reduced = x ->
-    InSymRange leq neg reduced (add u (neg unit)) ->
+    (carry : Carry) -> (output : s) ->
+    scale zero neg (add unit u) carry `add` output = input ->
+    InSymRange leq neg output (add u (neg unit)) ->
     CarryResult add zero neg leq unit
 
 value : CarryResult {s} _ _ _ _ _ -> (Carry, s)
@@ -108,25 +113,29 @@ value (MkCarryResult c r _ _) = (c, r)
 
 
 ||| See README for a brief introduction.
-||| The radix is u + 1, and 1 <= u - 1 means it is at least 3.
+||| 1 <= u - 1 means radix >= 3.
+
 computeCarry : (AdditiveGroup s, Unital s, Decidable [s,s] leq) =>
   DiscreteOrderedGroupSpec (+) Zero Ng leq One ->
   (u,x : s) ->
   leq One (u + Ng One) ->
   InSymRange leq Ng x (u + u) ->
   CarryResult (+) Zero Ng leq One
-computeCarry spec u x bound prf =
-  let pog = partiallyOrderedGroup spec in
-  case decidePartition3 spec (Ng u) u x prf of
+  
+computeCarry spec u x bound range =
+  let pog = partiallyOrderedGroup spec
+      grp = group (partiallyOrderedGroup spec)
+      abel = abelian spec in
+  case decidePartition3 spec (Ng u) u x range of
     Left prf
-      => MkCarryResult {x} M (One + u + x)
-           (groupCancel1bis (group pog) (One + u) x)
+      => MkCarryResult M (One + u + x)
+           (groupCancel1bis grp _ x)
            (shiftLeftToSymRange pog u One x bound prf)
     Middle prf
-      => MkCarryResult {x} O x
-           (neutralL (monoid (group pog)) _)
-           (toSymRange pog (abelian spec) prf)
+      => MkCarryResult O x
+           (neutralL (monoid grp) _)
+           (toSymRange pog abel prf)
     Right prf
-      => MkCarryResult {x} P (x + Ng (One + u))
-           (groupCancelAbelian (group pog) (abelian spec) (One + u) x)
+      => MkCarryResult P (x + Ng (One + u))
+           (groupCancelAbelian grp abel _ x)
            (shiftRightToSymRange pog u One x bound prf)

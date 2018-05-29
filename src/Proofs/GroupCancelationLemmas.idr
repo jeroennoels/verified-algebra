@@ -61,3 +61,11 @@ groupTranslationInjectiveL spec a x y given = o2 where
   o1 = cong given
   o2 : x = y
   o2 = groupCancel1bis spec a x @== o1 === groupCancel1bis spec a y
+
+
+groupCancelAbelian : {(#) : Binop s} ->
+  GroupSpec (#) e inv -> isAbelian (#) -> (a,b : s) ->
+    a # (b # inv a) = b
+groupCancelAbelian spec abel a b = abel a _ === o1 where
+  o1 : (b # inv a) # a = b
+  o1 = groupCancel2bis spec b a

@@ -1,4 +1,4 @@
-||| This example is inspired by exact real arithmetic.  
+||| This example is inspired by exact real arithmetic.
 ||| See README for a brief introduction.
 module Applications.ExactReal.Carry
 
@@ -22,7 +22,8 @@ implementation Show Carry where
   show O = "O"
   show P = "P"
 
-||| Adhoc lemma. 
+
+||| Adhoc lemma.
 ||| Start with `computeCarry` to understand where it fits.
 export
 shiftToLeft : {(+) : Binop s} ->
@@ -38,7 +39,7 @@ shiftToLeft spec u a x given = rewriteBetween o2 o3 o1 where
   o3 : a + u + neg u = a
   o3 = groupCancel3bis (group spec) a u
 
-||| Adhoc lemma. 
+||| Adhoc lemma.
 ||| Start with `computeCarry` to understand where it fits.
 export
 shiftLeftToSymRange : {(+) : Binop s} ->
@@ -59,7 +60,7 @@ shiftLeftToSymRange {s} spec u a x bound given = o4 where
   o4 : Between leq sx (neg (u + neg a), u + neg a)
   o4 = rewriteBetween (sym o3) Refl o2
 
-||| Adhoc lemma. 
+||| Adhoc lemma.
 ||| Start with `computeCarry` to understand where it fits.
 ||| Derived from `shiftLeftToSymRange` using symmetry.
 export
@@ -88,32 +89,44 @@ toSymRange spec abel =
   rewriteBetween (sym $ groupInverseAntiInverse (group spec) _ _) (abel _ _)
 
 
-data CarryResult : Binop s -> (s -> s) -> Binrel s -> s -> Type where
-  MkCarryResult :
-    Carry -> (x : s) -> InSymRange leq neg x (add u (neg unit)) ->
-    CarryResult add neg leq unit
+scale : s -> (s -> s) -> s -> Carry -> s
+scale zero neg x = f where
+  f : Carry -> s
+  f M = neg x
+  f O = zero
+  f P = x
 
-value : CarryResult {s} _ _ _ _ -> (Carry, s)
-value (MkCarryResult c x _) = (c, x)
+data CarryResult : Binop s -> s -> (s -> s) -> Binrel s -> s -> Type where
+  MkCarryResult :
+    .{x : s} ->  (carry : Carry) -> (reduced : s) ->
+    scale zero neg (add unit u) carry `add` reduced = x ->
+    InSymRange leq neg reduced (add u (neg unit)) ->
+    CarryResult add zero neg leq unit
+
+value : CarryResult {s} _ _ _ _ _ -> (Carry, s)
+value (MkCarryResult c r _ _) = (c, r)
 
 
 ||| See README for a brief introduction.
-||| The radix is u + 1, and 1 <= u - 1 means it is at least 3. 
+||| The radix is u + 1, and 1 <= u - 1 means it is at least 3.
 computeCarry : (AdditiveGroup s, Unital s, Decidable [s,s] leq) =>
   DiscreteOrderedGroupSpec (+) Zero Ng leq One ->
   (u,x : s) ->
   leq One (u + Ng One) ->
   InSymRange leq Ng x (u + u) ->
-  CarryResult (+) Ng leq One
+  CarryResult (+) Zero Ng leq One
 computeCarry spec u x bound prf =
   let pog = partiallyOrderedGroup spec in
   case decidePartition3 spec (Ng u) u x prf of
     Left prf
-      => MkCarryResult M (One + u + x) $
-           shiftLeftToSymRange pog u One x bound prf
+      => MkCarryResult {x} M (One + u + x)
+           (groupCancel1bis (group pog) (One + u) x)
+           (shiftLeftToSymRange pog u One x bound prf)
     Middle prf
-      => MkCarryResult O x $
-           toSymRange pog (abelian spec) prf
+      => MkCarryResult {x} O x
+           (neutralL (monoid (group pog)) _)
+           (toSymRange pog (abelian spec) prf)
     Right prf
-      => MkCarryResult P (x + Ng (One + u)) $
-           shiftRightToSymRange pog u One x bound prf
+      => MkCarryResult {x} P (x + Ng (One + u))
+           (groupCancelAbelian (group pog) (abelian spec) (One + u) x)
+           (shiftRightToSymRange pog u One x bound prf)

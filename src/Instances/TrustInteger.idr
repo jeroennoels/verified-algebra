@@ -1,10 +1,5 @@
 module Instances.TrustInteger
 
-import public Data.So
-import public Data.Vect
-import public Data.Rel
-import public Decidable.Decidable
-import public Common.Abbrev
 import Common.Util
 import Common.Interfaces
 import Specifications.DiscreteOrderedGroup

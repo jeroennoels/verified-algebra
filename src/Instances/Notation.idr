@@ -10,6 +10,10 @@ import Specifications.DiscreteOrderedGroup
 %default total
 %access public export
 
+specifyOrderedGroup : (AdditiveGroup s, Decidable [s,s] leq) => Type
+specifyOrderedGroup {leq} = OrderedGroupSpec (+) Zero Ng leq
+
+
 specifyDiscreteOrderedGroup :
   (AdditiveGroup s, Unital s, Decidable [s,s] leq) => Type
 specifyDiscreteOrderedGroup {leq} = 

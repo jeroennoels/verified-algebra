@@ -1,7 +1,7 @@
 module Instances.ZZ
 
 import Data.ZZ
-
+import Instances.OrderZZ
 import Specifications.OrderedRing
 
 %default total

@@ -10,11 +10,11 @@ infixl 8 #
 
 ||| specification
 isTranslationInvariantL : Binop s -> Binrel s -> Type
-isTranslationInvariantL (#) (<=) = (x,y,a : _) -> x <= y -> a # x <= a # y
+isTranslationInvariantL (#) rel = (x,y,a : _) -> rel x y -> rel (a # x) (a # y)
 
 ||| specification
 isTranslationInvariantR : Binop s -> Binrel s -> Type
-isTranslationInvariantR (#) (<=) = (x,y,a : _) -> x <= y -> x # a <= y # a
+isTranslationInvariantR (#) rel = (x,y,a : _) -> rel x y -> rel (x # a) (y # a)
 
 ||| composed specification
 data PartiallyOrderedMagmaSpec : Binop s -> Binrel s -> Type where

@@ -39,22 +39,22 @@ unwrapLtePosPos (LtePosPos prf) = prf
 unwrapLteNegNeg : LTEZ (NegS n) (NegS m) -> LTE m n
 unwrapLteNegNeg (LteNegNeg prf) = prf
 
-      
+
 lteReflZ : (x : ZZ) -> LTEZ x x
 lteReflZ (Pos _) = LtePosPos lteRefl
 lteReflZ (NegS _) = LteNegNeg lteRefl
 
 total
-lteTransitiveZ : LTEZ x y -> LTEZ y z -> LTEZ x z
-lteTransitiveZ (LtePosPos p) (LtePosPos q) = LtePosPos (lteTransitive p q)
-lteTransitiveZ (LteNegNeg p) (LteNegNeg q) = LteNegNeg (lteTransitive q p)
-lteTransitiveZ (LteNegNeg _) LteNegPos = LteNegPos
-lteTransitiveZ LteNegPos (LtePosPos _) = LteNegPos
+lteTransitiveZ : (x,y,z : ZZ) -> LTEZ x y -> LTEZ y z -> LTEZ x z
+lteTransitiveZ _ _ _ (LtePosPos p) (LtePosPos q) = LtePosPos (lteTransitive p q)
+lteTransitiveZ _ _ _ (LteNegNeg p) (LteNegNeg q) = LteNegNeg (lteTransitive q p)
+lteTransitiveZ _ _ _ (LteNegNeg _) LteNegPos = LteNegPos
+lteTransitiveZ _ _ _ LteNegPos (LtePosPos _) = LteNegPos
 
 total
-lteAntisymmetricZ : LTEZ x y -> LTEZ y x -> x = y
-lteAntisymmetricZ (LtePosPos p) (LtePosPos q) = cong $ lteAntisymmetric p q 
-lteAntisymmetricZ (LteNegNeg p) (LteNegNeg q) = cong $ lteAntisymmetric q p 
+lteAntisymmetricZ : (x,y : ZZ) -> LTEZ x y -> LTEZ y x -> x = y
+lteAntisymmetricZ _ _ (LtePosPos p) (LtePosPos q) = cong $ lteAntisymmetric p q
+lteAntisymmetricZ _ _ (LteNegNeg p) (LteNegNeg q) = cong $ lteAntisymmetric q p
 
 lteTotalZ : (x,y : ZZ) -> Either (LTEZ x y) (LTEZ y x)
 lteTotalZ (Pos _) (NegS _) = Right LteNegPos
@@ -87,12 +87,12 @@ ltePredZ (Pos _) (NegS _) p = absurd p
 total private
 lteLeftTranslationInvariantPosZ : (x,y : ZZ) -> (n : Nat) ->
   LTEZ x y -> LTEZ (Pos n + x) (Pos n + y)
-lteLeftTranslationInvariantPosZ x y Z prf = 
+lteLeftTranslationInvariantPosZ x y Z prf =
   rewrite plusZeroLeftNeutralZ x in
   rewrite plusZeroLeftNeutralZ y in prf
 lteLeftTranslationInvariantPosZ x y (S n) prf =
   rewrite sym $ plusAssociativeZ (Pos 1) (Pos n) x in
-  rewrite sym $ plusAssociativeZ (Pos 1) (Pos n) y in 
+  rewrite sym $ plusAssociativeZ (Pos 1) (Pos n) y in
   lteSuccZ _ _ (lteLeftTranslationInvariantPosZ x y n prf)
 
 total private
@@ -104,12 +104,12 @@ lteLeftTranslationInvariantNegZ x y (S n) prf =
   rewrite sym $ plusAssociativeZ (NegS Z) (NegS n) y in
   ltePredZ _ _ (lteLeftTranslationInvariantNegZ x y n prf)
 
-total
 lteLeftTranslationInvariantZ : (x,y,a : ZZ) ->
   LTEZ x y -> plusZ a x `LTEZ` plusZ a y
-lteLeftTranslationInvariantZ x y (Pos n) = lteLeftTranslationInvariantPosZ x y n 
-lteLeftTranslationInvariantZ x y (NegS n) = lteLeftTranslationInvariantNegZ x y n 
-
+lteLeftTranslationInvariantZ x y (Pos n) =
+  lteLeftTranslationInvariantPosZ x y n
+lteLeftTranslationInvariantZ x y (NegS n) =
+  lteLeftTranslationInvariantNegZ x y n
 
 toLtePosPos : Dec (LTE n m) -> Dec (LTEZ (Pos n) (Pos m))
 toLtePosPos (Yes prf) = Yes (LtePosPos prf)

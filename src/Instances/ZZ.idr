@@ -1,32 +1,48 @@
 module Instances.ZZ
 
-import Data.ZZ
-import Instances.OrderZZ
+import public Data.ZZ
+import Common.Util
+import Common.Interfaces
+import Specifications.OrderedGroup
 import Specifications.OrderedRing
+import Symmetry.Abelian
+import Instances.OrderZZ
+import Instances.Notation
 
 %default total
 %access public export
 
-ZZnegate : ZZ -> ZZ
-ZZnegate = negate
+implementation AdditiveGroup ZZ where
+  (+) = plusZ
+  Ng = negate
+  Zero = Pos 0
 
-zzMonoid : MonoidSpec ZZ.plusZ 0
+implementation Unital ZZ where
+  One = 1
+
+implementation Decidable [ZZ, ZZ] LTEZ where
+  decide = isLTEZ
+
+zzMonoid : specifyMonoid {s = ZZ}
 zzMonoid = MkMonoid plusAssociativeZ plusZeroLeftNeutralZ plusZeroRightNeutralZ
 
-zzGroup : GroupSpec ZZ.plusZ 0 ZZnegate
+zzGroup : specifyGroup {s = ZZ}
 zzGroup = MkGroup zzMonoid plusNegateInverseRZ plusNegateInverseLZ
 
-zzAbelianGroup : AbelianGroupSpec ZZ.plusZ 0 ZZnegate
-zzAbelianGroup = MkAbelianGroup zzGroup plusCommutativeZ
+zzPartialOrder : specifyPartialOrder {leq = LTEZ}
+zzPartialOrder = MkPartialOrder lteReflZ lteTransitiveZ lteAntisymmetricZ
 
-zzPreRing : PreRingSpec ZZ.plusZ ZZ.multZ
-zzPreRing = MkPreRing
-  multDistributesOverPlusRightZ
-  multDistributesOverPlusLeftZ
-  plusCommutativeZ
+zzTotalOrder : specifyTotalOrder {leq = LTEZ}
+zzTotalOrder = MkTotalOrder zzPartialOrder lteTotalZ
 
-zzRing : RingSpec ZZ.plusZ 0 ZZnegate ZZ.multZ
-zzRing = MkRing zzPreRing zzGroup multAssociativeZ
+zzPartiallyOrderedMagma : specifyPartiallyOrderedMagma {leq = LTEZ}
+zzPartiallyOrderedMagma = MkPartiallyOrderedMagma zzPartialOrder
+  lteLeftTranslationInvariantZ $
+  abelianTranslationInvariantLR plusCommutativeZ lteLeftTranslationInvariantZ
 
-zzUnitalRing : UnitalRingSpec ZZ.plusZ 0 ZZnegate ZZ.multZ 1
-zzUnitalRing = MkUnitalRing zzRing multOneLeftNeutralZ multOneRightNeutralZ
+zzPartiallyOrderedGroup : specifyPartiallyOrderedGroup {leq = LTEZ}
+zzPartiallyOrderedGroup = MkPartiallyOrderedGroup zzGroup
+  zzPartiallyOrderedMagma
+
+zzOrderedGroup : specifyOrderedGroup {leq = LTEZ}
+zzOrderedGroup = MkOrderedGroup zzPartiallyOrderedGroup lteTotalZ

@@ -18,7 +18,9 @@ import Applications.ExactReal.Carry
 testAbsoluteValue : Integer -> Integer
 testAbsoluteValue x = fst $
   absoluteValue (orderedGroup integerDiscreteOrderedGroup) x
- 
+
+testAbsoluteValueZZ : ZZ -> ZZ
+testAbsoluteValueZZ x = fst $ absoluteValue zzOrderedGroup x
 
 testSeparation : Integer -> Integer -> String
 testSeparation a b = show $ separate integerDiscreteOrderedGroup a b
@@ -47,5 +49,6 @@ testCarry x =
 
 main : IO ()
 main = do printLn $ map (testPartition3 0 3 7 10) [(-1)..11]
-          printLn $ map testAbsoluteValue [(-5)..5]
+          printLn $ map testAbsoluteValue [(-5)..5]   
+          printLn $ map testAbsoluteValueZZ (map fromInteger [(-10)..10])   
           printLn $ map testCarry [(-20)..20]

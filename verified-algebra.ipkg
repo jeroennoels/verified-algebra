@@ -20,6 +20,7 @@ modules =
   Specifications.DiscreteOrderedGroup,
   Specifications.OrderedRing,
   Symmetry.Opposite,
+  Symmetry.Abelian,
   Proofs.OrderTheory,
   Proofs.GroupCancelationLemmas,
   Proofs.GroupTheory,

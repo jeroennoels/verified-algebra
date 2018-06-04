@@ -29,6 +29,7 @@ modules =
   Proofs.Interval,
   Instances.Notation,
   Instances.TrustInteger,
+  Instances.OrderZZ,
   Instances.ZZ,
   Applications.Example,
   Applications.ExactReal.Carry,

@@ -84,26 +84,31 @@ ltePredZ (NegS n) (NegS m) (LteNegNeg p) = LteNegNeg (LTESucc p)
 ltePredZ (Pos (S _)) (Pos Z) (LtePosPos _) impossible
 ltePredZ (Pos _) (NegS _) p = absurd p
 
-||| TODO should be total
-partial
-lteLeftTranslationInvariantZ : (x,y,a : ZZ) ->
-  LTEZ x y -> plusZ a x `LTEZ` plusZ a y
-lteLeftTranslationInvariantZ x y (Pos Z) prf = 
+total private
+lteLeftTranslationInvariantPosZ : (x,y : ZZ) -> (n : Nat) ->
+  LTEZ x y -> LTEZ (Pos n + x) (Pos n + y)
+lteLeftTranslationInvariantPosZ x y Z prf = 
   rewrite plusZeroLeftNeutralZ x in
   rewrite plusZeroLeftNeutralZ y in prf
-lteLeftTranslationInvariantZ x y (NegS Z) prf = ltePredZ x y prf
-lteLeftTranslationInvariantZ x y (Pos (S n)) prf =
+lteLeftTranslationInvariantPosZ x y (S n) prf =
   rewrite sym $ plusAssociativeZ (Pos 1) (Pos n) x in
-  rewrite sym $ plusAssociativeZ (Pos 1) (Pos n) y in lteSuccZ _ _ ih 
-  where 
-    partial ih : LTEZ (Pos n + x) (Pos n + y)
-    ih = lteLeftTranslationInvariantZ x y (Pos n) prf
-lteLeftTranslationInvariantZ x y (NegS (S n)) prf =
+  rewrite sym $ plusAssociativeZ (Pos 1) (Pos n) y in 
+  lteSuccZ _ _ (lteLeftTranslationInvariantPosZ x y n prf)
+
+total private
+lteLeftTranslationInvariantNegZ : (x,y : ZZ) -> (n : Nat) ->
+  LTEZ x y -> LTEZ (NegS n + x) (NegS n + y)
+lteLeftTranslationInvariantNegZ x y Z prf = ltePredZ x y prf
+lteLeftTranslationInvariantNegZ x y (S n) prf =
   rewrite sym $ plusAssociativeZ (NegS Z) (NegS n) x in
-  rewrite sym $ plusAssociativeZ (NegS Z) (NegS n) y in ltePredZ _ _ ih 
-  where
-    partial ih : LTEZ (NegS n + x) (NegS n + y)
-    ih = lteLeftTranslationInvariantZ x y (NegS n) prf
+  rewrite sym $ plusAssociativeZ (NegS Z) (NegS n) y in
+  ltePredZ _ _ (lteLeftTranslationInvariantNegZ x y n prf)
+
+total
+lteLeftTranslationInvariantZ : (x,y,a : ZZ) ->
+  LTEZ x y -> plusZ a x `LTEZ` plusZ a y
+lteLeftTranslationInvariantZ x y (Pos n) = lteLeftTranslationInvariantPosZ x y n 
+lteLeftTranslationInvariantZ x y (NegS n) = lteLeftTranslationInvariantNegZ x y n 
 
 
 toLtePosPos : Dec (LTE n m) -> Dec (LTEZ (Pos n) (Pos m))

@@ -31,12 +31,15 @@ data LTEZ : ZZ -> ZZ -> Type where
   LteNegNeg : LTE n m -> LTEZ (NegS m) (NegS n)
   LteNegPos : LTEZ (NegS _) (Pos _)
 
+public export
 implementation Uninhabited (Pos _ `LTEZ` NegS _) where
   uninhabited _ impossible
 
+public export
 unwrapLtePosPos : LTEZ (Pos n) (Pos m) -> LTE n m
 unwrapLtePosPos (LtePosPos prf) = prf
 
+public export
 unwrapLteNegNeg : LTEZ (NegS n) (NegS m) -> LTE m n
 unwrapLteNegNeg (LteNegNeg prf) = prf
 
@@ -119,15 +122,17 @@ lteDiscreteZ (Pos Z) notZ _ = absurd (notZ Refl)
 lteDiscreteZ (NegS Z) _ LteNegPos = LtePosPos LTEZero
 lteDiscreteZ (NegS (S _)) _ LteNegPos = LteNegPos
 
-
+public export
 toLtePosPos : Dec (LTE n m) -> Dec (LTEZ (Pos n) (Pos m))
 toLtePosPos (Yes prf) = Yes (LtePosPos prf)
 toLtePosPos (No contra) = No (contra . unwrapLtePosPos)
 
+public export
 toLteNegNeg : Dec (LTE n m) -> Dec (LTEZ (NegS m) (NegS n))
 toLteNegNeg (Yes prf) = Yes (LteNegNeg prf)
 toLteNegNeg (No contra) = No (contra . unwrapLteNegNeg)
 
+public export
 isLTEZ : (x,y : ZZ) -> Dec (LTEZ x y)
 isLTEZ (Pos n) (Pos m) = toLtePosPos (isLTE n m)
 isLTEZ (NegS n) (NegS m) = toLteNegNeg (isLTE m n)

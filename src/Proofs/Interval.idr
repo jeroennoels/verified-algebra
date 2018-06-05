@@ -62,14 +62,14 @@ composeIntervals spec (MkBetween ax xb) (MkBetween cy yd) = MkBetween
   (composeOrder spec _ _ _ _ ax cy)
   (composeOrder spec _ _ _ _ xb yd)
 
-
+public export
 decideBetween : Decidable [s,s] leq => (x,a,b : s) -> Dec (Between leq x (a,b))
 decideBetween x a b =
   decideBoth MkBetween betweenL betweenR
-    (decision {rel = leq} a x) 
+    (decision {rel = leq} a x)
     (decision {rel = leq} x b)
 
-
+public export
 decidePivot : Decidable [s,s] leq =>
   DiscreteOrderedGroupSpec add zero neg leq unit ->
     (p,x : s) ->
@@ -81,7 +81,7 @@ decidePivot {s} spec p x (MkBetween ax xb) =
     Left xp => Left (MkBetween ax xp)
     Right px => Right (MkBetween px xb)
 
-
+public export
 decidePivotBis : Decidable [s,s] leq =>
   DiscreteOrderedGroupSpec add zero neg leq unit ->
     (p,x : s) ->
@@ -93,7 +93,7 @@ decidePivotBis {s} spec p x (MkBetween ax xb) =
     Left xp => Left (MkBetween ax xp)
     Right px => Right (MkBetween px xb)
 
-
+public export
 decidePartition3 : Decidable [s,s] leq =>
   DiscreteOrderedGroupSpec add zero neg leq unit ->
     (p,q,x : s) ->

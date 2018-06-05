@@ -1,6 +1,6 @@
 ||| In a discrete ordered group, distinct elements are at least a
 ||| fixed `unit` distance apart.  The group is assumed to be abelian.
-module Specifications.DiscreteOrderGroup
+module Specifications.DiscreteOrderedGroup
 
 import public Specifications.OrderedGroup
 

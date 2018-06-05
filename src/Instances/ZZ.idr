@@ -4,10 +4,11 @@ import public Data.ZZ
 import Common.Util
 import Common.Interfaces
 import Specifications.OrderedGroup
+import Specifications.DiscreteOrderedGroup
 import Specifications.OrderedRing
 import Symmetry.Abelian
-import Instances.OrderZZ
 import Instances.Notation
+import public Instances.OrderZZ
 
 %default total
 %access public export
@@ -46,3 +47,7 @@ zzPartiallyOrderedGroup = MkPartiallyOrderedGroup zzGroup
 
 zzOrderedGroup : specifyOrderedGroup {leq = LTEZ}
 zzOrderedGroup = MkOrderedGroup zzPartiallyOrderedGroup lteTotalZ
+
+zzDiscreteOrderedGroup : specifyDiscreteOrderedGroup {leq = LTEZ}
+zzDiscreteOrderedGroup = MkDiscreteOrderedGroup zzOrderedGroup
+  plusCommutativeZ lteDiscreteZ

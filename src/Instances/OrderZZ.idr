@@ -25,6 +25,7 @@ lteAntisymmetric : LTE n m -> LTE m n -> n = m
 lteAntisymmetric {n = Z} {m = Z} _ _ = Refl
 lteAntisymmetric (LTESucc p) (LTESucc q) = cong $ lteAntisymmetric p q
 
+public export
 data LTEZ : ZZ -> ZZ -> Type where
   LtePosPos : LTE n m -> LTEZ (Pos n) (Pos m)
   LteNegNeg : LTE n m -> LTEZ (NegS m) (NegS n)
@@ -110,6 +111,14 @@ lteLeftTranslationInvariantZ x y (Pos n) =
   lteLeftTranslationInvariantPosZ x y n
 lteLeftTranslationInvariantZ x y (NegS n) =
   lteLeftTranslationInvariantNegZ x y n
+
+lteDiscreteZ : (x : ZZ) ->
+  Not (x = Pos Z) -> LTEZ x (Pos Z) -> LTEZ (Pos 1 + x) (Pos Z)
+lteDiscreteZ (Pos (S _)) _ (LtePosPos p) = absurd (succNotLTEzero p)
+lteDiscreteZ (Pos Z) notZ _ = absurd (notZ Refl)
+lteDiscreteZ (NegS Z) _ LteNegPos = LtePosPos LTEZero
+lteDiscreteZ (NegS (S _)) _ LteNegPos = LteNegPos
+
 
 toLtePosPos : Dec (LTE n m) -> Dec (LTEZ (Pos n) (Pos m))
 toLtePosPos (Yes prf) = Yes (LtePosPos prf)

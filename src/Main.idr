@@ -46,9 +46,19 @@ testCarry x =
       computeCarry integerDiscreteOrderedGroup 9 x (CheckIntegerLeq Oh) inRange
     No _ => "Error"
 
+testCarryZZ : ZZ -> String
+testCarryZZ x =
+  case decideBetween {leq = LTEZ} x (-18) 18 of
+    Yes inRange => show $ value $
+      computeCarry zzDiscreteOrderedGroup 9 x bound inRange
+    No _ => "Error"
+  where
+    bound : LTEZ 1 8
+    bound = LtePosPos (LTESucc LTEZero)
 
 main : IO ()
 main = do printLn $ map (testPartition3 0 3 7 10) [(-1)..11]
           printLn $ map testAbsoluteValue [(-5)..5]   
           printLn $ map testAbsoluteValueZZ (map fromInteger [(-10)..10])   
           printLn $ map testCarry [(-20)..20]
+          printLn $ map testCarryZZ (map fromInteger [(-21)..21])

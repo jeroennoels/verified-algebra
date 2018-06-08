@@ -21,9 +21,6 @@ implementation AdditiveGroup ZZ where
 implementation Unital ZZ where
   One = 1
 
-implementation Decidable [ZZ, ZZ] LTEZ where
-  decide = isLTEZ
-
 zzMonoid : specifyMonoid {s = ZZ}
 zzMonoid = MkMonoid plusAssociativeZ plusZeroLeftNeutralZ plusZeroRightNeutralZ
 

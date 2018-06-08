@@ -1,5 +1,8 @@
 module Instances.OrderZZ
 
+import public Data.Vect
+import public Data.Rel
+import public Decidable.Decidable
 import Data.ZZ
 
 %default total
@@ -147,3 +150,7 @@ isLTEZ (Pos n) (Pos m) = toLtePosPos (isLTE n m)
 isLTEZ (NegS n) (NegS m) = toLteNegNeg (isLTE m n)
 isLTEZ (NegS _) (Pos _) = Yes LteNegPos
 isLTEZ (Pos _) (NegS _) = No absurd
+
+public export
+implementation Decidable [ZZ, ZZ] LTEZ where
+  decide = isLTEZ

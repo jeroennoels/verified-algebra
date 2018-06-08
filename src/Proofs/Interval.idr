@@ -62,6 +62,16 @@ composeIntervals spec (MkBetween ax xb) (MkBetween cy yd) = MkBetween
   (composeOrder spec _ _ _ _ ax cy)
   (composeOrder spec _ _ _ _ xb yd)
 
+
+addInSymRange : {(+) : Binop s} -> PartiallyOrderedGroupSpec (+) _ neg leq ->
+  InSymRange leq neg x a ->
+  InSymRange leq neg y a ->
+  InSymRange leq neg (x + y) (a + a)
+addInSymRange {a} spec p q =
+  rewrite groupInverseAnti (group spec) a a in
+  composeIntervals (invariantOrder spec) p q
+
+
 public export
 decideBetween : Decidable [s,s] leq => (x,a,b : s) -> Dec (Between leq x (a,b))
 decideBetween x a b =

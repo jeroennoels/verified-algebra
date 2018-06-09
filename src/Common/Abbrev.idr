@@ -9,6 +9,9 @@ Binop s = s -> s -> s
 Binrel : Type -> Type
 Binrel s = s -> s -> Type
 
+OuterBinop : {index : Type} -> (f : index -> Type) -> (a,b,c : index) -> Type
+OuterBinop f a b c = f a -> f b -> f c 
+
 infixl 5 ===
 infixl 5 @==
 

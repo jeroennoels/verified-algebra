@@ -73,8 +73,8 @@ addInSymRange {a} spec p q =
 
 
 public export
-decideBetween : Decidable [s,s] leq => (x,a,b : s) -> Dec (Between leq x (a,b))
-decideBetween x a b =
+decideBetween : Decidable [s,s] leq => (a,b,x : s) -> Dec (Between leq x (a,b))
+decideBetween a b x =
   decideBoth MkBetween betweenL betweenR
     (decision {rel = leq} a x)
     (decision {rel = leq} x b)

@@ -13,18 +13,18 @@ import Symmetry.Opposite
 
 infixl 8 #
 
-rewriteBetween : a = c -> b = d -> Between leq x (a,b) -> Between leq x (c,d)
+rewriteBetween : a = c -> b = d -> Between leq (a,b) x -> Between leq (c,d) x
 rewriteBetween p q given = rewrite sym p in rewrite sym q in given
 
 
 weakenR : PartialOrderSpec rel ->
-  rel b c -> Between rel x (a,b) -> Between rel x (a,c)
+  rel b c -> Between rel (a,b) x -> Between rel (a,c) x
 weakenR spec bc (MkBetween ax xb) =
   MkBetween ax (transitive spec _ _ _ xb bc)
 
 
 invertBetween : PartiallyOrderedGroupSpec _ _ inv rel ->
-  Between rel x (a,b) -> Between rel (inv x) (inv b, inv a)
+  Between rel (a,b) x -> Between rel (inv b, inv a) (inv x)
 invertBetween spec (MkBetween ax xb) =
   MkBetween (inverseReversesOrder spec xb)
             (inverseReversesOrder spec ax)
@@ -33,7 +33,7 @@ invertBetween spec (MkBetween ax xb) =
 invertSymRange : PartiallyOrderedGroupSpec _ _ inv rel ->
   InSymRange rel inv b x -> InSymRange rel inv b (inv x)
 invertSymRange {b} spec given = rewriteBetween Refl o2 o1 where
-  o1 : Between rel (inv x) (inv b, inv (inv b))
+  o1 : Between rel (inv b, inv (inv b)) (inv x)
   o1 = invertBetween spec given
   o2 : inv (inv b) = b
   o2 = groupInverseInvolution (group spec) b
@@ -41,7 +41,7 @@ invertSymRange {b} spec given = rewriteBetween Refl o2 o1 where
 
 translateIntervalR : {(#) : Binop s} ->
   PartiallyOrderedMagmaSpec (#) leq -> (c : s) ->
-    Between leq x (a,b) -> Between leq (x # c) (a # c, b # c)
+    Between leq (a,b) x -> Between leq (a # c, b # c) (x # c)
 translateIntervalR spec c (MkBetween ax xb) = MkBetween
   (translationInvariantR spec _ _ _ ax)
   (translationInvariantR spec _ _ _ xb)
@@ -49,15 +49,15 @@ translateIntervalR spec c (MkBetween ax xb) = MkBetween
 
 translateIntervalL : {(#) : Binop s} ->
   PartiallyOrderedMagmaSpec (#) leq -> (c : s) ->
-    Between leq x (a,b) -> Between leq (c # x) (c # a, c # b)
+    Between leq (a,b) x -> Between leq (c # a, c # b) (c # x)
 translateIntervalL spec = translateIntervalR (opposite spec)
 
 
 composeIntervals : {(#) : Binop s} ->
   PartiallyOrderedMagmaSpec (#) leq ->
-    Between leq x (a,b) ->
-    Between leq y (c,d) ->
-    Between leq (x # y) (a # c, b # d)
+    Between leq (a,b) x ->
+    Between leq (c,d) y ->
+    Between leq (a # c, b # d) (x # y)
 composeIntervals spec (MkBetween ax xb) (MkBetween cy yd) = MkBetween
   (composeOrder spec _ _ _ _ ax cy)
   (composeOrder spec _ _ _ _ xb yd)
@@ -73,7 +73,7 @@ addInSymRange {a} spec p q =
 
 
 public export
-decideBetween : Decidable [s,s] leq => (a,b,x : s) -> Dec (Between leq x (a,b))
+decideBetween : Decidable [s,s] leq => (a,b,x : s) -> Dec (Between leq (a,b) x)
 decideBetween a b x =
   decideBoth MkBetween betweenL betweenR
     (decision {rel = leq} a x)
@@ -83,9 +83,9 @@ public export
 decidePivot : Decidable [s,s] leq =>
   DiscreteOrderedGroupSpec add zero neg leq unit ->
     (p,x : s) ->
-    Between leq x (a,b) ->
-    EitherErased (Between leq x (a,p))
-                 (Between leq x (add unit p, b))
+    Between leq (a,b) x ->
+    EitherErased (Between leq (a,p) x)
+                 (Between leq (add unit p, b) x)
 decidePivot {s} spec p x (MkBetween ax xb) =
   case separate spec x p of
     Left xp => Left (MkBetween ax xp)
@@ -95,9 +95,9 @@ public export
 decidePivotBis : Decidable [s,s] leq =>
   DiscreteOrderedGroupSpec add zero neg leq unit ->
     (p,x : s) ->
-    Between leq x (a,b) ->
-    EitherErased (Between leq x (a, add (neg unit) p))
-                 (Between leq x (p, b))
+    Between leq (a,b) x ->
+    EitherErased (Between leq (a, add (neg unit) p) x)
+                 (Between leq (p, b) x)
 decidePivotBis {s} spec p x (MkBetween ax xb) =
   case separateBis spec x p of
     Left xp => Left (MkBetween ax xp)
@@ -107,10 +107,10 @@ public export
 decidePartition3 : Decidable [s,s] leq =>
   DiscreteOrderedGroupSpec add zero neg leq unit ->
     (p,q,x : s) ->
-    Between leq x (a,b) ->
-    Either3Erased (Between leq x (a,p))
-                  (Between leq x (add unit p, add (neg unit) q))
-                  (Between leq x (q,b))
+    Between leq (a,b) x ->
+    Either3Erased (Between leq (a,p) x)
+                  (Between leq (add unit p, add (neg unit) q) x)
+                  (Between leq (q,b) x)
 decidePartition3 spec p q x axb =
   case decidePivot spec p x axb of
     Left l => Left l

@@ -63,4 +63,4 @@ namespace PartiallyOrderedGroup
 
 ||| A symmetric interval [-u, u]
 InSymRange : Binrel s -> (s -> s) -> s -> s -> Type
-InSymRange rel inv u x = Between rel x (inv u, u)
+InSymRange rel inv u = Between rel (inv u, u)

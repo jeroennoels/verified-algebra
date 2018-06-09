@@ -29,10 +29,10 @@ export
 shiftToLeft : {(+) : Binop s} ->
   PartiallyOrderedGroupSpec (+) _ neg leq ->
     (u,a,x : s) ->
-    Between leq x (neg (u + u), neg u) ->
-    Between leq (a + u + x) (a + neg u, a)
+    Between leq (neg (u + u), neg u) x ->
+    Between leq (a + neg u, a) (a + u + x)
 shiftToLeft spec u a x given = rewriteBetween o2 o3 o1 where
-  o1 : Between leq (a + u + x) (a + u + neg (u + u), a + u + neg u)
+  o1 : Between leq (a + u + neg (u + u), a + u + neg u) (a + u + x)
   o1 = translateIntervalL (invariantOrder spec) (a + u) given
   o2 : a + u + neg (u + u) = a + neg u
   o2 = groupCancelMisc2 (group spec) a u _
@@ -46,18 +46,18 @@ shiftLeftToSymRange : {(+) : Binop s} ->
   PartiallyOrderedGroupSpec (+) _ neg leq ->
     (u,a,x : s) ->
     leq a (u + neg a) ->
-    Between leq x (neg (u + u), neg u) ->
+    Between leq (neg (u + u), neg u) x ->
     InSymRange leq neg (u + neg a) (a + u + x)
 shiftLeftToSymRange {s} spec u a x bound given = o4 where
   sx : s
   sx = a + u + x
-  o1 : Between leq sx (a + neg u, a)
+  o1 : Between leq (a + neg u, a) sx
   o1 = shiftToLeft spec u a x given
-  o2 : Between leq sx (a + neg u, u + neg a)
+  o2 : Between leq (a + neg u, u + neg a) sx
   o2 = weakenR (order spec) bound o1
   o3 : neg (u + neg a) = a + neg u
   o3 = groupInverseAntiInverse (group spec) u a
-  o4 : Between leq sx (neg (u + neg a), u + neg a)
+  o4 : Between leq (neg (u + neg a), u + neg a) sx
   o4 = rewriteBetween (sym o3) Refl o2
 
 ||| Adhoc lemma.
@@ -68,7 +68,7 @@ shiftRightToSymRange : {(+) : Binop s} ->
   PartiallyOrderedGroupSpec (+) _ neg leq ->
     (u,a,x : s) ->
     leq a (u + neg a) ->
-    Between leq x (u, u + u) ->
+    Between leq (u, u + u) x ->
     InSymRange leq neg (u + neg a) (x + neg (a + u))
 shiftRightToSymRange spec u a x bound given = rewrite sym o2 in o1 where
   o1 : InSymRange leq neg (u + neg a) (neg (a + u + neg x))
@@ -83,7 +83,7 @@ export
 toSymRange : {(+) : Binop s} ->
   PartiallyOrderedGroupSpec (+) _ neg leq ->
   isAbelian (+) ->
-    Between leq x (a + neg b, neg a + b) ->
+    Between leq (a + neg b, neg a + b) x ->
     InSymRange leq neg (b + neg a) x
 toSymRange spec abel =
   rewriteBetween (sym $ groupInverseAntiInverse (group spec) _ _) (abel _ _)

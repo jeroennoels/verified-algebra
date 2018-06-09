@@ -53,13 +53,13 @@ totalOrder (MkTotalOrder _ t) = t
 
 ||| A proof that `x` is between `a` and `b` relative to a certain
 ||| order relation.
-data Between : Binrel s -> s -> (s,s) -> Type where
-  MkBetween : rel a x -> rel x b -> Between rel x (a,b)
+data Between : Binrel s -> (s,s) -> s -> Type where
+  MkBetween : rel a x -> rel x b -> Between rel (a,b) x
 
 ||| about the left side of the interval
-betweenL : Between rel x (a,b) -> rel a x
+betweenL : Between rel (a,b) x -> rel a x
 betweenL (MkBetween l _) = l
 
 ||| about the right side of the interval
-betweenR : Between rel x (a,b) -> rel x b
+betweenR : Between rel (a,b) x -> rel x b
 betweenR (MkBetween _ r) = r

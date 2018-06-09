@@ -47,7 +47,7 @@ shiftLeftToSymRange : {(+) : Binop s} ->
     (u,a,x : s) ->
     leq a (u + neg a) ->
     Between leq x (neg (u + u), neg u) ->
-    InSymRange leq neg (a + u + x) (u + neg a)
+    InSymRange leq neg (u + neg a) (a + u + x)
 shiftLeftToSymRange {s} spec u a x bound given = o4 where
   sx : s
   sx = a + u + x
@@ -69,9 +69,9 @@ shiftRightToSymRange : {(+) : Binop s} ->
     (u,a,x : s) ->
     leq a (u + neg a) ->
     Between leq x (u, u + u) ->
-    InSymRange leq neg (x + neg (a + u)) (u + neg a)
+    InSymRange leq neg (u + neg a) (x + neg (a + u))
 shiftRightToSymRange spec u a x bound given = rewrite sym o2 in o1 where
-  o1 : InSymRange leq neg (neg (a + u + neg x)) (u + neg a)
+  o1 : InSymRange leq neg (u + neg a) (neg (a + u + neg x))
   o1 = invertSymRange spec $
        shiftLeftToSymRange spec u a (neg x) bound $
        invertBetween spec given
@@ -84,7 +84,7 @@ toSymRange : {(+) : Binop s} ->
   PartiallyOrderedGroupSpec (+) _ neg leq ->
   isAbelian (+) ->
     Between leq x (a + neg b, neg a + b) ->
-    InSymRange leq neg x (b + neg a)
+    InSymRange leq neg (b + neg a) x
 toSymRange spec abel =
   rewriteBetween (sym $ groupInverseAntiInverse (group spec) _ _) (abel _ _)
 
@@ -105,7 +105,7 @@ data CarryResult : Binop s -> s -> (s -> s) -> Binrel s -> s -> Type where
   MkCarryResult :
     (carry : Carry) -> (output : s) ->
     scale zero neg (add unit u) carry `add` output = input ->
-    InSymRange leq neg output (add u (neg unit)) ->
+    InSymRange leq neg (add u (neg unit)) output ->
     CarryResult add zero neg leq unit
 
 value : CarryResult {s} _ _ _ _ _ -> (Carry, s)
@@ -119,7 +119,7 @@ computeCarry : (AdditiveGroup s, Unital s, Decidable [s,s] leq) =>
   DiscreteOrderedGroupSpec (+) Zero Ng leq One ->
   (u,x : s) ->
   leq One (u + Ng One) ->
-  InSymRange leq Ng x (u + u) ->
+  InSymRange leq Ng (u + u) x ->
   CarryResult (+) Zero Ng leq One
   
 computeCarry spec u x bound range =

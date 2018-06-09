@@ -31,7 +31,7 @@ invertBetween spec (MkBetween ax xb) =
 
 
 invertSymRange : PartiallyOrderedGroupSpec _ _ inv rel ->
-  InSymRange rel inv x b -> InSymRange rel inv (inv x) b
+  InSymRange rel inv b x -> InSymRange rel inv b (inv x)
 invertSymRange {b} spec given = rewriteBetween Refl o2 o1 where
   o1 : Between rel (inv x) (inv b, inv (inv b))
   o1 = invertBetween spec given
@@ -64,9 +64,9 @@ composeIntervals spec (MkBetween ax xb) (MkBetween cy yd) = MkBetween
 
 
 addInSymRange : {(+) : Binop s} -> PartiallyOrderedGroupSpec (+) _ neg leq ->
-  InSymRange leq neg x a ->
-  InSymRange leq neg y a ->
-  InSymRange leq neg (x + y) (a + a)
+  InSymRange leq neg a x ->
+  InSymRange leq neg a y ->
+  InSymRange leq neg (a + a) (x + y)
 addInSymRange {a} spec p q =
   rewrite groupInverseAnti (group spec) a a in
   composeIntervals (invariantOrder spec) p q

@@ -1,6 +1,5 @@
 module Common.Util
 
-import Data.List.Quantifiers
 import public Data.So
 import public Data.Vect
 import public Data.Rel
@@ -62,8 +61,3 @@ decideBoth pair left right = dec
 ||| explicit type annotation would be needed.
 decision : Decidable [s,s] rel => (a,b : s) -> Dec (rel a b)
 decision {s} = decide {ts = [s,s]}
-
-
-allToDependentPairs : {P : a -> Type} -> All P xs -> List (x ** P x) 
-allToDependentPairs Nil = Nil
-allToDependentPairs {xs = x::_} (pf::pfs) = (x ** pf) :: allToDependentPairs pfs

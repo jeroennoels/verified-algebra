@@ -12,6 +12,7 @@ import Instances.TrustInteger
 import Instances.ZZ
 import Applications.Example
 import Applications.ExactReal.Carry
+import Applications.ExactReal.Addition
 
 %default total
 
@@ -38,6 +39,12 @@ testCarryZZ x =
   where
     bound : LTEZ 1 8
     bound = LtePosPos (LTESucc LTEZero)
+
+negateInteger : Integer -> Integer
+negateInteger x = negate x  
+
+digits : Maybe (List (Digit IntegerLeq Main.negateInteger 9))
+digits = maybeDigits {leq = IntegerLeq} negateInteger 9 [-2,4,1,4,-9,0,5]
 
 main : IO ()
 main = do printLn $ map testAbsoluteValue [(-5)..5]   

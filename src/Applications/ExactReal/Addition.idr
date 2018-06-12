@@ -2,7 +2,6 @@
 ||| See README for a brief introduction.
 module Applications.ExactReal.Addition
 
-import Data.List.Quantifiers
 import Common.Util
 import Common.Interfaces
 import Specifications.DiscreteOrderedGroup
@@ -16,19 +15,26 @@ import Applications.ExactReal.Carry
 Digit : .(leq : Binrel s) -> .(neg : s -> s) -> s -> Type
 Digit leq neg u = (x ** InSymRange leq neg u x)
 
-decideInSymRange : Decidable [s,s] leq => (neg : s -> s) -> (u : s) ->
-  (x : s) -> Dec (InSymRange leq neg u x)
-decideInSymRange neg u = decideBetween (neg u) u
+||| when full decidability is overkill
+maybeDigit : Decidable [s,s] leq => (neg : s -> s) -> (u : s) ->
+  s -> Maybe (Digit leq neg u)
+maybeDigit {leq} neg u x =
+  case decideBetween {leq} (neg u) u x of
+    Yes prf => Just (x ** prf)
+    No _ => Nothing
+
+maybeDigits : (Traversable trav, Decidable [s,s] leq) =>
+  (neg : s -> s) -> (u : s) -> trav s -> Maybe (trav (Digit leq neg u))
+maybeDigits {leq} neg u = sequence . map (maybeDigit {leq} neg u)
 
 
-allDigits : Decidable [s,s] leq => (neg : s -> s) -> (u : s) ->
-  List s -> Maybe $ List (Digit leq neg u)
-allDigits {leq} neg u xs =
-  case all (decideInSymRange {leq} neg u) xs of
-    Yes proofs => Just $ allToDependentPairs {P = InSymRange leq neg u} proofs
-    No contra => Nothing
-
-add : AdditiveGroup s => PartiallyOrderedGroupSpec {s} (+) Zero Ng leq ->
-  OuterBinop (Digit leq Ng) u u (u + u)
+add : AdditiveGroup s =>
+  PartiallyOrderedGroupSpec {s} (+) Zero Ng leq ->
+    OuterBinop (Digit leq Ng) u u (u + u)
 add spec (x ** p) (y ** q) = ((x + y) ** addInSymRange spec p q)
+
+addPairwise : AdditiveGroup s =>
+  PartiallyOrderedGroupSpec {s} (+) Zero Ng leq ->
+    OuterBinop (List . Digit leq Ng) u u (u + u)
+addPairwise spec = zipWith (add spec)
 

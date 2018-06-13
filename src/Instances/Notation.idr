@@ -37,6 +37,19 @@ specifyDiscreteOrderedGroup :
 specifyDiscreteOrderedGroup {leq} =
   DiscreteOrderedGroupSpec (+) Zero Ng leq One
 
+specifyRing : (AdditiveGroup s, Multiplicative s) => Type
+specifyRing {s} = RingSpec {s} (+) Zero Ng (*)
+
+specifyPartiallyOrderedRing :
+  (AdditiveGroup s, Multiplicative s, Decidable [s,s] leq) => Type
+specifyPartiallyOrderedRing {leq} =
+  PartiallyOrderedRingSpec (+) Zero Ng (*) leq
+
+specifyOrderedRing :
+  (AdditiveGroup s, Multiplicative s, Decidable [s,s] leq) => Type
+specifyOrderedRing {leq} =
+  OrderedRingSpec (+) Zero Ng (*) leq
+
 specifyDiscreteOrderedRing :
   (AdditiveGroup s, Unital s, Multiplicative s, Decidable [s,s] leq) => Type
 specifyDiscreteOrderedRing {leq} =

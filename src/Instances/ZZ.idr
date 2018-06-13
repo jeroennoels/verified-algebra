@@ -18,6 +18,9 @@ implementation AdditiveGroup ZZ where
   Ng = negate
   Zero = Pos 0
 
+implementation Multiplicative ZZ where
+  (*) = multZ
+
 implementation Unital ZZ where
   One = 1
 
@@ -48,3 +51,21 @@ zzOrderedGroup = MkOrderedGroup zzPartiallyOrderedGroup lteTotalZ
 zzDiscreteOrderedGroup : specifyDiscreteOrderedGroup {leq = LTEZ}
 zzDiscreteOrderedGroup = MkDiscreteOrderedGroup zzOrderedGroup
   plusCommutativeZ lteDiscreteZ
+
+zzRing : specifyRing {s = ZZ}
+zzRing = MkRing
+  (MkPreRing
+    multDistributesOverPlusRightZ
+    multDistributesOverPlusLeftZ
+    plusCommutativeZ)
+  zzGroup
+  multAssociativeZ
+
+zzOrderedRing : specifyOrderedRing {leq = LTEZ}
+zzOrderedRing = MkOrderedRing
+  (MkPartiallyOrderedRing zzRing zzPartiallyOrderedMagma)
+  lteTotalZ
+
+zzDiscreteOrderedRing : specifyDiscreteOrderedRing {leq = LTEZ}
+zzDiscreteOrderedRing = MkDiscreteOrderedRing zzOrderedRing
+  lteDiscreteZ multOneLeftNeutralZ multOneRightNeutralZ

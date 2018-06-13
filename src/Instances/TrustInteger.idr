@@ -33,3 +33,6 @@ implementation Decidable [Integer, Integer] IntegerLeq where
 
 postulate integerDiscreteOrderedGroup : 
   specifyDiscreteOrderedGroup {leq = IntegerLeq}
+
+integerPartiallyOrderedGroup : specifyPartiallyOrderedGroup {leq = IntegerLeq}
+integerPartiallyOrderedGroup = partiallyOrderedGroup integerDiscreteOrderedGroup 

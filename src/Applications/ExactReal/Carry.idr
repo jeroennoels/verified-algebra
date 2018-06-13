@@ -117,12 +117,11 @@ value (MkCarryResult c r _ _) = (c, r)
 
 computeCarry : (AdditiveGroup s, Unital s, Decidable [s,s] leq) =>
   DiscreteOrderedGroupSpec (+) Zero Ng leq One ->
-  (u,x : s) ->
-  leq One (u + Ng One) ->
-  InSymRange leq Ng (u + u) x ->
+  (u : s) -> leq One (u + Ng One) ->
+  (x : s) -> InSymRange leq Ng (u + u) x ->
   CarryResult (+) Zero Ng leq One
   
-computeCarry spec u x bound range =
+computeCarry spec u bound x range =
   let pog = partiallyOrderedGroup spec
       grp = group (partiallyOrderedGroup spec)
       abel = abelian spec in

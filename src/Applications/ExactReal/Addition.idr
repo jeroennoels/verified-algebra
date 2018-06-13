@@ -9,11 +9,14 @@ import Proofs.GroupTheory
 import Proofs.Interval
 import Applications.ExactReal.Carry
 
+import Instances.TrustInteger
+
 %default total
 %access public export
 
 Digit : .(leq : Binrel s) -> .(neg : s -> s) -> s -> Type
 Digit leq neg u = (x ** InSymRange leq neg u x)
+
 
 ||| when full decidability is overkill
 maybeDigit : Decidable [s,s] leq => (neg : s -> s) -> (u : s) ->
@@ -28,13 +31,12 @@ maybeDigits : (Traversable trav, Decidable [s,s] leq) =>
 maybeDigits {leq} neg u = sequence . map (maybeDigit {leq} neg u)
 
 
-add : AdditiveGroup s =>
+addDigit : AdditiveGroup s =>
   PartiallyOrderedGroupSpec {s} (+) Zero Ng leq ->
     OuterBinop (Digit leq Ng) u u (u + u)
-add spec (x ** p) (y ** q) = ((x + y) ** addInSymRange spec p q)
+addDigit spec (x ** p) (y ** q) = ((x + y) ** addInSymRange spec p q)
 
 addPairwise : AdditiveGroup s =>
   PartiallyOrderedGroupSpec {s} (+) Zero Ng leq ->
     OuterBinop (List . Digit leq Ng) u u (u + u)
-addPairwise spec = zipWith (add spec)
-
+addPairwise spec = zipWith (addDigit spec)

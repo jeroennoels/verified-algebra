@@ -27,24 +27,27 @@ testCarry : Integer -> String
 testCarry x =
   case decideBetween {leq = IntegerLeq} (-18) 18 x of
     Yes inRange => show $ value $
-      computeCarry integerDiscreteOrderedGroup 9 x (CheckIntegerLeq Oh) inRange
+      computeCarry integerDiscreteOrderedGroup 9 (CheckIntegerLeq Oh) x inRange
     No _ => "Error"
 
 testCarryZZ : ZZ -> String
 testCarryZZ x =
   case decideBetween {leq = LTEZ} (-18) 18 x of
     Yes inRange => show $ value $
-      computeCarry zzDiscreteOrderedGroup 9 x bound inRange
+      computeCarry zzDiscreteOrderedGroup 9 bound x inRange
     No _ => "Error"
   where
     bound : LTEZ 1 8
     bound = LtePosPos (LTESucc LTEZero)
 
-negateInteger : Integer -> Integer
-negateInteger x = negate x  
+digits : Maybe (List (Digit IntegerLeq Ng 9))
+digits = maybeDigits {leq = IntegerLeq} Ng 9 [-2,4,1,4,-9,0,5]
 
-digits : Maybe (List (Digit IntegerLeq Main.negateInteger 9))
-digits = maybeDigits {leq = IntegerLeq} negateInteger 9 [-2,4,1,4,-9,0,5]
+testAddition : OuterBinop (Maybe . List . Digit IntegerLeq Ng) 9 9 18
+testAddition = liftA2 (addPairwise integerPartiallyOrderedGroup)
+
+test : Maybe (List Integer)
+test = liftA (map fst) (testAddition digits digits)
 
 main : IO ()
 main = do printLn $ map testAbsoluteValue [(-5)..5]   

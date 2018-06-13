@@ -42,9 +42,9 @@ translationInvariantR (MkPartiallyOrderedMagma _ _ r) = r
 data PartiallyOrderedGroupSpec :
        Binop s -> s -> (s -> s) -> Binrel s -> Type where
   MkPartiallyOrderedGroup :
-    GroupSpec op inv e ->
+    GroupSpec op e inv ->
     PartiallyOrderedMagmaSpec op leq ->
-    PartiallyOrderedGroupSpec op inv e leq
+    PartiallyOrderedGroupSpec op e inv leq
 
 ||| forget
 invariantOrder : PartiallyOrderedGroupSpec op _ _ leq ->
@@ -55,8 +55,7 @@ invariantOrder (MkPartiallyOrderedGroup _ m) = m
 group : PartiallyOrderedGroupSpec op e inv _ -> GroupSpec op e inv
 group (MkPartiallyOrderedGroup g _) = g
 
-namespace PartiallyOrderedGroup
-  ||| forget more
+namespace ForgetGroup
   order : PartiallyOrderedGroupSpec _ _ _ leq -> PartialOrderSpec leq
   order = order . invariantOrder
 

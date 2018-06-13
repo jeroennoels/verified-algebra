@@ -9,8 +9,6 @@ import Proofs.GroupTheory
 import Proofs.Interval
 import Applications.ExactReal.Carry
 
-import Instances.TrustInteger
-
 %default total
 %access public export
 

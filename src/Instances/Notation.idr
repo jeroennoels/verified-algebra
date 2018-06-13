@@ -6,6 +6,7 @@ import public Decidable.Decidable
 import Common.Abbrev
 import Common.Interfaces
 import Specifications.DiscreteOrderedGroup
+import Specifications.OrderedRing
 
 %default total
 %access public export
@@ -35,3 +36,8 @@ specifyDiscreteOrderedGroup :
   (AdditiveGroup s, Unital s, Decidable [s,s] leq) => Type
 specifyDiscreteOrderedGroup {leq} =
   DiscreteOrderedGroupSpec (+) Zero Ng leq One
+
+specifyDiscreteOrderedRing :
+  (AdditiveGroup s, Unital s, Multiplicative s, Decidable [s,s] leq) => Type
+specifyDiscreteOrderedRing {leq} =
+  DiscreteOrderedRingSpec (+) Zero Ng (*) leq One

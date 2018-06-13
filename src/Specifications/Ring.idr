@@ -44,7 +44,8 @@ abelianGroup (MkRing preRing group _) = MkAbelianGroup group (abelian preRing)
 ||| composed specification
 data UnitalRingSpec : Binop s -> s -> (s -> s) -> Binop s -> s -> Type where
   MkUnitalRing : RingSpec add zero neg mul ->
-    isNeutralL mul one -> isNeutralR mul one ->
+    isNeutralL mul one ->
+    isNeutralR mul one ->
     UnitalRingSpec add zero neg mul one
 
 ||| forget

@@ -2,9 +2,11 @@
 ||| See README for a brief introduction.
 module Applications.ExactReal.Addition
 
+import Data.Vect
 import Common.Util
 import Common.Interfaces
 import Specifications.DiscreteOrderedGroup
+import Specifications.OrderedRing
 import Proofs.GroupTheory
 import Proofs.Interval
 import Applications.ExactReal.Carry
@@ -36,5 +38,10 @@ addDigit spec (x ** p) (y ** q) = ((x + y) ** addInSymRange spec p q)
 
 addPairwise : AdditiveGroup s =>
   PartiallyOrderedGroupSpec {s} (+) Zero Ng leq ->
-    OuterBinop (List . Digit leq Ng) u u (u + u)
+    OuterBinop (Vect n . Digit leq Ng) u u (u + u)
 addPairwise spec = zipWith (addDigit spec)
+
+||| semantics
+phi : (Foldable t, AdditiveGroup s, Multiplicative s) => s -> t s -> s
+phi r = foldl f Zero where f acc x = acc * r + x
+

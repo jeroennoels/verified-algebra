@@ -1,5 +1,7 @@
 module Main
 
+import Data.Combinators
+
 import Common.Util
 import Common.Interfaces
 import Specifications.DiscreteOrderedGroup
@@ -40,20 +42,21 @@ testCarryZZ x =
     bound : LTEZ 1 8
     bound = LtePosPos (LTESucc LTEZero)
 
-digits : Maybe (List (Digit IntegerLeq Ng 9))
-digits = maybeDigits {leq = IntegerLeq} Ng 9 [-2,4,1,4,-9,0,5]
+integerDigits : Vect n Integer -> Maybe (Vect n (Digit IntegerLeq Ng 9))
+integerDigits = maybeDigits {leq = IntegerLeq} Ng 9 
 
-testAddition : OuterBinop (Maybe . List . Digit IntegerLeq Ng) 9 9 18
-testAddition = liftA2 (addPairwise integerPartiallyOrderedGroup)
+decimalAdd : OuterBinop (Maybe . Vect n . Digit IntegerLeq Ng) 9 9 18
+decimalAdd = liftA2 (addPairwise integerPartiallyOrderedGroup)
 
-test : Maybe (List Integer)
-test = liftA (map fst) (testAddition digits digits)
+test : Vect n Integer -> Maybe (Vect n Integer)
+test xs = liftA (map fst) (reflex decimalAdd (integerDigits xs))
 
 main : IO ()
 main = do printLn $ map testAbsoluteValue [(-5)..5]   
           printLn $ map testAbsoluteValueZZ (map fromInteger [(-10)..10])   
           printLn $ map testCarry [(-20)..20]
           printLn $ map testCarryZZ (map fromInteger [(-21)..21])
+          printLn $ test [-2,4,1,4,-9,0,5]
 
 ||| compile time test
 test1 : testCarryZZ (-15) = testCarry (-15)

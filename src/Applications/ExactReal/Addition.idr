@@ -14,8 +14,11 @@ import Applications.ExactReal.Carry
 %default total
 %access public export
 
-Digit : .(leq : Binrel s) -> .(neg : s -> s) -> s -> Type
-Digit leq neg u = (x ** InSymRange leq neg u x)
+data Digit : (leq : Binrel s) -> (neg : s -> s) -> s -> Type where
+  MkDigit : (x : s) -> .InSymRange leq neg u x -> Digit leq neg u
+
+implementation Show s => Show (Digit {s} leq neg u) where
+  show (MkDigit x _) = show x
 
 
 ||| when full decidability is overkill
@@ -23,7 +26,7 @@ maybeDigit : Decidable [s,s] leq => (neg : s -> s) -> (u : s) ->
   s -> Maybe (Digit leq neg u)
 maybeDigit {leq} neg u x =
   case decideBetween {leq} (neg u) u x of
-    Yes prf => Just (x ** prf)
+    Yes prf => Just (MkDigit x prf)
     No _ => Nothing
 
 maybeDigits : (Traversable trav, Decidable [s,s] leq) =>
@@ -31,15 +34,20 @@ maybeDigits : (Traversable trav, Decidable [s,s] leq) =>
 maybeDigits {leq} neg u = sequence . map (maybeDigit {leq} neg u)
 
 
-addDigit : AdditiveGroup s =>
+addDigits : AdditiveGroup s =>
   PartiallyOrderedGroupSpec {s} (+) Zero Ng leq ->
     OuterBinop (Digit leq Ng) u u (u + u)
-addDigit spec (x ** p) (y ** q) = ((x + y) ** addInSymRange spec p q)
+addDigits spec (MkDigit x p) (MkDigit y q) =
+  MkDigit (x + y) (addInSymRange spec p q)
 
-addPairwise : AdditiveGroup s =>
-  PartiallyOrderedGroupSpec {s} (+) Zero Ng leq ->
-    OuterBinop (Vect n . Digit leq Ng) u u (u + u)
-addPairwise spec = zipWith (addDigit spec)
+addAndCarry : (AdditiveGroup s, Unital s, Decidable [s,s] leq) =>
+  DiscreteOrderedGroupSpec (+) Zero Ng leq One ->
+  (u : s) -> leq One (u + Ng One) ->
+  Digit leq Ng u -> Digit leq Ng u -> CarryResult (+) Zero Ng leq One
+addAndCarry spec u bound x y =
+  let MkDigit z prf = addDigits (partiallyOrderedGroup spec) x y
+  in computeCarry spec u bound z prf
+
 
 ||| semantics
 phi : (Foldable t, AdditiveGroup s, Multiplicative s) => s -> t s -> s

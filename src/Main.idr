@@ -45,18 +45,12 @@ testCarryZZ x =
 integerDigits : Vect n Integer -> Maybe (Vect n (Digit IntegerLeq Ng 9))
 integerDigits = maybeDigits {leq = IntegerLeq} Ng 9 
 
-decimalAdd : OuterBinop (Maybe . Vect n . Digit IntegerLeq Ng) 9 9 18
-decimalAdd = liftA2 (addPairwise integerPartiallyOrderedGroup)
-
-test : Vect n Integer -> Maybe (Vect n Integer)
-test xs = liftA (map fst) (reflex decimalAdd (integerDigits xs))
-
 main : IO ()
 main = do printLn $ map testAbsoluteValue [(-5)..5]   
           printLn $ map testAbsoluteValueZZ (map fromInteger [(-10)..10])   
           printLn $ map testCarry [(-20)..20]
           printLn $ map testCarryZZ (map fromInteger [(-21)..21])
-          printLn $ test [-2,4,1,4,-9,0,5]
+          printLn $ integerDigits [-2,4,1,4,-9,0,5]
 
 ||| compile time test
 test1 : testCarryZZ (-15) = testCarry (-15)

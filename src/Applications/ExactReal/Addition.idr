@@ -40,15 +40,43 @@ addDigits : AdditiveGroup s =>
 addDigits spec (MkDigit x p) (MkDigit y q) =
   MkDigit (x + y) (addInSymRange spec p q)
 
-addAndCarry : (AdditiveGroup s, Unital s, Decidable [s,s] leq) =>
+computeCarryForSum : (AdditiveGroup s, Unital s, Decidable [s,s] leq) =>
   DiscreteOrderedGroupSpec (+) Zero Ng leq One ->
   (u : s) -> leq One (u + Ng One) ->
-  Digit leq Ng u -> Digit leq Ng u -> CarryResult (+) Zero Ng leq One
-addAndCarry spec u bound x y =
+  Digit leq Ng u -> 
+  Digit leq Ng u -> 
+  CarryResult (+) Zero Ng leq One u
+computeCarryForSum spec u bound x y =
   let MkDigit z prf = addDigits (partiallyOrderedGroup spec) x y
   in computeCarry spec u bound z prf
 
 
+carryToLeft : (AdditiveGroup s, Unital s, Decidable [s,s] leq) =>
+  CarryResult (+) Zero Ng leq One u -> 
+  CarryResult (+) Zero Ng leq One u -> 
+  Digit leq Ng u
+carryToLeft curr next = 
+  let (_,a) = value curr
+      (c,_) = value next
+  in MkDigit (a + scale Zero Ng One c) ?prf
+
+carryAll : (AdditiveGroup s, Unital s, Decidable [s,s] leq) =>
+  Vect n $ CarryResult (+) Zero Ng leq One u -> 
+  Vect n $ Digit leq Ng u
+carryAll (x::y::ys) = carryToLeft x y :: carryAll (y::ys)
+carryAll [x] = let (_,a) = value x in [MkDigit a ?prf]
+carryAll [] = []  
+
+addition : (AdditiveGroup s, Unital s, Decidable [s,s] leq) =>
+  DiscreteOrderedGroupSpec (+) Zero Ng leq One ->
+  (u : s) -> leq One (u + Ng One) ->
+  Vect n $ Digit leq Ng u -> 
+  Vect n $ Digit leq Ng u -> 
+  Vect n $ Digit leq Ng u
+addition spec u bound xs ys = 
+  carryAll $ zipWith (computeCarryForSum spec u bound) xs ys
+  
+  
 ||| semantics
 phi : (Foldable t, AdditiveGroup s, Multiplicative s) => s -> t s -> s
 phi r = foldl f Zero where f acc x = acc * r + x

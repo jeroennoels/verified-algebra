@@ -45,12 +45,16 @@ testCarryZZ x =
 integerDigits : Vect n Integer -> Maybe (Vect n (Digit IntegerLeq Ng 9))
 integerDigits = maybeDigits {leq = IntegerLeq} Ng 9 
 
+testAddition : Vect n (Digit IntegerLeq Ng 9) -> Vect n (Digit IntegerLeq Ng 9) -> Vect n (Digit IntegerLeq Ng 9)
+testAddition = addition integerDiscreteOrderedGroup 9 (CheckIntegerLeq Oh) 
+
 main : IO ()
 main = do printLn $ map testAbsoluteValue [(-5)..5]   
           printLn $ map testAbsoluteValueZZ (map fromInteger [(-10)..10])   
           printLn $ map testCarry [(-20)..20]
           printLn $ map testCarryZZ (map fromInteger [(-21)..21])
-          printLn $ integerDigits [-2,4,1,4,-9,0,5]
+          printLn $ liftA2 testAddition 
+            (integerDigits [0,1,0,0,1]) (integerDigits [0,0,9,9,9]) 
 
 ||| compile time test
 test1 : testCarryZZ (-15) = testCarry (-15)

@@ -101,14 +101,14 @@ scale zero neg x P = x
 ||| carry * radix + output = input
 ||| output in [-v..v] where v = u - 1
 
-data CarryResult : Binop s -> s -> (s -> s) -> Binrel s -> s -> Type where
+data CarryResult : Binop s -> s -> (s -> s) -> Binrel s -> s -> s -> Type where
   MkCarryResult :
     (carry : Carry) -> (output : s) ->
     scale zero neg (add unit u) carry `add` output = input ->
     InSymRange leq neg (add u (neg unit)) output ->
-    CarryResult add zero neg leq unit
+    CarryResult add zero neg leq unit u
 
-value : CarryResult {s} _ _ _ _ _ -> (Carry, s)
+value : CarryResult {s} _ _ _ _ _ _ -> (Carry, s)
 value (MkCarryResult c r _ _) = (c, r)
 
 
@@ -119,7 +119,7 @@ computeCarry : (AdditiveGroup s, Unital s, Decidable [s,s] leq) =>
   DiscreteOrderedGroupSpec (+) Zero Ng leq One ->
   (u : s) -> leq One (u + Ng One) ->
   (x : s) -> InSymRange leq Ng (u + u) x ->
-  CarryResult (+) Zero Ng leq One
+  CarryResult (+) Zero Ng leq One u
   
 computeCarry spec u bound x range =
   let pog = partiallyOrderedGroup spec

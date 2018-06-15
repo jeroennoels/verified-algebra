@@ -36,8 +36,14 @@ data CarryResult : Binop s -> s -> (s -> s) -> Binrel s -> s -> s -> Type where
     InSymRange leq neg (add u (neg unit)) output ->
     CarryResult add zero neg leq unit u
 
-value : CarryResult {s} _ _ _ _ _ _ -> (Carry, s)
-value (MkCarryResult c r _ _) = (c, r)
+carry : CarryResult _ _ _ _ _ _ -> Carry
+carry (MkCarryResult c _ _ _) = c
+
+output : CarryResult {s} _ _ _ _ _ _ -> s
+output (MkCarryResult _ o _ _) = o
+
+result : CarryResult {s} _ _ _ _ _ _ -> (Carry, s)
+result (MkCarryResult c o _ _) = (c, o)
 
 CarryResultShort : .DiscreteOrderedGroupSpec {s} add zero neg leq unit ->
   .(u : s) -> Type

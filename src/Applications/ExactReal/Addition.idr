@@ -56,15 +56,13 @@ carryToLeft : (AdditiveGroup s, Unital s, Decidable [s,s] leq) =>
   CarryResult (+) Zero Ng leq One u -> 
   Digit leq Ng u
 carryToLeft curr next = 
-  let (_,a) = value curr
-      (c,_) = value next
-  in MkDigit (a + scale Zero Ng One c) ?prf
+  MkDigit (output curr + scale Zero Ng One (carry next)) ?prf
 
 carryAll : (AdditiveGroup s, Unital s, Decidable [s,s] leq) =>
   Vect n $ CarryResult (+) Zero Ng leq One u -> 
   Vect n $ Digit leq Ng u
 carryAll (x::y::ys) = carryToLeft x y :: carryAll (y::ys)
-carryAll [x] = let (_,a) = value x in [MkDigit a ?prf]
+carryAll [x] = [MkDigit (output x) ?prf]
 carryAll [] = []  
 
 addition : (AdditiveGroup s, Unital s, Decidable [s,s] leq) =>
@@ -76,7 +74,7 @@ addition : (AdditiveGroup s, Unital s, Decidable [s,s] leq) =>
 addition spec u bound xs ys = 
   carryAll $ zipWith (computeCarryForSum spec u bound) xs ys
   
-  
+
 ||| semantics
 phi : (Foldable t, AdditiveGroup s, Multiplicative s) => s -> t s -> s
 phi r = foldl f Zero where f acc x = acc * r + x

@@ -29,29 +29,29 @@ scale zero neg x P = x
 ||| radix = u + 1
 ||| carry * radix + output = input
 ||| output in [-v..v] where v = u - 1
-data CarryResult : Binop s -> s -> (s -> s) -> Binrel s -> s -> s -> Type where
-  MkCarryResult :
+data Reduction : Binop s -> s -> (s -> s) -> Binrel s -> s -> s -> Type where
+  MkReduction :
     (input : s) -> (carry : Carry) -> (output : s) ->
     scale zero neg (add unit u) carry `add` output = input ->
     InSymRange leq neg (add u (neg unit)) output ->
-    CarryResult add zero neg leq unit u
+    Reduction add zero neg leq unit u
 
-input : CarryResult {s} _ _ _ _ _ _ -> s
-input (MkCarryResult i _ _ _ _) = i
+input : Reduction {s} _ _ _ _ _ _ -> s
+input (MkReduction i _ _ _ _) = i
 
-carry : CarryResult _ _ _ _ _ _ -> Carry
-carry (MkCarryResult _ c _ _ _) = c
+carry : Reduction _ _ _ _ _ _ -> Carry
+carry (MkReduction _ c _ _ _) = c
 
-output : CarryResult {s} _ _ _ _ _ _ -> s
-output (MkCarryResult _ _ o _ _) = o
+output : Reduction {s} _ _ _ _ _ _ -> s
+output (MkReduction _ _ o _ _) = o
 
-result : CarryResult {s} _ _ _ _ _ _ -> (Carry, s)
-result (MkCarryResult _ c o _ _) = (c, o)
+result : Reduction {s} _ _ _ _ _ _ -> (Carry, s)
+result (MkReduction _ c o _ _) = (c, o)
 
-CarryResultShort : .DiscreteOrderedGroupSpec {s} add zero neg leq unit ->
+ReductionShort : .DiscreteOrderedGroupSpec {s} add zero neg leq unit ->
   .(u : s) -> Type
-CarryResultShort {add} {zero} {neg} {leq} {unit} spec u =
-  CarryResult add zero neg leq unit u
+ReductionShort {add} {zero} {neg} {leq} {unit} spec u =
+  Reduction add zero neg leq unit u
 
 
 ||| See README for a brief introduction.
@@ -60,7 +60,7 @@ computeCarry : (AdditiveGroup s, Unital s, Decidable [s,s] leq) =>
   (spec : DiscreteOrderedGroupSpec (+) Zero Ng leq One) ->
   (u : s) -> leq One (u + Ng One) ->
   (x : s) -> InSymRange leq Ng (u + u) x ->
-  CarryResult (+) Zero Ng leq One u
+  Reduction (+) Zero Ng leq One u
 
 computeCarry spec u bound x range =
   let pog = partiallyOrderedGroup spec
@@ -68,14 +68,14 @@ computeCarry spec u bound x range =
       abel = abelian spec in
   case decidePartition3 spec (Ng u) u x range of
     Left prf
-      => MkCarryResult x M (One + u + x)
+      => MkReduction x M (One + u + x)
            (groupCancel1bis grp _ x)
            (shiftLeftToSymRange pog u One x bound prf)
     Middle prf
-      => MkCarryResult x O x
+      => MkReduction x O x
            (neutralL (monoid grp) _)
            (toSymRange pog abel prf)
     Right prf
-      => MkCarryResult x P (x + Ng (One + u))
+      => MkReduction x P (x + Ng (One + u))
            (groupCancelAbelian grp abel _ x)
            (shiftRightToSymRange pog u One x bound prf)

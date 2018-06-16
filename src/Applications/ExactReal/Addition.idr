@@ -51,18 +51,3 @@ addition spec u bound xs ys =
 ||| semantics
 phi : (Foldable t, AdditiveGroup s, Multiplicative s) => s -> t s -> s
 phi radix = foldl f Zero where f acc x = acc * radix + x
-
-||| semantics: explicit recursion
-psi : (AdditiveGroup s, Multiplicative s) => s -> Vect n s -> s -> s
-psi radix (x::xs) acc = psi radix xs (acc * radix + x)
-psi radix [] acc = acc
-
-||| this could be extended to become an induction hypothesis
-reduce : (AdditiveGroup s, Unital s, Decidable [s,s] leq) =>
-  (Carry, Vect n $ CarryResult (+) Zero Ng leq One u) ->
-  (Carry, Vect n s)
-reduce (cin, x :: xs) = 
-    let (cout, ys) = reduce (cin, xs)
-        y = output x + scale Zero Ng One cout
-    in (carry x, y :: ys)
-reduce (cin, []) = (cin, [])

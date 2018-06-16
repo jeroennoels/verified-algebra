@@ -31,19 +31,22 @@ scale zero neg x P = x
 ||| output in [-v..v] where v = u - 1
 data CarryResult : Binop s -> s -> (s -> s) -> Binrel s -> s -> s -> Type where
   MkCarryResult :
-    (carry : Carry) -> (output : s) ->
+    (input : s) -> (carry : Carry) -> (output : s) ->
     scale zero neg (add unit u) carry `add` output = input ->
     InSymRange leq neg (add u (neg unit)) output ->
     CarryResult add zero neg leq unit u
 
+input : CarryResult {s} _ _ _ _ _ _ -> s
+input (MkCarryResult i _ _ _ _) = i
+
 carry : CarryResult _ _ _ _ _ _ -> Carry
-carry (MkCarryResult c _ _ _) = c
+carry (MkCarryResult _ c _ _ _) = c
 
 output : CarryResult {s} _ _ _ _ _ _ -> s
-output (MkCarryResult _ o _ _) = o
+output (MkCarryResult _ _ o _ _) = o
 
 result : CarryResult {s} _ _ _ _ _ _ -> (Carry, s)
-result (MkCarryResult c o _ _) = (c, o)
+result (MkCarryResult _ c o _ _) = (c, o)
 
 CarryResultShort : .DiscreteOrderedGroupSpec {s} add zero neg leq unit ->
   .(u : s) -> Type
@@ -65,14 +68,14 @@ computeCarry spec u bound x range =
       abel = abelian spec in
   case decidePartition3 spec (Ng u) u x range of
     Left prf
-      => MkCarryResult M (One + u + x)
+      => MkCarryResult x M (One + u + x)
            (groupCancel1bis grp _ x)
            (shiftLeftToSymRange pog u One x bound prf)
     Middle prf
-      => MkCarryResult O x
+      => MkCarryResult x O x
            (neutralL (monoid grp) _)
            (toSymRange pog abel prf)
     Right prf
-      => MkCarryResult P (x + Ng (One + u))
+      => MkCarryResult x P (x + Ng (One + u))
            (groupCancelAbelian grp abel _ x)
            (shiftRightToSymRange pog u One x bound prf)

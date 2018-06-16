@@ -35,6 +35,7 @@ modules =
   Applications.Example,
   Applications.ExactReal.Lemmas.Carry,
   Applications.ExactReal.Carry,
+  Applications.ExactReal.Digit,
   Applications.ExactReal.Addition,
   Main
 

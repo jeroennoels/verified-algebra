@@ -43,8 +43,8 @@ addDigits spec (MkDigit x p) (MkDigit y q) =
 computeCarryForSum : (AdditiveGroup s, Unital s, Decidable [s,s] leq) =>
   DiscreteOrderedGroupSpec (+) Zero Ng leq One ->
   (u : s) -> leq One (u + Ng One) ->
-  Digit leq Ng u -> 
-  Digit leq Ng u -> 
+  Digit leq Ng u ->
+  Digit leq Ng u ->
   CarryResult (+) Zero Ng leq One u
 computeCarryForSum spec u bound x y =
   let MkDigit z prf = addDigits (partiallyOrderedGroup spec) x y
@@ -52,30 +52,43 @@ computeCarryForSum spec u bound x y =
 
 
 carryToLeft : (AdditiveGroup s, Unital s, Decidable [s,s] leq) =>
-  CarryResult (+) Zero Ng leq One u -> 
-  CarryResult (+) Zero Ng leq One u -> 
+  CarryResult (+) Zero Ng leq One u ->
+  CarryResult (+) Zero Ng leq One u ->
   Digit leq Ng u
-carryToLeft curr next = 
+carryToLeft curr next =
   MkDigit (output curr + scale Zero Ng One (carry next)) ?prf
 
 carryAll : (AdditiveGroup s, Unital s, Decidable [s,s] leq) =>
-  Vect n $ CarryResult (+) Zero Ng leq One u -> 
+  Vect n $ CarryResult (+) Zero Ng leq One u ->
   Vect n $ Digit leq Ng u
 carryAll (x::y::ys) = carryToLeft x y :: carryAll (y::ys)
 carryAll [x] = [MkDigit (output x) ?prf]
-carryAll [] = []  
+carryAll [] = []
 
 addition : (AdditiveGroup s, Unital s, Decidable [s,s] leq) =>
   DiscreteOrderedGroupSpec (+) Zero Ng leq One ->
   (u : s) -> leq One (u + Ng One) ->
-  Vect n $ Digit leq Ng u -> 
-  Vect n $ Digit leq Ng u -> 
+  Vect n $ Digit leq Ng u ->
+  Vect n $ Digit leq Ng u ->
   Vect n $ Digit leq Ng u
-addition spec u bound xs ys = 
+addition spec u bound xs ys =
   carryAll $ zipWith (computeCarryForSum spec u bound) xs ys
-  
 
 ||| semantics
 phi : (Foldable t, AdditiveGroup s, Multiplicative s) => s -> t s -> s
-phi r = foldl f Zero where f acc x = acc * r + x
+phi radix = foldl f Zero where f acc x = acc * radix + x
 
+||| semantics: explicit recursion
+psi : (AdditiveGroup s, Multiplicative s) => s -> Vect n s -> s -> s
+psi radix (x::xs) acc = psi radix xs (acc * radix + x)
+psi radix [] acc = acc
+
+||| this could be extended to become an induction hypothesis
+reduce : (AdditiveGroup s, Unital s, Decidable [s,s] leq) =>
+  (Carry, Vect n $ CarryResult (+) Zero Ng leq One u) ->
+  (Carry, Vect n s)
+reduce (cin, x :: xs) = 
+    let (cout, ys) = reduce (cin, xs)
+        y = output x + scale Zero Ng One cout
+    in (carry x, y :: ys)
+reduce (cin, []) = (cin, [])

@@ -45,13 +45,16 @@ outputs : Absorption {s} {n} _ _ _ -> Vect n s
 outputs (MkAbsorption _ o _) = o
 
 absorb : (AdditiveGroup s, Multiplicative s, Unital s) =>
+  (spec : DiscreteOrderedGroupSpec (+) Zero Ng leq One) ->
   (reds : Vect n (Reduction (+) Zero Ng leq One u)) ->
   Absorption {s}
     (carrySemantics (One + u))
     (semantics (One + u) Zero)
     (map Carry.input reds)
-absorb (red :: reds) =
-    let absorption = absorb reds
+absorb spec (red :: reds) =
+    let absorption = absorb spec reds
         out = output red + value (carry absorption)
     in MkAbsorption (carry red) (out :: outputs absorption) ?pf
-absorb [] = MkAbsorption O [] ?pf2
+absorb {s} spec [] = MkAbsorption O [] (sym oo)
+  where oo : Zero + Zero = Zero {s}
+        oo = neutralL (monoid (group spec)) Zero

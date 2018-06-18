@@ -46,7 +46,7 @@ outputs (MkAbsorption _ o _) = o
 
 absorb : (AdditiveGroup s, Multiplicative s, Unital s) =>
   (spec : DiscreteOrderedGroupSpec (+) Zero Ng leq One) ->
-  (reds : Vect n (Reduction (+) Zero Ng leq One u)) ->
+  (reds : Vect n (Reduction (+) Zero Ng leq One u (One + u))) ->
   Absorption {s}
     (carrySemantics (One + u))
     (semantics (One + u) Zero)

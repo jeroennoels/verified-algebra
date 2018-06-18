@@ -19,21 +19,21 @@ computeCarryForSum : (AdditiveGroup s, Unital s, Decidable [s,s] leq) =>
   (u : s) -> leq One (u + Ng One) ->
   Digit leq Ng u ->
   Digit leq Ng u ->
-  Reduction (+) Zero Ng leq One u
+  Reduction (+) Zero Ng leq One u (One + u)
 computeCarryForSum spec u bound x y =
   let MkDigit z prf = addDigits (partiallyOrderedGroup spec) x y
   in computeCarry spec u bound z prf
 
 
 carryToLeft : (AdditiveGroup s, Unital s, Decidable [s,s] leq) =>
-  Reduction (+) Zero Ng leq One u ->
-  Reduction (+) Zero Ng leq One u ->
+  Reduction (+) Zero Ng leq One u _ ->
+  Reduction (+) Zero Ng leq One u _ ->
   Digit leq Ng u
 carryToLeft curr next =
   MkDigit (output curr + scale Zero Ng One (carry next)) ?prf
 
 carryAll : (AdditiveGroup s, Unital s, Decidable [s,s] leq) =>
-  Vect n (Reduction (+) Zero Ng leq One u) ->
+  Vect n (Reduction (+) Zero Ng leq One u (One + u)) ->
   Vect n (Digit leq Ng u)
 carryAll (x::y::ys) = carryToLeft x y :: carryAll (y::ys)
 carryAll [x] = [MkDigit (output x) ?prf]

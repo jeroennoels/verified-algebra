@@ -14,47 +14,70 @@ import public Applications.ExactReal.Digit
 %default total
 %access public export
 
-||| semantics: explicit recursion
-semantics : (AdditiveGroup s, Multiplicative s) => s -> s -> Vect n s -> s
-semantics radix acc (x :: xs) = semantics radix (acc * radix + x) xs
-semantics radix acc [] = acc
-
-carrySemantics : AdditiveGroup s => s -> s -> Carry -> s
-carrySemantics radix x c = x + scale Zero Ng radix c
-
 value : (AdditiveGroup s, Unital s) => Carry -> s
 value P = One
 value O = Zero
 value M = Ng One
 
+
+||| This is a proof friendly semantics function.  Consider a tail
+||| recursive variation for run time use.
+phi : (AdditiveGroup s, Multiplicative s, Unital s) =>
+  (radix : s) -> (lsdf : Vect n s) -> (msc : Carry) -> s
+phi radix (x :: xs) c = x + radix * phi radix xs c
+phi radix [] c = value c
+
+
+||| the result of absorbing carry digits
 data Absorption :
-  (psi : s -> Carry -> s) ->
-  (phi : Vect n s -> s) ->
-  (inputs : Vect n s) ->
-  Type where
-  MkAbsorption :
-    (cout : Carry) ->
-    (outputs : Vect n s) ->
-    phi inputs = psi (phi outputs) cout ->
-    Absorption psi phi inputs
+  (k : Nat) ->
+  (semantics : Vect (S k) s -> Carry -> s) ->
+  (inputs : Vect (S k) s) -> Type
+  where MkAbsorption :
+    (msc : Carry) ->
+    (pending : s) ->
+    (outputs : Vect k s) ->
+    (invariant : semantics inputs O = semantics (pending :: outputs) msc) ->
+    Absorption k semantics inputs
 
-carry : Absorption _ _ _ -> Carry
-carry (MkAbsorption c _ _) = c
 
-outputs : Absorption {s} {n} _ _ _ -> Vect n s
-outputs (MkAbsorption _ o _) = o
+scalingLemma : (AdditiveGroup s, Multiplicative s, Unital s) =>
+  UnitalRingSpec {s} (+) Zero Ng (*) One ->
+    (radix : s) -> (x : s) -> (c : Carry) ->
+    scale Zero Ng radix c + x = x + radix * value c
+scalingLemma spec radix x P =
+  let o1 = neutralR (multiplicativeMonoid spec) radix
+      o2 = abelian (abelianGroup (ring spec)) x radix
+  in sym (cong o1 === o2)
+scalingLemma spec radix x O = ?q
+scalingLemma spec radix x M = ?qq
 
-absorb : (AdditiveGroup s, Multiplicative s, Unital s) =>
-  (spec : DiscreteOrderedGroupSpec (+) Zero Ng leq One) ->
-  (reds : Vect n (Reduction (+) Zero Ng leq One u (One + u))) ->
-  Absorption {s}
-    (carrySemantics (One + u))
-    (semantics (One + u) Zero)
-    (map Carry.input reds)
-absorb spec (red :: reds) =
-    let absorption = absorb spec reds
-        out = output red + value (carry absorption)
-    in MkAbsorption (carry red) (out :: outputs absorption) ?pf
-absorb {s} spec [] = MkAbsorption O [] (sym oo)
-  where oo : Zero + Zero = Zero {s}
-        oo = neutralL (monoid (group spec)) Zero
+
+lemma : (AdditiveGroup s, Multiplicative s, Unital s) =>
+  (spec : DiscreteOrderedRingSpec (+) Zero Ng (*) leq One) ->
+  (msc : Carry) ->
+  (pending : s) ->
+  (outputs : Vect k s) ->
+  (inputs : Vect (S k) s) ->
+  (red : Reduction (+) Zero Ng leq One u radix) ->
+  (ih : phi radix inputs O = phi radix (pending :: outputs) msc) ->
+  phi radix (input red :: inputs) O =
+  phi radix (output red :: (value (carry red) + pending) :: outputs) msc
+lemma {s} {radix} spec msc pending outputs inputs red ih =
+  let MkReduction i c o invariant _ = red
+      o1 = the (phi radix inputs O = pending + radix * phi radix outputs msc) ih
+      o2 = the (o + radix * value c = i)
+             (scalingLemma (unitalRing spec) radix o c @== invariant)
+  in ?qed
+
+
+step : (AdditiveGroup s, Multiplicative s, Unital s) =>
+  (spec : DiscreteOrderedRingSpec (+) Zero Ng (*) leq One) ->
+  (radix : s) ->
+  (red : Reduction (+) Zero Ng leq One u radix) ->
+  Absorption k (phi radix) inputs ->
+  Absorption (S k) (phi radix) (input red :: inputs)
+step spec radix red (MkAbsorption {inputs} msc pending outputs invariant) =
+  let out = value (carry red) + pending
+  in MkAbsorption msc (output red) (out :: outputs)
+       (lemma spec msc pending outputs inputs red invariant)

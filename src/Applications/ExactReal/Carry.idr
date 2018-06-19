@@ -32,7 +32,7 @@ scale zero neg x P = x
 data Reduction : 
   Binop s -> s -> (s -> s) -> Binrel s -> s -> s -> s -> Type 
   where MkReduction :
-    (input : s) -> (carry : Carry) -> (output : s) ->
+    .(input : s) -> (carry : Carry) -> (output : s) ->
     scale zero neg radix carry `add` output = input ->
     InSymRange leq neg (add u (neg unit)) output ->
     Reduction add zero neg leq unit u radix

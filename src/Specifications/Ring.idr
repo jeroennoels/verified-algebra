@@ -51,3 +51,7 @@ data UnitalRingSpec : Binop s -> s -> (s -> s) -> Binop s -> s -> Type where
 ||| forget
 ring : UnitalRingSpec add zero neg mul _ -> RingSpec add zero neg mul
 ring (MkUnitalRing r _ _) = r
+
+||| forget
+multiplicativeMonoid : UnitalRingSpec _ _ _ mul one -> MonoidSpec mul one
+multiplicativeMonoid (MkUnitalRing (MkRing _ _ assoc) l r) = MkMonoid assoc l r

@@ -2,6 +2,7 @@ module Proofs.RingTheory
 
 import Specifications.Ring
 import Proofs.GroupCancelationLemmas
+import Symmetry.Opposite
 
 %default total
 %access export
@@ -20,6 +21,6 @@ zeroAbsorbsL {zero} spec x = o4 where
   o4 = groupCancelGivesNeutral (group (abelianGroup spec)) _ _ (sym o3)
 
 zeroAbsorbsR : {(*) : Binop s} ->
-  RingSpec _ zero _ (*) -> (x : s) -> 
+  RingSpec _ zero _ (*) -> (x : s) ->
     x * zero = zero
-zeroAbsorbsR spec x = ?qed
+zeroAbsorbsR spec x = zeroAbsorbsL (multiplicativeOpposite spec) x

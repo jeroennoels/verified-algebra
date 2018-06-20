@@ -3,6 +3,7 @@
 module Symmetry.Opposite
 
 import Specifications.TranslationInvariance
+import Specifications.Ring
 
 %default total
 %access export
@@ -18,6 +19,21 @@ namespace Monoid
 namespace Group
   opposite : GroupSpec op e inv -> GroupSpec (flip op) e inv
   opposite (MkGroup m l r) = MkGroup (opposite m) r l
+
+namespace PreRing
+  multiplicativeOpposite : PreRingSpec add mul -> PreRingSpec add (flip mul)
+  multiplicativeOpposite {add} {mul} (MkPreRing l r abel) =
+    MkPreRing rop lop abel where
+      rop : isDistributativeL add (flip mul)
+      rop a x y = r x y a
+      lop : isDistributativeR add (flip mul)
+      lop x y a = l a x y
+
+namespace Ring
+  multiplicativeOpposite : RingSpec add zero neg mul ->
+    RingSpec add zero neg (flip mul)
+  multiplicativeOpposite (MkRing pre grp multassoc) =
+    MkRing (multiplicativeOpposite pre) grp (oppAssoc multassoc)
 
 namespace PartiallyOrderedMagma
   opposite : PartiallyOrderedMagmaSpec op leq ->

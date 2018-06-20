@@ -27,8 +27,8 @@ phi : (AdditiveGroup s, Multiplicative s, Unital s) =>
 phi radix (x :: xs) c = x + radix * phi radix xs c
 phi radix [] c = value c
 
-
 ||| the result of absorbing carry digits
+export
 data Absorption :
   (k : Nat) ->
   (semantics : Vect (S k) s -> Carry -> s) ->
@@ -40,7 +40,7 @@ data Absorption :
     (invariant : semantics inputs O = semantics (pending :: outputs) msc) ->
     Absorption k semantics inputs
 
-
+export
 scalingLemma : (AdditiveGroup s, Multiplicative s, Unital s) =>
   UnitalRingSpec {s} (+) Zero Ng (*) One ->
     (radix : s) -> (x : s) -> (c : Carry) ->
@@ -52,7 +52,7 @@ scalingLemma spec radix x P =
 scalingLemma spec radix x O = ?q
 scalingLemma spec radix x M = ?qq
 
-
+export
 lemma : (AdditiveGroup s, Multiplicative s, Unital s) =>
   (spec : DiscreteOrderedRingSpec (+) Zero Ng (*) leq One) ->
   (msc : Carry) ->
@@ -70,7 +70,7 @@ lemma {s} {radix} spec msc pending outputs inputs red ih =
              (scalingLemma (unitalRing spec) radix o c @== invariant)
   in ?qed
 
-
+export
 step : (AdditiveGroup s, Multiplicative s, Unital s) =>
   (spec : DiscreteOrderedRingSpec (+) Zero Ng (*) leq One) ->
   (radix : s) ->

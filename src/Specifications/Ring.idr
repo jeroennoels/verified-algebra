@@ -19,14 +19,6 @@ data PreRingSpec : Binop s -> Binop s -> Type where
     isAbelian add -> PreRingSpec add mul
 
 ||| forget
-distributativeL : PreRingSpec add mul -> isDistributativeL add mul
-distributativeL (MkPreRing l _ _) = l
-
-||| forget
-distributativeR : PreRingSpec add mul -> isDistributativeR add mul
-distributativeR (MkPreRing _ r _) = r
-
-||| forget
 abelian : PreRingSpec add _ -> isAbelian add
 abelian (MkPreRing _ _ a) = a
 
@@ -36,6 +28,14 @@ data RingSpec : Binop s -> s -> (s -> s) -> Binop s -> Type where
     GroupSpec add zero neg ->
     isAssociative mul ->
     RingSpec add zero neg mul
+
+||| forget
+distributativeL : RingSpec add _ _ mul -> isDistributativeL add mul
+distributativeL (MkRing (MkPreRing l _ _) _ _) = l
+
+||| forget
+distributativeR : RingSpec add _ _ mul -> isDistributativeR add mul
+distributativeR (MkRing (MkPreRing _ r _) _ _) = r
 
 ||| forget
 abelianGroup : RingSpec add zero neg _ -> AbelianGroupSpec add zero neg

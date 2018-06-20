@@ -28,6 +28,7 @@ modules =
   Proofs.TranslationInvarianceTheory,
   Proofs.DiscreteOrderTheory,
   Proofs.Interval,
+  Proofs.RingTheory,
   Instances.Notation,
   Instances.TrustInteger,
   Instances.OrderZZ,

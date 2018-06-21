@@ -9,16 +9,11 @@ import Specifications.DiscreteOrderedGroup
 import Specifications.OrderedRing
 import Proofs.GroupTheory
 import Applications.ExactReal.Carry
+import Applications.ExactReal.Scaling
 import public Applications.ExactReal.Digit
 
 %default total
 %access public export
-
-value : (AdditiveGroup s, Unital s) => Carry -> s
-value P = One
-value O = Zero
-value M = Ng One
-
 
 ||| This is a proof friendly semantics function.  Consider a tail
 ||| recursive variation for run time use.
@@ -39,18 +34,6 @@ data Absorption :
     (outputs : Vect k s) ->
     (invariant : semantics inputs O = semantics (pending :: outputs) msc) ->
     Absorption k semantics inputs
-
-export
-scalingLemma : (AdditiveGroup s, Multiplicative s, Unital s) =>
-  UnitalRingSpec {s} (+) Zero Ng (*) One ->
-    (radix : s) -> (x : s) -> (c : Carry) ->
-    scale Zero Ng radix c + x = x + radix * value c
-scalingLemma spec radix x P =
-  let o1 = neutralR (multiplicativeMonoid spec) radix
-      o2 = abelian (abelianGroup (ring spec)) x radix
-  in sym (cong o1 === o2)
-scalingLemma spec radix x O = ?q
-scalingLemma spec radix x M = ?qq
 
 export
 lemma : (AdditiveGroup s, Multiplicative s, Unital s) =>

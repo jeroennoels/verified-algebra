@@ -13,6 +13,7 @@ import Instances.ZZ
 import Applications.Example
 import Applications.ExactReal.Carry
 import Applications.ExactReal.Addition
+import Applications.ExactReal.Explore
 
 %default total
 

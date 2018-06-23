@@ -38,12 +38,16 @@ distributativeR : RingSpec add _ _ mul -> isDistributativeR add mul
 distributativeR (MkRing (MkPreRing _ r _) _ _) = r
 
 ||| forget
+group : RingSpec add zero neg _ -> GroupSpec add zero neg
+group (MkRing preRing g _) = g
+
+||| forget
 abelianGroup : RingSpec add zero neg _ -> AbelianGroupSpec add zero neg
 abelianGroup (MkRing preRing g _) = MkAbelianGroup g (abelian preRing)
 
 ||| forget
-group : RingSpec add zero neg _ -> GroupSpec add zero neg
-group (MkRing preRing g _) = g
+plusAbelian : RingSpec add zero neg _ -> isAbelian add
+plusAbelian (MkRing preRing _ _) = abelian preRing
 
 ||| composed specification
 data UnitalRingSpec : Binop s -> s -> (s -> s) -> Binop s -> s -> Type where

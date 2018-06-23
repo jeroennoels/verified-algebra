@@ -48,10 +48,12 @@ lemma : (AdditiveGroup s, Multiplicative s, Unital s) =>
   phi radix (output red :: (value (carry red) + pending) :: outputs) msc
 lemma {s} {radix} spec msc pending outputs inputs red ih =
   let MkReduction i c o invariant _ = red
-      o1 = the (phi radix inputs O = pending + radix * phi radix outputs msc) ih
-      o2 = the (o + radix * value c = i)
-             (scalingLemma (unitalRing spec) radix o c @== invariant)
-  in ?qed
+      o1 = the (scale Zero Ng radix c + o = i) invariant 
+      o2 = the (scale Zero Ng radix c + o = o + radix * value c) 
+               (scalingLemma (unitalRing spec) radix o c)
+      o3 = the (o + radix * value c = i) (o2 @== o1)
+      o4 = the (phi radix inputs O = pending + radix * phi radix outputs msc) ih
+   in ?qed
 
 export
 step : (AdditiveGroup s, Multiplicative s, Unital s) =>

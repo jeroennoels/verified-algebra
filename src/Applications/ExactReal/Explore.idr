@@ -23,7 +23,30 @@ phi : (AdditiveGroup s, Multiplicative s, Unital s) =>
 phi radix (x :: xs) c = x + radix * phi radix xs c
 phi radix [] c = value c
 
-||| the result of absorbing carry digits
+
+private
+adhocIdentity : (AdditiveGroup s, Multiplicative s) =>
+  (spec : RingSpec {s} (+) Zero Ng (*)) -> (b,x,y,z : s) ->
+  a = b + c -> x + y * z + y * a = x + y * (z + b + c)
+adhocIdentity spec {a} b {c} x y z given = o3 where
+  o1 : z + a = z + b + c
+  o1 = cong given === associative (monoid (group spec)) z b c
+  o2 : y * z + y * a = y * (z + b + c)
+  o2 = distributativeL spec y z a @== cong o1
+  o3 : x + y * z + y * a = x + y * (z + b + c)
+  o3 = associative (monoid (group spec)) x _ _ @== cong o2  
+
+
+||| The result of absorbing carry digits:
+|||
+|||           in1    in2    in3
+|||           ou1    ou2    pen + unk
+|||    msc    abs    abs    unk
+|||
+||| unk = the least significant carry is still unknown
+||| pen = ouput of reduction before absorbing the unknown carry
+||| msc = most significant carry
+||| abs = carry already absorbed in the corresponding output
 export
 data Absorption :
   (k : Nat) ->
@@ -57,7 +80,9 @@ lemma {s} {radix} spec msc pending outputs inputs red ih =
              (abelianCongruence (plusAbelian (ring (unitalRing spec))) o2)
     o4 = the (o + radix * value c = i) (o3 @== o1)
     o5 = the (phi radix inputs O = pending + radix * phi radix outputs msc) ih
-  in ?qed
+    o6 = adhocIdentity (ring (unitalRing spec)) pending o radix (value c) o5
+    vv = radix * phi radix inputs O
+  in cong {f = (+ vv)} o4 @== o6
 
 export
 step : (AdditiveGroup s, Multiplicative s, Unital s) =>

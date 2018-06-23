@@ -22,6 +22,7 @@ modules =
   Symmetry.Opposite,
   Symmetry.Abelian,
   Proofs.OrderTheory,
+  Proofs.SemigroupTheory,
   Proofs.GroupCancelationLemmas,
   Proofs.GroupTheory,
   Proofs.GroupCancelMisc,

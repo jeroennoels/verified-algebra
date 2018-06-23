@@ -7,6 +7,7 @@ import Common.Util
 import Common.Interfaces
 import Specifications.DiscreteOrderedGroup
 import Specifications.OrderedRing
+import Proofs.SemigroupTheory
 import Proofs.GroupTheory
 import Applications.ExactReal.Carry
 import Applications.ExactReal.Scaling
@@ -47,13 +48,16 @@ lemma : (AdditiveGroup s, Multiplicative s, Unital s) =>
   phi radix (input red :: inputs) O =
   phi radix (output red :: (value (carry red) + pending) :: outputs) msc
 lemma {s} {radix} spec msc pending outputs inputs red ih =
-  let MkReduction i c o invariant _ = red
-      o1 = the (scale Zero Ng radix c + o = i) invariant 
-      o2 = the (scale Zero Ng radix c + o = o + radix * value c) 
-               (scalingLemma (unitalRing spec) radix o c)
-      o3 = the (o + radix * value c = i) (o2 @== o1)
-      o4 = the (phi radix inputs O = pending + radix * phi radix outputs msc) ih
-   in ?qed
+  let
+    MkReduction i c o invariant _ = red
+    o1 = the (scale Zero Ng radix c + o = i) invariant
+    o2 = the (scale Zero Ng radix c = radix * value c)
+             (scalingLemma (unitalRing spec) radix c)
+    o3 = the (scale Zero Ng radix c + o = o + radix * value c)
+             (abelianCongruence (plusAbelian (ring (unitalRing spec))) o2)
+    o4 = the (o + radix * value c = i) (o3 @== o1)
+    o5 = the (phi radix inputs O = pending + radix * phi radix outputs msc) ih
+  in ?qed
 
 export
 step : (AdditiveGroup s, Multiplicative s, Unital s) =>

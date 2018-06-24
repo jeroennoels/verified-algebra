@@ -9,6 +9,7 @@ import Applications.ExactReal.Carry
 %default total
 %access export
 
+public export
 value : (AdditiveGroup s, Unital s) => Carry -> s
 value P = One
 value O = Zero

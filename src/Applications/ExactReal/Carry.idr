@@ -58,7 +58,7 @@ ReductionShort {add} {zero} {neg} {leq} {unit} spec u radix =
 ||| See README for a brief introduction.
 ||| 1 <= u - 1 means radix >= 3.
 computeCarry : (AdditiveGroup s, Unital s, Decidable [s,s] leq) =>
-  (spec : DiscreteOrderedGroupSpec (+) Zero Ng leq One) ->
+  DiscreteOrderedGroupSpec (+) Zero Ng leq One ->
   (u : s) -> leq One (u + Ng One) ->
   (x : s) -> InSymRange leq Ng (u + u) x ->
   Reduction (+) Zero Ng leq One u (One + u)

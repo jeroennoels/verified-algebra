@@ -38,6 +38,8 @@ modules =
   Applications.ExactReal.Lemmas.Carry,
   Applications.ExactReal.Carry,
   Applications.ExactReal.Digit,
+  Applications.ExactReal.Scaling,
+  Applications.ExactReal.Adhoc,
   Applications.ExactReal.Addition,
   Main
 

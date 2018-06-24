@@ -7,7 +7,6 @@ import Common.Util
 import Common.Interfaces
 import Specifications.DiscreteOrderedGroup
 import Specifications.OrderedRing
-import Proofs.SemigroupTheory
 import Proofs.GroupTheory
 import Applications.ExactReal.Carry
 import Applications.ExactReal.Scaling
@@ -54,42 +53,39 @@ base : (AdditiveGroup s, Multiplicative s, Unital s) =>
   (radix : s) ->
   (red : Reduction (+) Zero Ng leq One u radix) ->
   Absorption Z (phi radix) [input red]
-base spec radix (MkReduction i c o invariant _) = 
-  let
-    o1 = the (scale Zero Ng radix c + o = i) invariant
-    o2 = the (scale Zero Ng radix c = radix * value c)
-             (scalingLemma (unitalRing spec) radix c)
-    o3 = the (scale Zero Ng radix c + o = o + radix * value c)
-             (abelianCongruence (plusAbelian (ring (unitalRing spec))) o2)
-    o4 = the (o + radix * value c = i) (o3 @== o1)
-    o5 = the (i = i + radix * value O) 
-             (adhocIdentity2 (ring (unitalRing spec)) i radix)
-  in MkAbsorption c o [] (sym $ trans o4 o5)
+base spec radix (MkReduction i c o invariant _) = MkAbsorption c o [] o3 
+  where
+    o1 : o + radix * value c = i 
+    o1 = rewriteInvariant (unitalRing spec) radix i o c invariant
+    o2 : i = i + radix * value O
+    o2 = adhocIdentity2 (ring (unitalRing spec)) i radix
+    o3 : phi radix [i] O = phi radix [o] c
+    o3 = sym (o1 === o2)
   
 export
 lemma : (AdditiveGroup s, Multiplicative s, Unital s) =>
-  DiscreteOrderedRingSpec (+) Zero Ng (*) leq One ->
+  UnitalRingSpec {s} (+) Zero Ng (*) One ->
   (msc : Carry) ->
   (pending : s) ->
   (outputs : Vect k s) ->
   (inputs : Vect (S k) s) ->
-  (red : Reduction (+) Zero Ng leq One u radix) ->
+  (red : Reduction (+) Zero Ng _ One u radix) ->
   (ih : phi radix inputs O = phi radix (pending :: outputs) msc) ->
   phi radix (input red :: inputs) O =
   phi radix (output red :: (value (carry red) + pending) :: outputs) msc
-lemma {s} {radix} 
-  spec msc pending outputs inputs  (MkReduction i c o invariant _) ih = 
+lemma {s} {radix} spec msc pending outputs inputs 
+    (MkReduction i c o invariant _) inductionHypothesis = 
   let 
-    o1 = the (scale Zero Ng radix c + o = i) invariant
-    o2 = the (scale Zero Ng radix c = radix * value c)
-             (scalingLemma (unitalRing spec) radix c)
-    o3 = the (scale Zero Ng radix c + o = o + radix * value c)
-             (abelianCongruence (plusAbelian (ring (unitalRing spec))) o2)
-    o4 = the (o + radix * value c = i) (o3 @== o1)
-    o5 = the (phi radix inputs O = pending + radix * phi radix outputs msc) ih
-    o6 = adhocIdentity1 (ring (unitalRing spec)) pending o radix (value c) o5
-    vv = radix * phi radix inputs O
-  in cong {f = (+ vv)} o4 @== o6
+    adhoc = adhocIdentity1 (ring spec) pending o radix (value c) o2
+    shift = radix * phi radix inputs O
+    shifted = cong {f = (+ shift)} o1
+  in shifted @== adhoc
+  where 
+    o1 : o + radix * value c = i
+    o1 = rewriteInvariant spec radix i o c invariant
+    o2 : phi radix inputs O = pending + radix * phi radix outputs msc 
+    o2 = inductionHypothesis
+    
 
 export
 step : (AdditiveGroup s, Multiplicative s, Unital s) =>
@@ -101,4 +97,4 @@ step : (AdditiveGroup s, Multiplicative s, Unital s) =>
 step spec radix red (MkAbsorption {inputs} msc pending outputs invariant) =
   let out = value (carry red) + pending
   in MkAbsorption msc (output red) (out :: outputs)
-       (lemma spec msc pending outputs inputs red invariant)
+       (lemma (unitalRing spec) msc pending outputs inputs red invariant)

@@ -17,8 +17,9 @@ value O = Zero
 value M = Ng One
 
 scalingLemmaM : (AdditiveGroup s, Multiplicative s, Unital s) =>
-  UnitalRingSpec {s} (+) Zero Ng (*) One -> (radix : s) ->
-    scale Zero Ng radix M = radix * value M
+  UnitalRingSpec {s} (+) Zero Ng (*) One ->
+  (radix : s) ->
+  scale Zero Ng radix M = radix * value M
 scalingLemmaM spec radix = o2 @== o1 where
   o1 : Ng (radix * One) = radix * Ng One
   o1 = negatedMultiplication (ring spec) radix One
@@ -35,8 +36,11 @@ scalingLemma spec radix M = scalingLemmaM spec radix
 
 
 rewriteInvariant : (AdditiveGroup s, Multiplicative s, Unital s) =>
-  UnitalRingSpec {s} (+) Zero Ng (*) One -> (radix,i,o : s) -> (c : Carry) ->
-    scale Zero Ng radix c + o = i -> o + radix * value c = i
+  UnitalRingSpec {s} (+) Zero Ng (*) One ->
+  (radix, i, o : s) ->
+  (c : Carry) ->
+  scale Zero Ng radix c + o = i ->
+  o + radix * value c = i
 rewriteInvariant spec radix i o c invariant = o2 @== invariant where
   o1 : scale Zero Ng radix c = radix * value c
   o1 = scalingLemma spec radix c

@@ -11,6 +11,9 @@ import Proofs.Interval
 data Digit : (leq : Binrel s) -> (neg : s -> s) -> s -> Type where
   MkDigit : (x : s) -> .InSymRange leq neg u x -> Digit leq neg u
 
+val : Digit {s} _ _ _ -> s
+val (MkDigit x _) = x
+
 implementation Show s => Show (Digit {s} leq neg u) where
   show (MkDigit x _) = show x
 

@@ -130,3 +130,11 @@ step spec radix red@(MkReduction _ _ _ _ reducedRange)
   in MkAbsorption msc (output red) (absorb :: outputs)
       (rangeLemma (discreteOrderedGroup spec) ranges reducedRange (carry red))
       (arithLemma (unitalRing spec) msc pending outputs inputs red invariant)
+
+
+reduce : (AdditiveGroup s, Multiplicative s, Unital s, Decidable [s,s] leq) =>
+  DiscreteOrderedRingSpec (+) Zero Ng (*) leq One ->
+  (bound : leq One (u + Ng One)) ->
+  (radix : s) ->
+  (inputs : Vect (S k) (Digit leq Ng (u + u))) ->
+  Absorption k (Ranges leq Ng u (u + Ng One)) (phi radix) (map Digit.val inputs)

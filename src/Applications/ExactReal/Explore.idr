@@ -60,7 +60,7 @@ data Ranges : Binrel s -> (s -> s) -> s -> s -> s -> Vect k s -> Type
 
 absorbCarry : (AdditiveGroup s, Unital s) =>
   DiscreteOrderedGroupSpec {s} (+) Zero Ng leq One ->
-    InSymRange leq Ng (u + Ng One) x -> 
+    InSymRange leq Ng (u + Ng One) x ->
     (c : Carry) ->
     InSymRange leq Ng u (value c + x)
 
@@ -68,7 +68,7 @@ absorbCarry : (AdditiveGroup s, Unital s) =>
 rangeLemma : (AdditiveGroup s, Unital s) =>
   DiscreteOrderedGroupSpec {s} (+) Zero Ng leq One ->
     Ranges leq Ng u (u + Ng One) oldPending outputs ->
-    InSymRange leq Ng (u + Ng One) newPending -> 
+    InSymRange leq Ng (u + Ng One) newPending ->
     (c : Carry) ->
     Ranges leq Ng u (u + Ng One) newPending ((value c + oldPending) :: outputs)
 rangeLemma {oldPending} spec (MkRanges old digits) prf c =
@@ -92,8 +92,7 @@ base spec radix (MkReduction i c o invariant outRange) =
     o3 : phi radix [i] O = phi radix [o] c
     o3 = sym (o1 === o2)
 
-  
-export
+
 arithLemma : (AdditiveGroup s, Multiplicative s, Unital s) =>
   UnitalRingSpec {s} (+) Zero Ng (*) One ->
   (msc : Carry) ->
@@ -104,19 +103,19 @@ arithLemma : (AdditiveGroup s, Multiplicative s, Unital s) =>
   (ih : phi radix inputs O = phi radix (pending :: outputs) msc) ->
   phi radix (input red :: inputs) O =
   phi radix (output red :: (value (carry red) + pending) :: outputs) msc
-arithLemma {s} {radix} spec msc pending outputs inputs 
-        (MkReduction i c o invariant _) inductionHypothesis = 
-  let 
+arithLemma {s} {radix} spec msc pending outputs inputs
+        (MkReduction i c o invariant _) inductionHypothesis =
+  let
     adhoc = adhocIdentity1 (ring spec) pending o radix (value c) o2
     shift = radix * phi radix inputs O
     shifted = cong {f = (+ shift)} o1
   in shifted @== adhoc
-  where 
+  where
     o1 : o + radix * value c = i
     o1 = rewriteInvariant spec radix i o c invariant
-    o2 : phi radix inputs O = pending + radix * phi radix outputs msc 
+    o2 : phi radix inputs O = pending + radix * phi radix outputs msc
     o2 = inductionHypothesis
-    
+
 
 step : (AdditiveGroup s, Multiplicative s, Unital s) =>
   DiscreteOrderedRingSpec (+) Zero Ng (*) leq One ->
@@ -125,9 +124,9 @@ step : (AdditiveGroup s, Multiplicative s, Unital s) =>
   Absorption k (Ranges leq Ng u (u + Ng One)) (phi radix) inputs ->
   Absorption (S k) (Ranges leq Ng u (u + Ng One))
     (phi radix) (input red :: inputs)
-step spec radix red@(MkReduction _ _ _ _ reducedRange) 
+step spec radix red@(MkReduction _ _ _ _ reducedRange)
        (MkAbsorption {inputs} msc pending outputs ranges invariant) =
-  let out = value (carry red) + pending
-  in MkAbsorption msc (output red) (out :: outputs) 
+  let absorb = value (carry red) + pending
+  in MkAbsorption msc (output red) (absorb :: outputs)
       (rangeLemma (discreteOrderedGroup spec) ranges reducedRange (carry red))
       (arithLemma (unitalRing spec) msc pending outputs inputs red invariant)

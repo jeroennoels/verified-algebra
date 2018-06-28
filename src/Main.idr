@@ -3,6 +3,7 @@ module Main
 import Common.Util
 import Common.Interfaces
 import Specifications.DiscreteOrderedGroup
+import Specifications.OrderedRing
 import Proofs.GroupTheory
 import Proofs.TranslationInvarianceTheory
 import Proofs.DiscreteOrderTheory
@@ -12,7 +13,6 @@ import Instances.TrustInteger
 import Instances.ZZ
 import Applications.Example
 import Applications.ExactReal.Carry
-import Applications.ExactReal.Addition
 import Applications.ExactReal.Explore
 
 %default total
@@ -41,19 +41,20 @@ testCarryZZ x =
     bound : LTEZ 1 8
     bound = LtePosPos (LTESucc LTEZero)
 
-integerDigits : Vect n Integer -> Maybe (Vect n (Digit IntegerLeq Ng 9))
-integerDigits = maybeDigits {leq = IntegerLeq} Ng 9
+integerDigits : Vect n Integer -> Maybe (Vect n (Digit IntegerLeq Ng 18))
+integerDigits = maybeDigits {leq = IntegerLeq} Ng 18
 
-testAddition : Vect n (Digit IntegerLeq Ng 9) -> Vect n (Digit IntegerLeq Ng 9) -> Vect n (Digit IntegerLeq Ng 9)
-testAddition = addition integerDiscreteOrderedGroup 9 (CheckIntegerLeq Oh)
+testAddition : Vect (S k) (Digit {s = Integer} IntegerLeq Ng 18) -> 
+  (Carry, Vect (S k) Integer)
+testAddition inputs = outputs $ 
+  reduce {u = 9} integerDiscreteOrderedRing (CheckIntegerLeq Oh) inputs
 
 main : IO ()
 main = do printLn $ map testAbsoluteValue [(-5)..5]
           printLn $ map testAbsoluteValueZZ (map fromInteger [(-10)..10])
           printLn $ map testCarry [(-20)..20]
           printLn $ map testCarryZZ (map fromInteger [(-21)..21])
-          printLn $ liftA2 testAddition
-            (integerDigits [0,1,0,0,1]) (integerDigits [0,0,9,9,9])
+          printLn $ liftA testAddition (integerDigits (reverse [17,2,13,4,5,-15,0]))
 
 ||| compile time test
 test1 : testCarryZZ (-15) = testCarry (-15)

@@ -30,15 +30,15 @@ scale zero neg x P = x
 ||| carry * radix + output = input
 ||| output in [-v..v] where v = u - 1
 data Reduction : 
-  Binop s -> s -> (s -> s) -> Binrel s -> s -> s -> s -> Type 
+  Binop s -> s -> (s -> s) -> Binrel s -> s -> s -> s -> {input : s} -> Type 
   where MkReduction :
     .(input : s) -> (carry : Carry) -> (output : s) ->
     scale zero neg radix carry `add` output = input ->
     InSymRange leq neg (add u (neg unit)) output ->
-    Reduction add zero neg leq unit u radix
+    Reduction add zero neg leq unit u radix {input}
 
-input : Reduction {s} _ _ _ _ _ _ _ -> s
-input (MkReduction i _ _ _ _) = i
+input : Reduction {s} _ _ _ _ _ _ _ {input = x} -> s
+input _ = x
 
 carry : Reduction _ _ _ _ _ _ _ -> Carry
 carry (MkReduction _ c _ _ _) = c
@@ -49,11 +49,6 @@ output (MkReduction _ _ o _ _) = o
 result : Reduction {s} _ _ _ _ _ _ _ -> (Carry, s)
 result (MkReduction _ c o _ _) = (c, o)
 
-ReductionShort : .DiscreteOrderedGroupSpec {s} add zero neg leq unit ->
-  .(u : s) -> .(radix : s) -> Type
-ReductionShort {add} {zero} {neg} {leq} {unit} spec u radix =
-  Reduction add zero neg leq unit u radix
-
 
 ||| See README for a brief introduction.
 ||| 1 <= u - 1 means radix >= 3.
@@ -61,7 +56,7 @@ computeCarry : (AdditiveGroup s, Unital s, Decidable [s,s] leq) =>
   DiscreteOrderedGroupSpec (+) Zero Ng leq One ->
   (u : s) -> leq One (u + Ng One) ->
   (x : s) -> InSymRange leq Ng (u + u) x ->
-  Reduction (+) Zero Ng leq One u (One + u)
+  Reduction (+) Zero Ng leq One u (One + u) {input = x}
 
 computeCarry spec u bound x range =
   let pog = partiallyOrderedGroup spec

@@ -135,6 +135,16 @@ step spec radix red@(MkReduction _ _ _ _ reducedRange)
 reduce : (AdditiveGroup s, Multiplicative s, Unital s, Decidable [s,s] leq) =>
   DiscreteOrderedRingSpec (+) Zero Ng (*) leq One ->
   (bound : leq One (u + Ng One)) ->
-  (radix : s) ->
   (inputs : Vect (S k) (Digit leq Ng (u + u))) ->
-  Absorption k (Ranges leq Ng u (u + Ng One)) (phi radix) (map Digit.val inputs)
+  Absorption k (Ranges leq Ng u (u + Ng One)) (phi (One + u))
+    (map Digit.val inputs)
+reduce {u} spec bound [MkDigit input inRange] = base spec (One + u)
+  (computeCarry (discreteOrderedGroup spec) u bound input inRange)
+reduce {u} spec bound (MkDigit input inRange :: inputs@(_::_)) = 
+  step spec (One + u)
+    (computeCarry (discreteOrderedGroup spec) u bound input inRange)
+    (reduce {u} spec bound inputs)
+
+
+outputs : Absorption {s} k _ _ _ -> (Carry, Vect (S k) s)
+outputs (MkAbsorption c p o _ _) = (c, reverse (p :: o))

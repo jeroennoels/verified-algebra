@@ -40,7 +40,8 @@ modules =
   Applications.ExactReal.Digit,
   Applications.ExactReal.Scaling,
   Applications.ExactReal.Adhoc,
-  Applications.ExactReal.Addition,
+  Applications.ExactReal.Absorb,
+  Applications.ExactReal.Reduce,
   Main
 
 executable = run

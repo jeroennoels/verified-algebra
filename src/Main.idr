@@ -13,7 +13,8 @@ import Instances.TrustInteger
 import Instances.ZZ
 import Applications.Example
 import Applications.ExactReal.Carry
-import Applications.ExactReal.Explore
+import Applications.ExactReal.Absorb
+import Applications.ExactReal.Reduce
 
 %default total
 
@@ -54,7 +55,8 @@ main = do printLn $ map testAbsoluteValue [(-5)..5]
           printLn $ map testAbsoluteValueZZ (map fromInteger [(-10)..10])
           printLn $ map testCarry [(-20)..20]
           printLn $ map testCarryZZ (map fromInteger [(-21)..21])
-          printLn $ liftA testAddition (integerDigits (reverse [17,2,13,4,5,-15,0]))
+          printLn $ liftA testAddition 
+                      (integerDigits (reverse [17,2,13,4,5,-15,0]))
 
 ||| compile time test
 test1 : testCarryZZ (-15) = testCarry (-15)

@@ -1,6 +1,6 @@
 ||| This example is inspired by exact real arithmetic.
 ||| See README for a brief introduction.
-module Applications.ExactReal.Explore
+module Applications.ExactReal.Absorb
 
 import Data.Vect
 import Common.Util
@@ -47,6 +47,11 @@ data Absorption :
     (constraints pending outputs) ->
     (semantics inputs O = semantics (pending :: outputs) msc) ->
     Absorption k constraints semantics inputs
+
+
+outputs : Absorption {s} k _ _ _ -> (Carry, Vect (S k) s)
+outputs (MkAbsorption c p o _ _) = (c, reverse (p :: o))
+
 
 ||| Express the constraint that the output is in the allowed digit
 ||| range.  The output range is [-v, v] before carry absorption, and
@@ -130,21 +135,3 @@ step spec radix red@(MkReduction _ _ _ _ reducedRange)
   in MkAbsorption msc (output red) (absorb :: outputs)
       (rangeLemma (discreteOrderedGroup spec) ranges reducedRange (carry red))
       (arithLemma (unitalRing spec) msc pending outputs inputs red invariant)
-
-
-reduce : (AdditiveGroup s, Multiplicative s, Unital s, Decidable [s,s] leq) =>
-  DiscreteOrderedRingSpec (+) Zero Ng (*) leq One ->
-  (bound : leq One (u + Ng One)) ->
-  (inputs : Vect (S k) (Digit leq Ng (u + u))) ->
-  Absorption k (Ranges leq Ng u (u + Ng One)) (phi (One + u))
-    (map Digit.val inputs)
-reduce {u} spec bound [MkDigit input inRange] = base spec (One + u)
-  (computeCarry (discreteOrderedGroup spec) u bound input inRange)
-reduce {u} spec bound (MkDigit input inRange :: inputs@(_::_)) = 
-  step spec (One + u)
-    (computeCarry (discreteOrderedGroup spec) u bound input inRange)
-    (reduce {u} spec bound inputs)
-
-
-outputs : Absorption {s} k _ _ _ -> (Carry, Vect (S k) s)
-outputs (MkAbsorption c p o _ _) = (c, reverse (p :: o))

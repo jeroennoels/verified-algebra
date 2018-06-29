@@ -48,7 +48,7 @@ integerDigits = maybeDigits {leq = IntegerLeq} Ng 18
 testAddition : Vect (S k) (Digit {s = Integer} IntegerLeq Ng 18) -> 
   (Carry, Vect (S k) Integer)
 testAddition inputs = outputs $ 
-  reduce {u = 9} integerDiscreteOrderedRing (CheckIntegerLeq Oh) inputs
+  reduce integerDiscreteOrderedRing 9 (CheckIntegerLeq Oh) inputs
 
 main : IO ()
 main = do printLn $ map testAbsoluteValue [(-5)..5]

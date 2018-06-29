@@ -14,15 +14,17 @@ import public Applications.ExactReal.Digit
 %default total
 %access export
 
+total
 reduce : (AdditiveGroup s, Multiplicative s, Unital s, Decidable [s,s] leq) =>
   DiscreteOrderedRingSpec (+) Zero Ng (*) leq One ->
+  (u : s) ->
   (bound : leq One (u + Ng One)) ->
   (inputs : Vect (S k) (Digit leq Ng (u + u))) ->
   Absorption k (Ranges leq Ng u (u + Ng One)) (phi (One + u))
     (map Digit.val inputs)
-reduce {u} spec bound [MkDigit input inRange] = base spec (One + u)
+reduce spec u bound [MkDigit input inRange] = base spec {u} (One + u)
   (computeCarry (discreteOrderedGroup spec) u bound input inRange)
-reduce {u} spec bound (MkDigit input inRange :: inputs@(_::_)) = 
-  step spec (One + u)
+reduce spec u bound (MkDigit input inRange :: inputs@(_::_)) = 
+  step spec {u} (One + u)
     (computeCarry (discreteOrderedGroup spec) u bound input inRange)
-    (reduce {u} spec bound inputs)
+    (reduce spec u bound inputs)

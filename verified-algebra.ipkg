@@ -35,12 +35,13 @@ modules =
   Instances.OrderZZ,
   Instances.ZZ,
   Applications.Example,
-  Applications.ExactReal.Lemmas.Carry,
+  Applications.ExactReal.CarryLemmas,
   Applications.ExactReal.Carry,
   Applications.ExactReal.Digit,
   Applications.ExactReal.Scaling,
   Applications.ExactReal.Adhoc,
   Applications.ExactReal.Absorb,
+  Applications.ExactReal.AbsorptionLemmas,
   Applications.ExactReal.Reduce,
   Main
 

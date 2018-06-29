@@ -7,7 +7,7 @@ import Common.Interfaces
 import Specifications.DiscreteOrderedGroup
 import Proofs.GroupCancelationLemmas
 import Proofs.Interval
-import Applications.ExactReal.Lemmas.Carry
+import Applications.ExactReal.CarryLemmas
 
 %default total
 %access public export
@@ -18,6 +18,12 @@ implementation Show Carry where
   show M = "M"
   show O = "O"
   show P = "P"
+
+public export
+value : (AdditiveGroup s, Unital s) => Carry -> s
+value P = One
+value O = Zero
+value M = Ng One
 
 ||| multiply by Carry
 scale : s -> (s -> s) -> s -> Carry -> s

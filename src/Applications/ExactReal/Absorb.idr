@@ -10,8 +10,8 @@ import Specifications.OrderedRing
 import Proofs.GroupTheory
 import Applications.ExactReal.Carry
 import Applications.ExactReal.Scaling
+import Applications.ExactReal.AbsorptionLemmas
 import Applications.ExactReal.Adhoc
-import public Applications.ExactReal.Digit
 
 %default total
 %access export
@@ -53,41 +53,12 @@ outputs : Absorption {s} k _ _ _ -> (Carry, Vect (S k) s)
 outputs (MkAbsorption c p o _ _) = (c, reverse (p :: o))
 
 
-||| Express the constraint that the output is in the allowed digit
-||| range.  The output range is [-v, v] before carry absorption, and
-||| [-u, u] after.
-data Ranges : Binrel s -> (s -> s) -> s -> s -> s -> Vect k s -> Type
-  where MkRanges :
-    InSymRange leq neg v pending ->
-    (digits : Vect k (Digit leq neg u)) ->
-    Ranges leq neg u v pending (map Digit.val digits)
-
-
-absorbCarry : (AdditiveGroup s, Unital s) =>
-  DiscreteOrderedGroupSpec {s} (+) Zero Ng leq One ->
-    InSymRange leq Ng (u + Ng One) x ->
-    (c : Carry) ->
-    InSymRange leq Ng u (value c + x)
-
-
-rangeLemma : (AdditiveGroup s, Unital s) =>
-  DiscreteOrderedGroupSpec {s} (+) Zero Ng leq One ->
-    Ranges leq Ng u (u + Ng One) oldPending outputs ->
-    InSymRange leq Ng (u + Ng One) newPending ->
-    (c : Carry) ->
-    Ranges leq Ng u (u + Ng One) newPending ((value c + oldPending) :: outputs)
-rangeLemma {oldPending} spec (MkRanges old digits) prf c =
-  let output = value c + oldPending
-      digit = MkDigit output (absorbCarry spec old c)
-  in MkRanges prf (digit :: digits)
-
-
-base : (AdditiveGroup s, Multiplicative s, Unital s) =>
+absorptionBase : (AdditiveGroup s, Multiplicative s, Unital s) =>
   DiscreteOrderedRingSpec (+) Zero Ng (*) leq One ->
   (radix : s) ->
   (red : Reduction (+) Zero Ng leq One u radix) ->
   Absorption Z (Ranges leq Ng u (u + Ng One)) (phi radix) [input red]
-base spec radix (MkReduction i c o invariant outRange) =
+absorptionBase spec radix (MkReduction i c o invariant outRange) =
   MkAbsorption c o [] (MkRanges outRange []) o3
   where
     o1 : o + radix * value c = i
@@ -122,14 +93,14 @@ arithLemma {s} {radix} spec msc pending outputs inputs
     o2 = inductionHypothesis
 
 
-step : (AdditiveGroup s, Multiplicative s, Unital s) =>
+absorptionStep : (AdditiveGroup s, Multiplicative s, Unital s) =>
   DiscreteOrderedRingSpec (+) Zero Ng (*) leq One ->
   (radix : s) ->
   (red : Reduction (+) Zero Ng leq One u radix) ->
   Absorption k (Ranges leq Ng u (u + Ng One)) (phi radix) inputs ->
   Absorption (S k) (Ranges leq Ng u (u + Ng One))
     (phi radix) (input red :: inputs)
-step spec radix red@(MkReduction _ _ _ _ reducedRange)
+absorptionStep spec radix red@(MkReduction _ _ _ _ reducedRange)
        (MkAbsorption {inputs} msc pending outputs ranges invariant) =
   let absorb = value (carry red) + pending
   in MkAbsorption msc (output red) (absorb :: outputs)

@@ -10,12 +10,6 @@ import Applications.ExactReal.Carry
 %default total
 %access export
 
-public export
-value : (AdditiveGroup s, Unital s) => Carry -> s
-value P = One
-value O = Zero
-value M = Ng One
-
 scalingLemmaM : (AdditiveGroup s, Multiplicative s, Unital s) =>
   UnitalRingSpec {s} (+) Zero Ng (*) One ->
   (radix : s) ->

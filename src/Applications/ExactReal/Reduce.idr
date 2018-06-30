@@ -14,18 +14,25 @@ import public Applications.ExactReal.Digit
 %default total
 %access export
 
+||| Recursively reduce the input digits and absorb the carries. 
 total
 reduce : (AdditiveGroup s, Multiplicative s, Unital s, Decidable [s,s] leq) =>
   DiscreteOrderedRingSpec (+) Zero Ng (*) leq One ->
   (u : s) ->
   (bound : leq One (u + Ng One)) ->
-  (inputs : Vect (S k) (Digit leq Ng (u + u))) ->
+  (digits : Vect (S k) (Digit leq Ng (u + u))) ->
   Absorption k (Ranges leq Ng u (u + Ng One)) (phi (One + u))
-    (map Digit.val inputs)
-reduce spec u bound [MkDigit input inRange] =
-  absorptionBase spec {u} (One + u)
-    (computeCarry (discreteOrderedGroup spec) u bound input inRange)
-reduce spec u bound (MkDigit input inRange :: inputs@(_::_)) =
-  absorptionStep spec {u} (One + u)
-    (computeCarry (discreteOrderedGroup spec) u bound input inRange)
-    (reduce spec u bound inputs)
+      (map Digit.val digits)
+-- Base case. Explicitly pass dictionaries to improve compilation time.
+reduce @{ia} @{im} @{iu} @{id}
+    spec u bound [MkDigit input inRange] =
+  absorptionBase @{ia} @{im} @{iu} spec {u} (One + u)
+      (computeCarry @{ia} @{iu} @{id}
+        (discreteOrderedGroup spec) u bound input inRange)
+-- Recursive case.
+reduce @{ia} @{im} @{iu} @{id}
+    spec u bound (MkDigit input inRange :: digits@(_::_)) =
+  absorptionStep @{ia} @{im} @{iu} spec {u} (One + u)
+    (computeCarry @{ia} @{iu} @{id}
+       (discreteOrderedGroup spec) u bound input inRange)
+    (reduce @{ia} @{im} @{iu} @{id} spec u bound digits)

@@ -42,4 +42,4 @@ absoluteValue spec x =
 The type `s` above could for instance be `Integer` with a _postulated_ `OrderedGroupSpec`.  Or it could also be `Data.ZZ` with an explicitly constructed specification proof term.  Or any other ordered group structure.
 
 A more interesting example aims at partially verified
-[exact real arithmetic](https://github.com/jeroennoels/verified-algebra/tree/master/src/Applications/ExactReal).
+[exact real arithmetic](https://github.com/jeroennoels/verified-exact-real).

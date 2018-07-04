@@ -13,16 +13,9 @@ import public Instances.OrderZZ
 %default total
 %access public export
 
-implementation AdditiveGroup ZZ where
-  (+) = plusZ
-  Ng = negate
+implementation Ringops ZZ where
   Zero = Pos 0
-
-implementation Multiplicative ZZ where
-  (*) = multZ
-
-implementation Unital ZZ where
-  One = 1
+  One = Pos 1
 
 zzMonoid : specifyMonoid {s = ZZ}
 zzMonoid = MkMonoid plusAssociativeZ plusZeroLeftNeutralZ plusZeroRightNeutralZ

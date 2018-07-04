@@ -21,16 +21,7 @@ decideLeq a b = case isItSo (intToBool (prim__slteBigInt a b)) of
   No contra => No (contra . soIntegerLeq)
 
 
-implementation AdditiveGroup Integer where
-  (+) = prim__addBigInt
-  Ng = prim__subBigInt 0
-  Zero = 0
-
-implementation Multiplicative Integer where
-  (*) = prim__mulBigInt
-
-implementation Unital Integer where
-  One = 1
+implementation Ringops Integer where Ng = negate
 
 implementation Decidable [Integer, Integer] IntegerLeq where
   decide = decideLeq

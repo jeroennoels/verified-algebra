@@ -12,7 +12,7 @@ import Proofs.TranslationInvarianceTheory
 %access public export
 
 
-absoluteValue : (AdditiveGroup s, Decidable [s,s] leq) =>
+absoluteValue : (Ringops s, Decidable [s,s] leq) =>
   .OrderedGroupSpec (+) Zero Ng leq -> s -> (a ** leq Zero a)
 absoluteValue spec x =
   case decision {rel = leq} x Zero of

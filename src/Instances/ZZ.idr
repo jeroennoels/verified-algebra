@@ -68,4 +68,4 @@ zzOrderedRing = MkOrderedRing
 
 zzDiscreteOrderedRing : specifyDiscreteOrderedRing {leq = LTEZ}
 zzDiscreteOrderedRing = MkDiscreteOrderedRing zzOrderedRing
-  lteDiscreteZ multOneLeftNeutralZ multOneRightNeutralZ
+  lteDiscreteZ multOneLeftNeutralZ multOneRightNeutralZ (LtePosPos LTEZero)

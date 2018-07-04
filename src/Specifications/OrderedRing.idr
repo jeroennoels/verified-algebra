@@ -51,15 +51,21 @@ data DiscreteOrderedRingSpec :
     isDiscreteOrder add leq zero one ->
     isNeutralL mul one ->
     isNeutralR mul one ->
+    (onePositive : leq zero one) ->
     DiscreteOrderedRingSpec add zero neg mul leq one
+
 
 ||| forget
 discreteOrderedGroup : DiscreteOrderedRingSpec add zero neg _ leq one ->
   DiscreteOrderedGroupSpec add zero neg leq one
-discreteOrderedGroup (MkDiscreteOrderedRing r d _ _) =
+discreteOrderedGroup (MkDiscreteOrderedRing r d _ _ _) =
   MkDiscreteOrderedGroup (orderedGroup r) (abelian (abelianGroup (ring r))) d
 
 ||| forget
 unitalRing : DiscreteOrderedRingSpec add zero neg mul _ one ->
   UnitalRingSpec add zero neg mul one
-unitalRing (MkDiscreteOrderedRing or _ l r) = MkUnitalRing (ring or) l r
+unitalRing (MkDiscreteOrderedRing or _ l r _) = MkUnitalRing (ring or) l r
+
+||| forget
+onePositive : DiscreteOrderedRingSpec _ zero _ _ leq one -> leq zero one
+onePositive (MkDiscreteOrderedRing _ _ _ _ pos) = pos

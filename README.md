@@ -17,19 +17,21 @@ this means is best illustrated with a short
 [example](https://github.com/jeroennoels/verified-algebra/blob/master/src/Applications/Example.idr):
 
 ```idris
-||| A clean additive notation that plays nicely with implicit binding:
-
-interface AdditiveGroup s where
-  (+) : s -> s -> s
+||| A clean notation that plays nicely with implicit binding:
+interface Neg s => Ringops s where
   Ng : s -> s
   Zero : s
+  One : s
+  Ng = negate
+  Zero = fromInteger 0
+  One = fromInteger 1
 
 ||| OrderedGroupSpec is a dependent type that requires its 4 parameters
 ||| to satisfy the laws of an ordered group.  We compute the absolute
 ||| value of an element and return it, along with a proof that the result
 ||| is non-negative.
 
-absoluteValue : (AdditiveGroup s, Decidable [s,s] leq) =>
+absoluteValue : (Ringops s, Decidable [s,s] leq) =>
   .OrderedGroupSpec (+) Zero Ng leq -> s -> (a ** leq Zero a)
 absoluteValue spec x =
   case decision {rel = leq} x Zero of
